@@ -27,7 +27,6 @@ export default function Home() {
   return (
     <div>
         <TopNavbar />
-      <h1 className="display-4">Dashboard</h1>
       <Alert className="alert" show={show} variant="danger">
         <Alert.Heading>Login to get access</Alert.Heading>
         <p>To see your personal dashboard and access your hospitals, please log in!</p>

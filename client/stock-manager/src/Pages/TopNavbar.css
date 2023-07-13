@@ -10,3 +10,12 @@
 .btn {
   margin: 2vh;
 }
+
+.nav-link {
+  font-size: 18px;
+  transition: color 0.3s ease-in-out;
+}
+
+.nav-link:hover {
+  color: rgb(184, 183, 183);
+}

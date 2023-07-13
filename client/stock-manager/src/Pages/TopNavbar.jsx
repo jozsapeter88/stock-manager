@@ -1,26 +1,22 @@
-
-//import { Button } from 'react-bootstrap';
 import { Link, Outlet } from "react-router-dom";
+import { Navbar, Nav } from "react-bootstrap";
 import "./TopNavbar.css";
-import { Navbar, Nav, Button } from "react-bootstrap";
-
 
 export default function TopNavbar() {
   return (
     <>
-      <Navbar expand="lg" data-bs-theme="dark">
-        <Navbar.Brand as={Link} to="/" style={{ fontWeight: "bold", marginLeft: "20px" }}>
+      <Navbar expand="lg" variant="light" className="navbar" data-bs-theme="light">
+        <Navbar.Brand as={Link} to="/home" style={{ marginLeft: "20px" }}>
           <div className="logo">
-            <img src="https://i.imgur.com/GcFE3gR.png" alt="" height="75" width="150"></img>
+            <img src={process.env.PUBLIC_URL + "/rac.png"} alt="" height="75" width="110" />
           </div>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto"></Nav>
-          <Nav>
-            <Button className="btn" as={Link} to="/login" variant="outline-primary">Login</Button>
-            <Button className="btn" as={Link} to="/registration" variant="outline-primary">Registration</Button>
-            <Button className="btn" as={Link} to="/order" variant="outline-primary">Order</Button>
+        <Navbar.Collapse id="basic-navbar-nav" style={{fontWeight: "bold"}} className="justify-content-end">
+          <Nav className="ml-auto">
+            <Nav.Link as={Link} to="/users" className="nav-link">Users</Nav.Link>
+            <Nav.Link as={Link} to="/facility-list" className="nav-link">Facility List</Nav.Link>
+            <Nav.Link as={Link} to="/order-history" className="nav-link">Order History</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
