@@ -1,0 +1,20 @@
+body {
+    font-family: 'Roboto Slab', serif;
+    height: 100vh;
+}
+
+.opacity {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+img {  
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+ }
+
+ #not-valid {
+    color: red;
+ }

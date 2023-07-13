@@ -1,0 +1,12 @@
+.logo img {
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+.logo:hover img {
+  opacity: 0.7;
+}
+
+.btn {
+  margin: 2vh;
+}
