@@ -8,9 +8,7 @@ const hospitalSchema = new Schema({
   city: {type: String, required: true},
   address: {type: String, required: true},
   partner_id: String,
-  invoiceData: Object,
   users: Array,
-  orderHistory: Array
 });
 
-module.exports = mongoose.model("Hospital", hospitalSchema);
+module.exports = mongoose.model("Facility", facilitySchema);
