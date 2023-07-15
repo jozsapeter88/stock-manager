@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Table, Button, Alert } from "react-bootstrap";
 import { AuthContext } from "../../Contexts/AuthContext";
 import "./Home.css";
-import TopNavbar from "../TopNavbar";
+import TopNavbar from "../Navbar";
 
 export default function Home() {
   const [facilities, setFacilities] = useState(null);
@@ -40,8 +40,9 @@ export default function Home() {
         <thead>
           <tr>
             <th>Name</th>
+            <th>Sport</th>
             <th>City</th>
-            <th>Country</th>
+            <th>Address</th>
           </tr>
         </thead>
         <tbody>
@@ -49,8 +50,9 @@ export default function Home() {
             facilities.map((facility) => (
               <tr key={facility._id}>
                 <td>{facility.name}</td>
+                <td>{facility.sport}</td>
                 <td>{facility.city}</td>
-                <td>{facility.country}</td>
+                <td>{facility.address}</td>
               </tr>
             ))}
         </tbody>

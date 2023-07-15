@@ -4,16 +4,10 @@ const AccountModel = require("./db/accountSchema");
 const OrderHistory = require("./db/orderHistorySchema");
 const ProductModel = require("./db/productSchema");
 const cors = require("cors");
-
 const express = require("express");
 const app = express();
 
-app.use(
-  cors({
-    origin: "*",
-  })
-);
-
+app.use(cors());
 app.use(express.json());
 
 app.get("/try", (req, res) => {
@@ -41,6 +35,48 @@ app.post("/api/facilities", async (req, res) => {
     res.status(200).json(facilities);
   } catch (error) {
     res.status(500).json(error);
+  }
+});
+
+app.post("/api/accounts/new", async (req, res) => {
+  try {
+    const { name, userName, passWord } = req.body;
+
+    const newAccount = new AccountModel({
+      name,
+      userName,
+      passWord,
+    });
+
+    await newAccount.save();
+
+    res.status(200).json({ message: "User registered successfully" });
+  } catch (error) {
+    console.error("Error registering user:", error);
+    res.status(500).json({ error: "Error registering user" });
+  }
+});
+
+app.post("/api/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    // Find the account by username
+    const account = await AccountModel.findOne({ userName: username });
+
+    if (!account) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    // Compare the submitted password with the stored password
+    if (account.passWord !== password) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    return res.status(200).json({ message: "Login successful" });
+  } catch (error) {
+    console.error("Login error:", error);
+    return res.status(500).json({ message: "Login failed" });
   }
 });
 
@@ -94,7 +130,7 @@ app.post("/facilities/mine/:id", async (req, res) => {
   }
 });
 
-app.post("/accounts/new", async (req, res) => {
+app.post("/api/accounts/new", async (req, res) => {
   console.log("accounts/new accessed");
   try {
     const newUser = {
@@ -128,35 +164,6 @@ app.get("/facilities/mine/Peti/:id", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
-  const userName = req.body.userName;
-  console.log("/login accessed by " + userName);
-  const errorMessage = "Invalid username or password!";
-  try {
-    try {
-      const user = await AccountModel.findOne({ userName: userName });
-      const responseObj = {
-        status: "",
-        content: "",
-      };
-
-      if (user.passWord == req.body.passWord) {
-        responseObj.status = "OK";
-        responseObj.content = user._id;
-        res.status(200).json(responseObj);
-      } else {
-        responseObj.status = "NO";
-        responseObj.content = errorMessage;
-        res.status(406).json(responseObj);
-      }
-    } catch (error) {
-      res.status(418).json(errorMessage);
-    }
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
-
 app.get("/orderhistory/:id", async (req, res) => {
   try {
     const facility = await FacilityModel.findOne({ _id: req.params.id });
@@ -180,12 +187,13 @@ app.get("/orderhistory/:id", async (req, res) => {
   }
 });
 
-app.get("/products", async (req, res) => {
+app.get("/api/products", async (req, res) => {
   try {
-    const products = await ProductModel.find({});
+    const products = await ProductModel.find();
     res.status(200).json(products);
   } catch (error) {
-    res.status(500).json(error);
+    console.error("Error retrieving products:", error);
+    res.status(500).json({ error: "Error retrieving products" });
   }
 });
 
@@ -221,9 +229,8 @@ app.post("/order", async (req, res) => {
 });
 
 async function main() {
-  const url = "mongodb://127.0.0.1:27017/stock-manager";-
-
-  await mongoose.connect(url);
+  const url = "mongodb://127.0.0.1:27017/stock-manager";
+  -(await mongoose.connect(url));
   const port = 5001;
   app.listen(port, () => {
     console.log(`App is listening on port ${port}`);

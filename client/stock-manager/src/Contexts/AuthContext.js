@@ -4,9 +4,9 @@ import { createContext, useState } from "react";
 export const AuthContext = createContext();
 
 export const AuthContextProvider = (props) => {
-    const [doctorId, setDoctorId] = useState(null);
+    const [userId, setuserId] = useState(null);
     return (
-        <AuthContext.Provider value={{doctorId, setDoctorId}}>
+        <AuthContext.Provider value={{userId, setuserId}}>
         {props.children}
         </AuthContext.Provider>
     )

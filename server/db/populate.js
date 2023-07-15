@@ -83,19 +83,161 @@ const generateProducts = async () => {
     console.log("Products collection cleared.");
 
     const products = [
+      // Soccer products
       {
-        name: "Product 1",
-        id: 1,
+        name: "Soccer Ball 1",
+        sport: "Soccer",
+        price: 24.99,
+        quantity: 20,
+      },
+      {
+        name: "Soccer Cleats",
+        sport: "Soccer",
+        price: 89.99,
+        quantity: 8,
+      },
+      {
+        name: "Soccer Jersey",
+        sport: "Soccer",
+        price: 49.99,
+        quantity: 12,
+      },
+      {
+        name: "Soccer Goal",
+        sport: "Soccer",
+        price: 149.99,
+        quantity: 5,
+      },
+      {
+        name: "Soccer Training Cones",
+        sport: "Soccer",
         price: 9.99,
+        quantity: 30,
+      },
+      // American Football products
+      {
+        name: "Football 1",
+        sport: "American Football",
+        price: 29.99,
+        quantity: 15,
+      },
+      {
+        name: "Football Helmet",
+        sport: "American Football",
+        price: 159.99,
+        quantity: 8,
+      },
+      {
+        name: "Football Gloves",
+        sport: "American Football",
+        price: 39.99,
+        quantity: 20,
+      },
+      {
+        name: "Football Shoulder Pads",
+        sport: "American Football",
+        price: 89.99,
+        quantity: 12,
+      },
+      {
+        name: "Football Cones",
+        sport: "American Football",
+        price: 9.99,
+        quantity: 30,
+      },
+      // Basketball products
+      {
+        name: "Basketball 1",
+        sport: "Basketball",
+        price: 24.99,
+        quantity: 20,
+      },
+      {
+        name: "Basketball Shoes",
+        sport: "Basketball",
+        price: 99.99,
+        quantity: 8,
+      },
+      {
+        name: "Basketball Jersey",
+        sport: "Basketball",
+        price: 49.99,
+        quantity: 12,
+      },
+      {
+        name: "Basketball Hoop",
+        sport: "Basketball",
+        price: 199.99,
+        quantity: 5,
+      },
+      {
+        name: "Basketball Training Cones",
+        sport: "Basketball",
+        price: 9.99,
+        quantity: 30,
+      },
+      // Tennis products
+      {
+        name: "Tennis Racket 1",
+        sport: "Tennis",
+        price: 59.99,
         quantity: 10,
       },
       {
-        name: "Product 2",
-        id: 2,
-        price: 19.99,
-        quantity: 5,
+        name: "Tennis Balls",
+        sport: "Tennis",
+        price: 14.99,
+        quantity: 50,
       },
-      // Add more products
+      {
+        name: "Tennis Shoes",
+        sport: "Tennis",
+        price: 79.99,
+        quantity: 8,
+      },
+      {
+        name: "Tennis Bag",
+        sport: "Tennis",
+        price: 39.99,
+        quantity: 15,
+      },
+      {
+        name: "Tennis Training Cones",
+        sport: "Tennis",
+        price: 9.99,
+        quantity: 30,
+      },
+      // Swimming products
+      {
+        name: "Swimming Goggles 1",
+        sport: "Swimming",
+        price: 14.99,
+        quantity: 20,
+      },
+      {
+        name: "Swimming Cap",
+        sport: "Swimming",
+        price: 9.99,
+        quantity: 30,
+      },
+      {
+        name: "Swimming Fins",
+        sport: "Swimming",
+        price: 29.99,
+        quantity: 15,
+      },
+      {
+        name: "Swimming Kickboard",
+        sport: "Swimming",
+        price: 19.99,
+        quantity: 20,
+      },
+      {
+        name: "Swimming Training Cones",
+        sport: "Swimming",
+        price: 9.99,
+        quantity: 30,
+      },
     ];
 
     await Product.insertMany(products);
