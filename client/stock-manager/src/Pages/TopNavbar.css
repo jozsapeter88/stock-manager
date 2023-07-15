@@ -4,7 +4,7 @@
 }
 
 .logo:hover img {
-  opacity: 0.7;
+  opacity: 0.5;
 }
 
 .btn {
@@ -17,5 +17,5 @@
 }
 
 .nav-link:hover {
-  color: rgb(184, 183, 183);
+  color: rgb(0, 0, 0);
 }

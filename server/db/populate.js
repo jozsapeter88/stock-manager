@@ -1,154 +1,121 @@
 const mongoose = require("mongoose");
-const HospitalModel = require("./hospitalSchema");
-const AccountModel = require("./accountSchema");
-const ProductModel = require("./productSchema");
-const hospitals = require("../data/hospitals");
-const accounts = require("../data/accounts");
+const Facility = require("./facilitySchema.js");
+const Product = require("./productSchema.js");
 
-let obj = {
-  invoiceData: {
-    vendor_id: "H01",
-    partner_id: 101,
-    name: "",
-    emails: [],
-    block_id: 101,
-    type: "hospital",
-    payment_method: "transfer",
-    currency: "",
-    conversion_rate: 1,
-    electronic: true,
-    vat: 0,
-  },
-  users: [],
-  orderHistory: [],
-};
+mongoose.connect("mongodb://127.0.0.1:27017/stock-manager", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
-async function populate(input) {
-  if (input == "hospitals") {
-    await HospitalModel.deleteMany({});
-    // await HospitalModel.create(...hospitals);
-    let newHospitals = [];
-    hospitals.map(async (hosp) => {
-      let obj = {
-        vendor_id: "H",
-        partner_id: "not populated yet",
-        name: "",
-        emails: ["randomaddress@email.com"],
-        block_id: 101,
-        type: "hospital",
-        payment_method: "transfer",
-        currency: "",
-        conversion_rate: 1,
-        electronic: true,
-        vat: 0,
-        country_code: hosp.country_code,
-        post_code: hosp.post_code,
-        city: hosp.city,
-        address: hosp.address,
-        taxcode: hosp.taxcode,
-      };
-      const users = [];
-      const history = [];
+const generateFacilities = async () => {
+  try {
+    await Facility.deleteMany({});
+    console.log("Facilities collection cleared.");
 
-      if (hosp.country == "Hungary") {
-        obj.vat = 27;
-        obj.currency = "HUF";
-        obj.vendor_id = "H" + hospitals.indexOf(hosp).toString();
-        obj.partner_id = hospitals.indexOf(hosp);
-        obj.name = hosp.name;
-      } else if (hosp.country == "Germany") {
-        obj.vat = 19;
-        obj.currency = "EUR";
-        obj.conversion_rate = 0.0025;
-        obj.vendor_id = "GER" + hospitals.indexOf(hosp).toString();
-        obj.partner_id = hospitals.indexOf(hosp);
-        obj.name = hosp.name;
-      } else if (hosp.country == "Latvia") {
-        obj.vat = 21;
-        obj.currency = "EUR";
-        obj.conversion_rate = 0.0025;
-        obj.vendor_id = "LAT" + hospitals.indexOf(hosp).toString();
-        obj.partner_id = hospitals.indexOf(hosp);
-        obj.name = hosp.name;
-      } else if (hosp.country == "Sweden") {
-        obj.vat = 25;
-        obj.currency = "KR";
-        obj.conversion_rate = 0.0285;
-        obj.vendor_id = "SWE" + hospitals.indexOf(hosp).toString();
-        obj.partner_id = hospitals.indexOf(hosp);
-        obj.name = hosp.name;
-      } else {
-        obj.vat = 27;
-        obj.currency = "EUR";
-        obj.conversion_rate = 0.0025;
-        obj.vendor_id = "FOREIGN" + hospitals.indexOf(hosp).toString();
-        obj.partner_id = hospitals.indexOf(hosp);
-        obj.name = hosp.name;
-      }
-      hosp.partner_id = "not populated yet";
-      hosp.invoiceData = obj;
-      hosp.users = users;
-      hosp.orderHistory = history;
-      newHospitals.push(hosp);
-    });
-    await HospitalModel.create(...newHospitals);
-    console.log("Hospitals have been populated");
-  } else if (input == "accounts") {
-    await AccountModel.deleteMany({});
-    const findAll = await HospitalModel.find();
-    let ids = [];
-    findAll.map((hosp) => ids.push(hosp._id));
-    let newUsers = [];
-    accounts.map(async (account) => {
-      account.hospitals.push(ids[0]);
-      account.hospitals.push(ids[1]);
-      ids.shift();
-      ids.shift();
-      newUsers.push(account);
-    });
-    console.log(newUsers);
-    await AccountModel.create(newUsers);
-    console.log(newUsers);
-    console.log("Accounts have been populated");
-  } else if (input == "products") {
-    await ProductModel.deleteMany({});
-    const products = [
+    const facilities = [
       {
-        name: "FFP2",
-        id: 12818969,
-        price: 500,
-        quantity: 1000000,
+        name: "Thunderdome Arena",
+        sport: "Combat Sports",
+        country_code: "US",
+        post_code: "12345",
+        city: "Reactville",
+        address: "123 Main Street",
+        users: [],
       },
       {
-        name: "KN95",
-        id: 12826735,
-        price: 600,
-        quantity: 1000000,
+        name: "Stormwatch Stadium",
+        sport: "Soccer",
+        country_code: "UK",
+        post_code: "67890",
+        city: "Reactville",
+        address: "456 High Street",
+        users: [],
       },
       {
-        name: "FFP3",
-        id: 12826737,
-        price: 800,
-        quantity: 855000,
+        name: "Gridiron Grounds",
+        sport: "American Football",
+        country_code: "US",
+        post_code: "54321",
+        city: "Reactville",
+        address: "789 Elm Avenue",
+        users: [],
+      },
+      {
+        name: "Mystic Court",
+        sport: "Basketball",
+        country_code: "US",
+        post_code: "13579",
+        city: "Reactville",
+        address: "321 Oak Lane",
+        users: [],
+      },
+      {
+        name: "Celestial Tennis Courts",
+        sport: "Tennis",
+        country_code: "UK",
+        post_code: "24680",
+        city: "Reactville",
+        address: "987 Pine Road",
+        users: [],
+      },
+      {
+        name: "Aquatic Arena",
+        sport: "Swimming",
+        country_code: "US",
+        post_code: "97531",
+        city: "Reactville",
+        address: "654 Maple Avenue",
+        users: [],
       },
     ];
-    await ProductModel.create(...products);
-    console.log("Products have been filled up");
-  } else {
-    console.log(
-      "This populate function can only handle hospitals, products, and accounts. What were you even trying to do, bro?"
-    );
-    return;
+
+    await Facility.insertMany(facilities);
+    console.log("Facilities created successfully!");
+  } catch (error) {
+    console.error("Error creating facilities:", error);
+    throw error;
   }
-}
+};
 
-async function main() {
-  const url = "mongodb://127.0.0.1:27017/mask-stock";
-  await mongoose.connect(url);
-  await populate("hospitals");
-  await populate("accounts");
-  await populate("products");
-  await mongoose.disconnect();
-}
+const generateProducts = async () => {
+  try {
+    await Product.deleteMany({});
+    console.log("Products collection cleared.");
 
-main().catch((err) => console.error(err));
+    const products = [
+      {
+        name: "Product 1",
+        id: 1,
+        price: 9.99,
+        quantity: 10,
+      },
+      {
+        name: "Product 2",
+        id: 2,
+        price: 19.99,
+        quantity: 5,
+      },
+      // Add more products
+    ];
+
+    await Product.insertMany(products);
+    console.log("Products created successfully!");
+  } catch (error) {
+    console.error("Error creating products:", error);
+    throw error;
+  }
+};
+
+const populateDatabase = async () => {
+  try {
+    await generateFacilities();
+    await generateProducts();
+    console.log("Database population completed!");
+  } catch (error) {
+    console.error("Error populating database:", error);
+  } finally {
+    mongoose.disconnect();
+  }
+};
+
+populateDatabase();

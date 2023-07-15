@@ -14,9 +14,9 @@ export default function TopNavbar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" style={{fontWeight: "bold"}} className="justify-content-end">
           <Nav className="ml-auto">
-            <Nav.Link as={Link} to="/users" className="nav-link">Users</Nav.Link>
             <Nav.Link as={Link} to="/facility-list" className="nav-link">Facility List</Nav.Link>
             <Nav.Link as={Link} to="/order-history" className="nav-link">Order History</Nav.Link>
+            <Nav.Link as={Link} to="/logout" className="nav-link">Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
