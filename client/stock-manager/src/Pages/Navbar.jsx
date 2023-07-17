@@ -42,7 +42,7 @@ export default function TopNavbar() {
                   marginRight: "10px",
                 }}
               >
-                Products
+                Items
               </Nav.Link>
             </Nav.Item>
           </Nav>

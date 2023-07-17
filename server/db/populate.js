@@ -1,97 +1,58 @@
 const mongoose = require("mongoose");
 const Facility = require("./facilitySchema.js");
-const Product = require("./productSchema.js");
+const Item = require("./itemSchema.js");
 
 mongoose.connect("mongodb://127.0.0.1:27017/stock-manager", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-const generateFacilities = async () => {
+const generateItems = async () => {
   try {
-    await Facility.deleteMany({});
-    console.log("Facilities collection cleared.");
+    await Item.deleteMany({});
+    console.log("Items collection cleared.");
 
-    const facilities = [
+    const items = [
+      // Combat sport items
       {
-        name: "Thunderdome Arena",
+        name: "Boxing Gloves",
         sport: "Combat Sports",
-        country_code: "US",
-        post_code: "12345",
-        city: "Reactville",
-        address: "123 Main Street",
-        users: [],
+        price: 79.99,
+        quantity: 10,
       },
       {
-        name: "Stormwatch Stadium",
-        sport: "Soccer",
-        country_code: "UK",
-        post_code: "67890",
-        city: "Reactville",
-        address: "456 High Street",
-        users: [],
+        name: "Mouthguard",
+        sport: "Combat Sports",
+        price: 9.99,
+        quantity: 20,
       },
       {
-        name: "Gridiron Grounds",
-        sport: "American Football",
-        country_code: "US",
-        post_code: "54321",
-        city: "Reactville",
-        address: "789 Elm Avenue",
-        users: [],
+        name: "Headgear",
+        sport: "Combat Sports",
+        price: 49.99,
+        quantity: 5,
       },
       {
-        name: "Mystic Court",
-        sport: "Basketball",
-        country_code: "US",
-        post_code: "13579",
-        city: "Reactville",
-        address: "321 Oak Lane",
-        users: [],
+        name: "Shin Guards",
+        sport: "Combat Sports",
+        price: 39.99,
+        quantity: 12,
       },
       {
-        name: "Celestial Tennis Courts",
-        sport: "Tennis",
-        country_code: "UK",
-        post_code: "24680",
-        city: "Reactville",
-        address: "987 Pine Road",
-        users: [],
+        name: "MMA Shorts",
+        sport: "Combat Sports",
+        price: 29.99,
+        quantity: 15,
       },
+      // Soccer items
       {
-        name: "Aquatic Arena",
-        sport: "Swimming",
-        country_code: "US",
-        post_code: "97531",
-        city: "Reactville",
-        address: "654 Maple Avenue",
-        users: [],
-      },
-    ];
-
-    await Facility.insertMany(facilities);
-    console.log("Facilities created successfully!");
-  } catch (error) {
-    console.error("Error creating facilities:", error);
-    throw error;
-  }
-};
-
-const generateProducts = async () => {
-  try {
-    await Product.deleteMany({});
-    console.log("Products collection cleared.");
-
-    const products = [
-      // Soccer products
-      {
-        name: "Soccer Ball 1",
+        name: "Soccer Ball",
         sport: "Soccer",
         price: 24.99,
         quantity: 20,
       },
       {
-        name: "Soccer Cleats",
+        name: "Soccer Shoes",
         sport: "Soccer",
         price: 89.99,
         quantity: 8,
@@ -114,9 +75,9 @@ const generateProducts = async () => {
         price: 9.99,
         quantity: 30,
       },
-      // American Football products
+      // American Football items
       {
-        name: "Football 1",
+        name: "Football - Wilson",
         sport: "American Football",
         price: 29.99,
         quantity: 15,
@@ -145,9 +106,9 @@ const generateProducts = async () => {
         price: 9.99,
         quantity: 30,
       },
-      // Basketball products
+      // Basketball items
       {
-        name: "Basketball 1",
+        name: "Basketball - Spalding",
         sport: "Basketball",
         price: 24.99,
         quantity: 20,
@@ -176,9 +137,9 @@ const generateProducts = async () => {
         price: 9.99,
         quantity: 30,
       },
-      // Tennis products
+      // Tennis items
       {
-        name: "Tennis Racket 1",
+        name: "Tennis Racket - Wilson",
         sport: "Tennis",
         price: 59.99,
         quantity: 10,
@@ -207,9 +168,9 @@ const generateProducts = async () => {
         price: 9.99,
         quantity: 30,
       },
-      // Swimming products
+      // Swimming items
       {
-        name: "Swimming Goggles 1",
+        name: "Swimming Goggles",
         sport: "Swimming",
         price: 14.99,
         quantity: 20,
@@ -240,10 +201,87 @@ const generateProducts = async () => {
       },
     ];
 
-    await Product.insertMany(products);
-    console.log("Products created successfully!");
+    await Item.insertMany(items);
+    console.log("Items created successfully!");
   } catch (error) {
-    console.error("Error creating products:", error);
+    console.error("Error creating items:", error);
+    throw error;
+  }
+};
+
+const generateFacilities = async () => {
+  try {
+    await Facility.deleteMany({});
+    console.log("Facilities collection cleared.");
+
+    const facilities = [
+      {
+        name: "Thunderdome Arena",
+        sport: "Combat Sports",
+        country_code: "US",
+        post_code: "12345",
+        city: "Reactville",
+        address: "123 Main Street",
+        users: ['Admin'],
+      },
+      {
+        name: "Stormwatch Stadium",
+        sport: "Soccer",
+        country_code: "UK",
+        post_code: "67890",
+        city: "Reactville",
+        address: "456 High Street",
+        users: ['Admin'],
+      },
+      {
+        name: "Gridiron Grounds",
+        sport: "American Football",
+        country_code: "US",
+        post_code: "54321",
+        city: "Reactville",
+        address: "789 Elm Avenue",
+        users: ['Admin'],
+      },
+      {
+        name: "Mystic Court",
+        sport: "Basketball",
+        country_code: "US",
+        post_code: "13579",
+        city: "Reactville",
+        address: "321 Oak Lane",
+        users: ['Admin'],
+      },
+      {
+        name: "Celestial Tennis Courts",
+        sport: "Tennis",
+        country_code: "UK",
+        post_code: "24680",
+        city: "Reactville",
+        address: "987 Pine Road",
+        users: ['Admin'],
+      },
+      {
+        name: "Aquatic Arena",
+        sport: "Swimming",
+        country_code: "US",
+        post_code: "97531",
+        city: "Reactville",
+        address: "654 Maple Avenue",
+        users: ['Admin'],
+      },
+    ];
+
+    const createdFacilities = await Facility.insertMany(facilities);
+
+    for (const facility of createdFacilities) {
+      const facilityItems = await Item.find({ sport: facility.sport });
+      facility.items = facilityItems.map((item) => item._id.toString());
+      await facility.save();
+    }
+    
+    console.log("Facilities created successfully!");
+  } catch (error) {
+    console.error("Error creating facilities:", error);
     throw error;
   }
 };
@@ -251,7 +289,7 @@ const generateProducts = async () => {
 const populateDatabase = async () => {
   try {
     await generateFacilities();
-    await generateProducts();
+    await generateItems();
     console.log("Database population completed!");
   } catch (error) {
     console.error("Error populating database:", error);

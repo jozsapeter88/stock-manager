@@ -1,4 +1,14 @@
-.table
-{
+.table {
     --bs-table-striped-bg: #ffc10741;
+}
+
+.alert {
+    max-width: 1000px;
+    margin: 0 auto;
+    margin-bottom: 50px;
+}
+
+.table-container {
+    max-width: 1500px;
+    margin: 0 auto;
 }

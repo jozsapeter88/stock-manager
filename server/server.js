@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const FacilityModel = require("./db/facilitySchema");
 const AccountModel = require("./db/accountSchema");
 const OrderHistory = require("./db/orderHistorySchema");
-const ProductModel = require("./db/productSchema");
+const ItemModel = require("./db/itemSchema");
 const cors = require("cors");
 const express = require("express");
 const app = express();
@@ -106,27 +106,19 @@ app.get("/facilities/mine/:id", async (req, res) => {
   }
 });
 
-app.post("/facilities/mine/:id", async (req, res) => {
-  console.log("a new facility is being added by doctor " + req.params.id);
+app.get("/api/facilities/:id", async (req, res) => {
   try {
-    const newFacility = {
-      name: req.body.name,
-      country_code: req.body.country_code,
-      post_code: req.body.post_code,
-      city: req.body.city,
-      address: req.body.address,
-      users: [req.params.id],
-    };
-    await FacilityModel.create(newFacility);
-    const findNew = await FacilityModel.findOne({ name: newFacility.name });
-    const doctor = await AccountModel.findOne({ _id: req.params.id });
-    doctor.facilities.push(findNew._id);
-    doctor.save();
-    res
-      .status(200)
-      .json({ message: `New facility added to user ${doctor.name}` });
+    const facilityId = req.params.id;
+    const facility = await FacilityModel.findById(facilityId);
+
+    if (!facility) {
+      return res.status(404).json({ error: "Facility not found" });
+    }
+
+    res.status(200).json(facility);
   } catch (error) {
-    res.status(500).json(error);
+    console.error("Error fetching facility details:", error);
+    res.status(500).json({ error: "Error fetching facility details" });
   }
 });
 
@@ -187,13 +179,13 @@ app.get("/orderhistory/:id", async (req, res) => {
   }
 });
 
-app.get("/api/products", async (req, res) => {
+app.get("/api/items", async (req, res) => {
   try {
-    const products = await ProductModel.find();
-    res.status(200).json(products);
+    const items = await ItemModel.find();
+    res.status(200).json(items);
   } catch (error) {
-    console.error("Error retrieving products:", error);
-    res.status(500).json({ error: "Error retrieving products" });
+    console.error("Error retrieving items:", error);
+    res.status(500).json({ error: "Error retrieving items" });
   }
 });
 
