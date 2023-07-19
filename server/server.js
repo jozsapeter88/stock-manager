@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const FacilityModel = require("./db/facilitySchema");
 const AccountModel = require("./db/accountSchema");
-const OrderHistory = require("./db/orderHistorySchema");
 const ItemModel = require("./db/itemSchema");
+const OrderModel = require("./db/orderSchema");
 const cors = require("cors");
 const express = require("express");
 const app = express();
@@ -156,26 +156,23 @@ app.get("/facilities/mine/Peti/:id", async (req, res) => {
   }
 });
 
-app.get("/orderhistory/:id", async (req, res) => {
+app.post("/api/orders", async (req, res) => {
   try {
-    const facility = await FacilityModel.findOne({ _id: req.params.id });
-    let response;
-    if (facility.orderHistory.length == 0) {
-      response = [
-        {
-          date: "",
-          client: facility.name,
-          items: [""],
-          message: "Order history is empty.",
-        },
-      ];
-    } else {
-      response = facility.orderHistory;
-    }
-    res.status(200).json(response);
-    console.log(response);
+    const { facility, items, quantity, comment } = req.body;
+
+    const newOrder = new OrderModel({
+      facility: facility,
+      items: items,
+      quantity: quantity,
+      comment: comment,
+    });
+
+    await newOrder.save();
+
+    res.status(200).json({ message: "Order placed successfully", order: newOrder });
   } catch (error) {
-    res.status(500).json(error);
+    console.error("Error placing order:", error);
+    res.status(500).json({ error: "Error placing order" });
   }
 });
 
