@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Form } from "react-bootstrap";
 import TopNavbar from "../Navbar";
 
 const OrderHistory = () => {
   const [orderHistory, setOrderHistory] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchOrderHistory();
@@ -31,18 +32,34 @@ const OrderHistory = () => {
       const data = await response.json();
       console.log("Order deleted successfully:", data);
 
-      // After deleting the order, update the order history list
       fetchOrderHistory();
     } catch (error) {
       console.error("Error deleting order:", error);
     }
   };
 
+  const filteredOrderHistory = orderHistory.filter((order) => {
+    const facilityName = order.facility?.name || "";
+    return facilityName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
   return (
     <div>
       <TopNavbar />
       <div className="table-container">
         <h1>Order History</h1>
+        <Form>
+          <Form.Group>
+            <Form.Control
+              type="text"
+              placeholder="Search by Facility Name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </Form.Group>
+        </Form>
+        <br></br>
+
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -51,10 +68,11 @@ const OrderHistory = () => {
               <th>Quantity</th>
               <th>Comment</th>
               <th>Date</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {orderHistory.map((order) => (
+            {filteredOrderHistory.map((order) => (
               <tr key={order._id}>
                 <td>{order.facility.name}</td>
                 <td>{order.items.map((item) => item.name).join(", ")}</td>
@@ -62,7 +80,7 @@ const OrderHistory = () => {
                 <td>{order.comment}</td>
                 <td>{new Date(order.createdAt).toLocaleString()}</td>
                 <td>
-                  <Button variant="danger" size="sm" onClick={() => deleteOrder(order._id)}>
+                  <Button variant="danger" onClick={() => deleteOrder(order._id)}>
                     Delete
                   </Button>
                 </td>
