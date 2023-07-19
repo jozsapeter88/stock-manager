@@ -29,20 +29,33 @@ export default function TopNavbar() {
                   marginRight: "10px",
                 }}
               >
-                Facilities
+                Facility List
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
               <Nav.Link
                 as={Link}
-                to="/productlist"
+                to="/itemlist"
                 style={{
                   color: "black",
                   fontWeight: "bold",
                   marginRight: "10px",
                 }}
               >
-                Items
+                Item List
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
+                as={Link}
+                to="/order-history"
+                style={{
+                  color: "black",
+                  fontWeight: "bold",
+                  marginRight: "10px",
+                }}
+              >
+                Order History
               </Nav.Link>
             </Nav.Item>
           </Nav>

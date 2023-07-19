@@ -6,16 +6,14 @@ import Login from "./Pages/Login";
 import Registration from "./Pages/Registration";
 import Order from "./Pages/Order";
 import ErrorPage from "./Pages/ErrorPage";
-import OrderHistory from "./Pages/OrderHistory";
-import MyHospitals from "./Pages/MyHospitals";
-import NewOrder from "./Pages/NewOrder";
-import NewHospital from "./Pages/NewHospital";
+import OrderHistory from "./Pages/OrderHistory/OrderHistory";
 
 import "./index.css";
 import { AuthContextProvider } from "./Contexts/AuthContext";
 import LoginForm from "./Pages/LandingPage/LoginForm";
 import ProductList from "./Pages/Products/ProductList";
 import FacilityDetails from "./Pages/FacilityDetails/FacilityDetails";
+import ItemList from "./Pages/Products/ProductList";
 
 const router = createBrowserRouter([
   {
@@ -30,9 +28,8 @@ const router = createBrowserRouter([
         <Route path="productlist" element={<ProductList />} />
         <Route path="facilities/:id" element={<FacilityDetails />} />
         <Route path="orderhistory/:id" element={<OrderHistory />} />
-        <Route path="neworder/:id" element={<NewOrder />} />
-        <Route path="myhospitals" element={<MyHospitals />} />
-        <Route path="newhospital" element={<NewHospital />} />
+        <Route path="order-history" element={<OrderHistory />} />
+        <Route path="itemlist" element={<ItemList />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     ),
