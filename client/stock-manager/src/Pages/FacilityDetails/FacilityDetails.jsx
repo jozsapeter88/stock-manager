@@ -66,7 +66,7 @@ export default function FacilityDetails() {
         facility: facility._id,
         items: [selectedItem._id],
         quantity: quantity,
-        comment: comment, 
+        comment: comment,
       };
 
       const response = await fetch("http://localhost:5001/api/orders", {
@@ -88,8 +88,8 @@ export default function FacilityDetails() {
   };
   return (
     <div>
+      <TopNavbar />
       <div className="table-container">
-        <TopNavbar />
         <Link to="/home" variant="warning" style={{ marginBottom: "10px" }}>
           <Button variant="outline-warning">Back</Button>
         </Link>
