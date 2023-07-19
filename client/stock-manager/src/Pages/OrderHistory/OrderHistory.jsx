@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Table, Alert } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import TopNavbar from "../Navbar";
 
 export default function OrderHistory() {
   const [orderHistory, setOrderHistory] = useState([]);
-  const [showAlert, setShowAlert] = useState(true);
 
   useEffect(() => {
     const fetchOrderHistory = async () => {

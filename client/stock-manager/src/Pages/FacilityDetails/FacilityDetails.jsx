@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Table, Button, Modal, Form, Dropdown, InputGroup } from "react-bootstrap";
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Dropdown,
+  InputGroup,
+} from "react-bootstrap";
 import TopNavbar from "../Navbar";
 
 export default function FacilityDetails() {
@@ -59,7 +66,7 @@ export default function FacilityDetails() {
         facility: facility._id,
         items: [selectedItem._id],
         quantity: quantity,
-        comment: comment,
+        comment: comment, 
       };
 
       const response = await fetch("http://localhost:5001/api/orders", {
@@ -81,12 +88,16 @@ export default function FacilityDetails() {
   };
   return (
     <div>
-            <div className="table-container">
-      <TopNavbar />
-      <Link to="/home" variant="warning" style={{ marginBottom: "10px" }}>
-        <Button variant="outline-warning">Back</Button>
-      </Link>
-      <Button variant="warning" style={ {float: "right"}} onClick={() => setShowModal(true)}>
+      <div className="table-container">
+        <TopNavbar />
+        <Link to="/home" variant="warning" style={{ marginBottom: "10px" }}>
+          <Button variant="outline-warning">Back</Button>
+        </Link>
+        <Button
+          variant="warning"
+          style={{ float: "right" }}
+          onClick={() => setShowModal(true)}
+        >
           Order
         </Button>
         <h1>{facility.name}</h1>
@@ -134,10 +145,13 @@ export default function FacilityDetails() {
           </tbody>
         </Table>
       </div>
-      <Modal show={showModal} onHide={() => {
-        setShowModal(false);
-        setSelectedItem(null);
-      }}>
+      <Modal
+        show={showModal}
+        onHide={() => {
+          setShowModal(false);
+          setSelectedItem(null);
+        }}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Place Order</Modal.Title>
         </Modal.Header>
@@ -164,13 +178,24 @@ export default function FacilityDetails() {
               </Dropdown>
             </Form.Group>
             <InputGroup className="mb-3">
-        <InputGroup.Text>Quantity</InputGroup.Text>
-        <Form.Control aria-label="Quantity" />
-      </InputGroup>
-      <InputGroup>
-        <InputGroup.Text>Add your comment</InputGroup.Text>
-        <Form.Control as="textarea" aria-label="With textarea" />
-      </InputGroup>
+              <InputGroup.Text>Quantity</InputGroup.Text>
+              {/* Add the onChange event handler to update the quantity state */}
+              <Form.Control
+                aria-label="Quantity"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+              />
+            </InputGroup>
+            <InputGroup>
+              <InputGroup.Text>Add your comment</InputGroup.Text>
+              {/* Add the onChange event handler to update the comment state */}
+              <Form.Control
+                as="textarea"
+                aria-label="With textarea"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+            </InputGroup>
           </Form>
         </Modal.Body>
         <Modal.Footer>

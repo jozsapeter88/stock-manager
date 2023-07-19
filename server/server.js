@@ -141,21 +141,6 @@ app.post("/api/accounts/new", async (req, res) => {
   }
 });
 
-app.get("/facilities/mine/Peti/:id", async (req, res) => {
-  try {
-    const user = await AccountModel.findOne({ _id: req.params.id });
-    let facilityList = ["Peti"];
-    const promises = user.facilities.map(async (fac) => {
-      return await FacilityModel.findOne({ _id: fac });
-    });
-    facilityList = facilityList.concat(await Promise.all(promises));
-    console.log(facilityList);
-    res.status(200).json(facilityList);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
-
 app.post("/api/orders", async (req, res) => {
   try {
     const { facility, items, quantity, comment } = req.body;
@@ -176,6 +161,17 @@ app.post("/api/orders", async (req, res) => {
   }
 });
 
+app.get("/api/order-history", async (req, res) => {
+  try {
+    const orderHistory = await OrderModel.find().populate("items", "name");
+    res.status(200).json(orderHistory);
+  } catch (error) {
+    console.error("Error fetching order history:", error);
+    res.status(500).json({ error: "Failed to fetch order history" });
+  }
+});
+
+
 app.get("/api/items", async (req, res) => {
   try {
     const items = await ItemModel.find();
@@ -183,37 +179,6 @@ app.get("/api/items", async (req, res) => {
   } catch (error) {
     console.error("Error retrieving items:", error);
     res.status(500).json({ error: "Error retrieving items" });
-  }
-});
-
-app.post("/order", async (req, res) => {
-  console.log("/order accessed");
-  console.log(req.body.order);
-  console.log(req.body.client);
-  console.log(req.body.user);
-  try {
-    const orderData = req.body.order;
-    const facID = req.body.client;
-    const userID = req.body.user;
-    const user = await AccountModel.find({ _id: userID });
-    const facility = await FacilityModel.findOne({ _id: facID });
-
-    const newOrder = {
-      date: new Date(),
-      client: facility.name,
-      invoiceData: facility.invoiceData,
-      items: orderData,
-    };
-    await OrderHistory.create(newOrder);
-    const invoice = await exchangeDataWAPI(facility, orderData, user);
-    if (invoice) {
-      facility.orderHistory.push(newOrder);
-      facility.save();
-      res.status(200).json(invoice);
-      console.log("elment");
-    } else res.status(200).json("Not enough masks");
-  } catch (error) {
-    res.status(500).json(error);
   }
 });
 
