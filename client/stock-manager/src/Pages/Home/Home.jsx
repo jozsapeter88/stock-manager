@@ -8,7 +8,6 @@ import TopNavbar from "../Navbar";
 export default function Home() {
   const [facilities, setFacilities] = useState(null);
   const [show, setShow] = useState(true);
-  // const { doctorId } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchFacilities = async () => {

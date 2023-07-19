@@ -179,7 +179,6 @@ export default function FacilityDetails() {
             </Form.Group>
             <InputGroup className="mb-3">
               <InputGroup.Text>Quantity</InputGroup.Text>
-              {/* Add the onChange event handler to update the quantity state */}
               <Form.Control
                 aria-label="Quantity"
                 value={quantity}
@@ -188,7 +187,6 @@ export default function FacilityDetails() {
             </InputGroup>
             <InputGroup>
               <InputGroup.Text>Add your comment</InputGroup.Text>
-              {/* Add the onChange event handler to update the comment state */}
               <Form.Control
                 as="textarea"
                 aria-label="With textarea"
