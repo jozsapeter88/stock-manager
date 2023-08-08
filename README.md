@@ -1,4 +1,4 @@
-## <span style="font-size: 30px"><b>Stock System Manager 📦🏢</b></span>
+# <span style="font-size: 30px"><b>Stock System Manager 📦🏢</b></span>
 <span style="color: blue">ℹ️ Please note that this is not the final version of the project, therefore bugs may appear. If you have any suggestions or observations, please do not hesitate to reach out to me!</span> 
 
 ## <span style="font-size: 24px"><b>Introduction 👋</b></span>
