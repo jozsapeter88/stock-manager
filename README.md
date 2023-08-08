@@ -44,3 +44,5 @@ $ npm start
 
 # Once the server has started, you can access the Stock System Manager on your local machine using the specified port (e.g., http://localhost:3000).
 ```
+# Stats
+<img alt="GitHub Language Count" src="https://img.shields.io/github/languages/count/jozsapeter88/stock-manager" /> <img alt="GitHub Top Language" src="https://img.shields.io/github/languages/top/jozsapeter88/stock-manager" /> <img alt="" src="https://img.shields.io/github/repo-size/jozsapeter88/stock-manager" /> <img alt="GitHub Contributors" src="https://img.shields.io/github/contributors/jozsapeter88/stock-manager" /> <img alt="GitHub Last Commit" src="https://img.shields.io/github/last-commit/jozsapeter88/stock-manager" />
