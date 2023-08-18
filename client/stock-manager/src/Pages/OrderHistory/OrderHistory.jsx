@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Form } from "react-bootstrap";
+import { Table, Button, Form, Modal } from "react-bootstrap";
 import TopNavbar from "../Navbar";
 
 const OrderHistory = () => {
   const [orderHistory, setOrderHistory] = useState([]);
   const [searchItem, setSearchItem] = useState("");
   const [selectedFacility, setSelectedFacility] = useState("All facilities");
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
 
   useEffect(() => {
     fetchOrderHistory();
@@ -16,7 +18,6 @@ const OrderHistory = () => {
       const response = await fetch("http://localhost:5001/api/order-history");
       const data = await response.json();
 
-      // Populate the 'facility' field with the corresponding facility name
       for (const order of data) {
         const facilityId = order.facility;
         const facilityResponse = await fetch(
@@ -34,12 +35,15 @@ const OrderHistory = () => {
 
   const deleteOrder = async (orderId) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/orders/${orderId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `http://localhost:5001/api/orders/${orderId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const data = await response.json();
       console.log("Order deleted successfully:", data);
@@ -50,15 +54,52 @@ const OrderHistory = () => {
     }
   };
 
-  // Extract unique facility names from order history for the dropdown list
-  const uniqueFacilities = ["All facilities", ...new Set(orderHistory.map((order) => order.facility))];
+  const confirmDelivered = async () => {
+    try {
+      if (selectedOrderId) {
+        const response = await fetch(
+          `http://localhost:5001/api/orders/${selectedOrderId}/confirm`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+  
+        if (response.ok) {
+          console.log("Order confirmed and removed successfully.");
+          fetchOrderHistory(); // Fetch updated order history after confirming delivery
+        } else {
+          console.error("Failed to confirm order. Status:", response.status);
+        }
+      } else {
+        console.error("Selected order ID is not valid.");
+      }
+  
+      setShowConfirmModal(false);
+      setSelectedOrderId(null);
+    } catch (error) {
+      console.error("Error confirming delivery:", error);
+    }
+  };
 
-  // Filter order history based on the item name and selected facility
+  const uniqueFacilities = [
+    "All facilities",
+    ...new Set(orderHistory.map((order) => order.facility)),
+  ];
+
   const filteredOrderHistory = orderHistory.filter((order) => {
     const itemNames = order.items?.map((item) => item.name.toLowerCase());
-    const facilityMatch = selectedFacility === "All facilities" || order.facility === selectedFacility;
+    const facilityMatch =
+      selectedFacility === "All facilities" ||
+      order.facility === selectedFacility;
 
-    return itemNames?.some((itemName) => itemName.includes(searchItem.toLowerCase())) && facilityMatch;
+    return (
+      itemNames?.some((itemName) =>
+        itemName.includes(searchItem.toLowerCase())
+      ) && facilityMatch
+    );
   });
 
   return (
@@ -110,14 +151,50 @@ const OrderHistory = () => {
                 <td>{order.comment}</td>
                 <td>{new Date(order.createdAt).toLocaleString()}</td>
                 <td>
-                  <Button variant="danger" onClick={() => deleteOrder(order._id)}>
+                  <Button
+                    variant="danger"
+                    onClick={() => deleteOrder(order._id)}
+                  >
                     Delete
+                  </Button>{" "}
+                  <Button
+                    variant="success"
+                    onClick={() => {
+                      setSelectedOrderId(order._id);
+                      setShowConfirmModal(true);
+                    }}
+                  >
+                    Confirm Delivered
                   </Button>
                 </td>
               </tr>
             ))}
           </tbody>
         </Table>
+
+        {/* Confirm Delivered Modal */}
+        <Modal
+          show={showConfirmModal}
+          onHide={() => setShowConfirmModal(false)}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Confirm Delivery</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>Are you sure you want to confirm delivery for this order?</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => setShowConfirmModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button variant="success" onClick={confirmDelivered}>
+              Confirm
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </div>
   );

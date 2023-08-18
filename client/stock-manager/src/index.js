@@ -7,6 +7,7 @@ import Registration from "./Pages/Registration";
 import Order from "./Pages/Order";
 import ErrorPage from "./Pages/ErrorPage";
 import OrderHistory from "./Pages/OrderHistory/OrderHistory";
+import Statistics from "./Pages/Statistics/Statistics";
 
 import "./index.css";
 import { AuthContextProvider } from "./Contexts/AuthContext";
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
         <Route path="orderhistory/:id" element={<OrderHistory />} />
         <Route path="order-history" element={<OrderHistory />} />
         <Route path="itemlist" element={<ItemList />} />
+        <Route path="statistics" element={<Statistics />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     ),

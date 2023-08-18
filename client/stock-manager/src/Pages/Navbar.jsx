@@ -58,6 +58,19 @@ export default function TopNavbar() {
                 Order History
               </Nav.Link>
             </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
+                as={Link}
+                to="/statistics"
+                style={{
+                  color: "black",
+                  fontWeight: "bold",
+                  marginRight: "10px",
+                }}
+              >
+                Statistics
+              </Nav.Link>
+            </Nav.Item>
           </Nav>
         </Navbar.Collapse>
       </Navbar>

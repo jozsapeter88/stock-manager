@@ -12,7 +12,7 @@ const SignIn = ({ onSubmit, showMsg }) => {
               alt="img"
               className="img-fluid"
               style={{
-                marginLeft: "-10rem",
+                marginLeft: "",
                 maxWidth: "500px",
                 maxHeight: "500px",
               }}

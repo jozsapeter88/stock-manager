@@ -3,6 +3,7 @@ const FacilityModel = require("./db/facilitySchema");
 const AccountModel = require("./db/accountSchema");
 const ItemModel = require("./db/itemSchema");
 const OrderModel = require("./db/orderSchema");
+const StatisticsModel = require("./db/statisticsSchema");
 const cors = require("cors");
 const express = require("express");
 const app = express();
@@ -89,23 +90,6 @@ app.get("/accounts", async (req, res) => {
   }
 });
 
-app.get("/facilities/mine/:id", async (req, res) => {
-  console.log("/facilities/mine accessed by id: " + req.params.id);
-  try {
-    let facilityList = [];
-    const user = await AccountModel.findOne({ _id: req.params.id });
-    const facilities = await FacilityModel.find({});
-    facilities.map((fac) => {
-      if (user.facilities.includes(fac._id)) {
-        facilityList.push(fac);
-      }
-    });
-    res.status(200).json(facilityList);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
-
 app.get("/api/facilities/:id", async (req, res) => {
   try {
     const facilityId = req.params.id;
@@ -154,7 +138,9 @@ app.post("/api/orders", async (req, res) => {
 
     await newOrder.save();
 
-    res.status(200).json({ message: "Order placed successfully", order: newOrder });
+    res
+      .status(200)
+      .json({ message: "Order placed successfully", order: newOrder });
   } catch (error) {
     console.error("Error placing order:", error);
     res.status(500).json({ error: "Error placing order" });
@@ -187,7 +173,6 @@ app.delete("/api/orders/:orderId", async (req, res) => {
   }
 });
 
-
 app.get("/api/items", async (req, res) => {
   try {
     const items = await ItemModel.find();
@@ -195,6 +180,33 @@ app.get("/api/items", async (req, res) => {
   } catch (error) {
     console.error("Error retrieving items:", error);
     res.status(500).json({ error: "Error retrieving items" });
+  }
+});
+
+app.get("/api/statistics", async (req, res) => {
+  try {
+    // Check if there are saved statistics in the "Statistics" collection
+    const savedStatistics = await StatisticsModel.find();
+    if (savedStatistics.length > 0) {
+      console.log("Returning saved statistics:", savedStatistics);
+      return res.status(200).json(savedStatistics);
+    }
+
+    // If no saved statistics found, calculate and save the statistics
+    const statisticsData = await FacilityModel.aggregate([
+      // ... (existing aggregation pipeline)
+    ]);
+
+    console.log("Statistics Data:", statisticsData);
+
+    // Save the statistics data in the "Statistics" collection
+    await StatisticsModel.deleteMany({}); // Clear existing data (optional)
+    const newStatistics = await StatisticsModel.insertMany(statisticsData);
+
+    res.status(200).json(newStatistics);
+  } catch (error) {
+    console.error("Error fetching statistics:", error);
+    res.status(500).json({ error: "Error fetching statistics" });
   }
 });
 

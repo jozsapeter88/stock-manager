@@ -86,6 +86,7 @@ export default function FacilityDetails() {
       console.error("Error placing order:", error);
     }
   };
+  
   return (
     <div>
       <TopNavbar />
