@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using StockBackend.Data;
+using StockBackend.Areas.Identity.Data;
 
 #nullable disable
 
@@ -71,70 +71,6 @@ namespace StockBackend.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex");
-
-                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -222,6 +158,522 @@ namespace StockBackend.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.Facility", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CountryCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PostCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Sport")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Facilities");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Address = "123 Main Street",
+                            City = "Reactville",
+                            CountryCode = "US",
+                            Name = "Thunderdome Arena",
+                            PostCode = "12345",
+                            Sport = 1
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Address = "456 High Street",
+                            City = "Reactville",
+                            CountryCode = "UK",
+                            Name = "Stormwatch Stadium",
+                            PostCode = "67890",
+                            Sport = 0
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Address = "789 Elm Avenue",
+                            City = "Reactville",
+                            CountryCode = "US",
+                            Name = "Gridiron Grounds",
+                            PostCode = "54321",
+                            Sport = 5
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Address = "321 Oak Lane",
+                            City = "Reactville",
+                            CountryCode = "US",
+                            Name = "Mystic Court",
+                            PostCode = "13579",
+                            Sport = 2
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Address = "987 Pine Road",
+                            City = "Reactville",
+                            CountryCode = "UK",
+                            Name = "Celestial Tennis Courts",
+                            PostCode = "24680",
+                            Sport = 6
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            Address = "654 Maple Avenue",
+                            City = "Reactville",
+                            CountryCode = "US",
+                            Name = "Aquatic Arena",
+                            PostCode = "97531",
+                            Sport = 4
+                        });
+                });
+
+            modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.Item", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("FacilityId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long?>("OrderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Sport")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacilityId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("Items");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Name = "Boxing Gloves",
+                            Price = 79.989999999999995,
+                            Quantity = 10,
+                            Sport = 1
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Name = "Mouthguard",
+                            Price = 9.9900000000000002,
+                            Quantity = 20,
+                            Sport = 1
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Name = "Headgear",
+                            Price = 49.990000000000002,
+                            Quantity = 5,
+                            Sport = 1
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Name = "Shin Guards",
+                            Price = 39.990000000000002,
+                            Quantity = 12,
+                            Sport = 1
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Name = "MMA Shorts",
+                            Price = 29.989999999999998,
+                            Quantity = 15,
+                            Sport = 1
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            Name = "Soccer Ball",
+                            Price = 24.989999999999998,
+                            Quantity = 20,
+                            Sport = 0
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            Name = "Soccer Shoes",
+                            Price = 89.989999999999995,
+                            Quantity = 8,
+                            Sport = 0
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            Name = "Soccer Jersey",
+                            Price = 49.990000000000002,
+                            Quantity = 12,
+                            Sport = 0
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            Name = "Soccer Goal",
+                            Price = 149.99000000000001,
+                            Quantity = 5,
+                            Sport = 0
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            Name = "Soccer Training Cones",
+                            Price = 9.9900000000000002,
+                            Quantity = 30,
+                            Sport = 0
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            Name = "Football - Wilson",
+                            Price = 29.989999999999998,
+                            Quantity = 15,
+                            Sport = 5
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            Name = "Football Helmet",
+                            Price = 159.99000000000001,
+                            Quantity = 8,
+                            Sport = 5
+                        },
+                        new
+                        {
+                            Id = 13L,
+                            Name = "Football Gloves",
+                            Price = 39.990000000000002,
+                            Quantity = 20,
+                            Sport = 5
+                        },
+                        new
+                        {
+                            Id = 14L,
+                            Name = "Football Shoulder Pads",
+                            Price = 89.989999999999995,
+                            Quantity = 12,
+                            Sport = 5
+                        },
+                        new
+                        {
+                            Id = 15L,
+                            Name = "Football Cones",
+                            Price = 9.9900000000000002,
+                            Quantity = 30,
+                            Sport = 5
+                        },
+                        new
+                        {
+                            Id = 16L,
+                            Name = "Basketball - Spalding",
+                            Price = 24.989999999999998,
+                            Quantity = 20,
+                            Sport = 2
+                        },
+                        new
+                        {
+                            Id = 17L,
+                            Name = "Basketball Shoes",
+                            Price = 99.989999999999995,
+                            Quantity = 8,
+                            Sport = 2
+                        },
+                        new
+                        {
+                            Id = 18L,
+                            Name = "Basketball Jersey",
+                            Price = 49.990000000000002,
+                            Quantity = 12,
+                            Sport = 2
+                        },
+                        new
+                        {
+                            Id = 19L,
+                            Name = "Basketball Hoop",
+                            Price = 199.99000000000001,
+                            Quantity = 5,
+                            Sport = 2
+                        },
+                        new
+                        {
+                            Id = 20L,
+                            Name = "Basketball Training Cones",
+                            Price = 9.9900000000000002,
+                            Quantity = 30,
+                            Sport = 2
+                        },
+                        new
+                        {
+                            Id = 21L,
+                            Name = "Tennis Racket - Wilson",
+                            Price = 59.990000000000002,
+                            Quantity = 10,
+                            Sport = 6
+                        },
+                        new
+                        {
+                            Id = 22L,
+                            Name = "Tennis Balls",
+                            Price = 14.99,
+                            Quantity = 50,
+                            Sport = 6
+                        },
+                        new
+                        {
+                            Id = 23L,
+                            Name = "Tennis Shoes",
+                            Price = 79.989999999999995,
+                            Quantity = 8,
+                            Sport = 6
+                        },
+                        new
+                        {
+                            Id = 24L,
+                            Name = "Tennis Bag",
+                            Price = 39.990000000000002,
+                            Quantity = 15,
+                            Sport = 6
+                        },
+                        new
+                        {
+                            Id = 25L,
+                            Name = "Tennis Training Cones",
+                            Price = 9.9900000000000002,
+                            Quantity = 30,
+                            Sport = 6
+                        },
+                        new
+                        {
+                            Id = 26L,
+                            Name = "Swimming Goggles",
+                            Price = 14.99,
+                            Quantity = 20,
+                            Sport = 4
+                        },
+                        new
+                        {
+                            Id = 27L,
+                            Name = "Swimming Cap",
+                            Price = 9.9900000000000002,
+                            Quantity = 30,
+                            Sport = 4
+                        },
+                        new
+                        {
+                            Id = 28L,
+                            Name = "Swimming Fins",
+                            Price = 29.989999999999998,
+                            Quantity = 15,
+                            Sport = 4
+                        },
+                        new
+                        {
+                            Id = 29L,
+                            Name = "Swimming Kickboard",
+                            Price = 19.989999999999998,
+                            Quantity = 20,
+                            Sport = 4
+                        },
+                        new
+                        {
+                            Id = 30L,
+                            Name = "Swimming Training Cones",
+                            Price = 9.9900000000000002,
+                            Quantity = 30,
+                            Sport = 4
+                        });
+                });
+
+            modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.Order", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("FacilityId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacilityId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.ShippedItems", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ShippedItems");
+                });
+
+            modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.Statistic", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("FacilityName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("OverallItems")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OverallValue")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Statistics");
+                });
+
+            modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<long?>("FacilityId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacilityId");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -233,7 +685,7 @@ namespace StockBackend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("StockBackend.Areas.Identity.Data.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -242,7 +694,7 @@ namespace StockBackend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("StockBackend.Areas.Identity.Data.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -257,7 +709,7 @@ namespace StockBackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("StockBackend.Areas.Identity.Data.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -266,11 +718,52 @@ namespace StockBackend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("StockBackend.Areas.Identity.Data.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.Item", b =>
+                {
+                    b.HasOne("StockBackend.Areas.Identity.Data.Models.Facility", null)
+                        .WithMany("Items")
+                        .HasForeignKey("FacilityId");
+
+                    b.HasOne("StockBackend.Areas.Identity.Data.Models.Order", null)
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId");
+                });
+
+            modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.Order", b =>
+                {
+                    b.HasOne("StockBackend.Areas.Identity.Data.Models.Facility", "Facility")
+                        .WithMany()
+                        .HasForeignKey("FacilityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Facility");
+                });
+
+            modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.User", b =>
+                {
+                    b.HasOne("StockBackend.Areas.Identity.Data.Models.Facility", null)
+                        .WithMany("Users")
+                        .HasForeignKey("FacilityId");
+                });
+
+            modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.Facility", b =>
+                {
+                    b.Navigation("Items");
+
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.Order", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }
