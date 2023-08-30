@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../Contexts/AuthContext";
 
 const loginUser = async (user) => {
   try {
@@ -23,7 +22,7 @@ const loginUser = async (user) => {
 export default function Login() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const { setUserId } = useContext(AuthContext);
+  const { setUserId } = useContext();
 
   const handleLogin = async () => {
     const user = {
