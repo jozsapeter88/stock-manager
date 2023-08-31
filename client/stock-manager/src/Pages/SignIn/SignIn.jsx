@@ -1,7 +1,7 @@
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import "./SignIn.css";
 
-const SignIn = ({ onSubmit, showMsg }) => {
+const SignIn = ({ onSubmit, showMsg, rememberMe, handleRememberMeChange }) => {
   return (
     <div>
       <Container>
@@ -52,7 +52,12 @@ const SignIn = ({ onSubmit, showMsg }) => {
                       <Form.Group
                         className="mb-3"
                         controlId="formBasicCheckbox"
-                      ></Form.Group>
+                      > <Form.Check
+                      type="checkbox"
+                      label="Remember me"
+                      checked={rememberMe}
+                      onChange={handleRememberMeChange}
+                  /></Form.Group>
                       <div className="d-grid">
                         <Button variant="warning" type="submit">
                           Login

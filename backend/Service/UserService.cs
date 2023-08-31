@@ -20,6 +20,7 @@ public class UserService: IUserService
 
     public async Task<SignInResult> SignInAsync(string userName, string password, bool rememberMe)
     {
+        Console.WriteLine("userserv:"+ userName);
       return await _signInManager.PasswordSignInAsync(userName, password, rememberMe, lockoutOnFailure: false);
     }
 }

@@ -6,12 +6,13 @@ import Login from "./Pages/Login";
 import ErrorPage from "./Pages/ErrorPage";
 import OrderHistory from "./Pages/OrderHistory/OrderHistory";
 import Statistics from "./Pages/Statistics/Statistics";
-
 import "./index.css";
 import LoginForm from "./Pages/LandingPage/LoginForm";
+import RegisterFormNew from "./Pages/LandingPage/RegisterFormNew";
 import ProductList from "./Pages/Products/ProductList";
 import FacilityDetails from "./Pages/FacilityDetails/FacilityDetails";
 import ItemList from "./Pages/Products/ProductList";
+import { AuthContextProvider } from './Contexts/AuthContext';
 
 const router = createBrowserRouter([
   {
@@ -19,8 +20,9 @@ const router = createBrowserRouter([
     element: (
       <Routes>
         <Route path="/" element={<LoginForm />} />
+        <Route path="register" element={<RegisterFormNew/>} />
         <Route path="home" element={<Home />} />
-        <Route path="login" element={<Login />} />
+        <Route path="login" element={<LoginForm />} />
         <Route path="productlist" element={<ProductList />} />
         <Route path="facilities/:id" element={<FacilityDetails />} />
         <Route path="orderhistory/:id" element={<OrderHistory />} />
@@ -35,7 +37,9 @@ const router = createBrowserRouter([
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
+  <AuthContextProvider>
   <React.StrictMode>
       <RouterProvider router={router} />
   </React.StrictMode>
+  </AuthContextProvider>
 );

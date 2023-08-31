@@ -17,6 +17,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<ShippedItems> ShippedItems => Set<ShippedItems>();
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<Item> Items => Set<Item>();
+    public new DbSet<Role> Roles => Set<Role>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

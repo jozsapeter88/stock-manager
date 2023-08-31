@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using StockBackend.Areas.Identity.Data;
 using StockBackend.Areas.Identity.Data.Models;
+using StockBackend.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,13 +13,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
-builder.Services.AddControllers();
+builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
+builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddCors();
 
 builder.Services.AddLogging(loggingBuilder =>
@@ -63,7 +64,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages();
+//app.MapRazorPages();
 
 app.Run();
 

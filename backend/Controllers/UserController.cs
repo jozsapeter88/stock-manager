@@ -15,8 +15,9 @@ public class UserController: Controller
     }
     
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterModel model)
+    public async Task<IActionResult> Register([FromBody]RegisterModel model)
     {
+        Console.WriteLine(model.UserName);
         if (ModelState.IsValid)
         {
             var user = new User { UserName = model.UserName, Email = model.Email };
@@ -26,22 +27,23 @@ public class UserController: Controller
             {
                 return Ok();
             }
-
             return BadRequest(result.Errors);
         }
-
         return BadRequest(ModelState);
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginModel model)
+    public async Task<IActionResult> Login([FromBody]LoginModel model)
     {
         if (ModelState.IsValid)
         {
             var result = await _userService.SignInAsync(model.UserName, model.Password, model.RememberMe);
-
+            
             if (result.Succeeded)
             {
+                Console.WriteLine(model.UserName);
+                Console.WriteLine(model.Password);
+                Console.WriteLine(model.RememberMe);
                 return Ok();
             }
 

@@ -18,6 +18,12 @@ export default function SignUp({onSubmit, showMsg, successfulReg}) {
                   <p className=" mb-5" ></p>
                   <div className="mb-3">
                     <Form onSubmit={onSubmit}>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label className="text-center" >
+                          Email
+                        </Form.Label>
+                        <Form.Control type="input" placeholder="Enter email" style={{borderColor: showMsg ? '' : 'red'}}/>
+                      </Form.Group>
                       <Form.Group className="mb-3" controlId="formBasicUsername">
                         <Form.Label className="text-center" >
                           Username

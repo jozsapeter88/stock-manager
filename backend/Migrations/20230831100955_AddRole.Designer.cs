@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StockBackend.Areas.Identity.Data;
@@ -11,9 +12,11 @@ using StockBackend.Areas.Identity.Data;
 namespace StockBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230831100955_AddRole")]
+    partial class AddRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -659,12 +662,6 @@ namespace StockBackend.Migrations
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
-
-                    b.Property<long>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("UserId"));
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
