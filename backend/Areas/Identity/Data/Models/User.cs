@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using StockBackend.Areas.Identity.Enums;
+using StockBackend.Models;
 
 namespace StockBackend.Areas.Identity.Data.Models;
 

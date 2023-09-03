@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using StockBackend.Areas.Identity.Data.Models;
 
-namespace StockBackend.Areas.Identity.Data.Models;
+namespace StockBackend.Models;
 
 public class Order
 {

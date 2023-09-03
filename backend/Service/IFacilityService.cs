@@ -1,4 +1,5 @@
 using StockBackend.Areas.Identity.Data.Models;
+using StockBackend.Models;
 
 namespace StockBackend.Service;
 

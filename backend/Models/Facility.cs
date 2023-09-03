@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
+using StockBackend.Areas.Identity.Data.Models;
 using StockBackend.Areas.Identity.Enums;
 
-namespace StockBackend.Areas.Identity.Data.Models;
+namespace StockBackend.Models;
 
 public class Facility
 {

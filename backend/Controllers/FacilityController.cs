@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using StockBackend.Areas.Identity.Data.Models;
+using StockBackend.Models;
 using StockBackend.Service;
 
 namespace StockBackend.Controllers;

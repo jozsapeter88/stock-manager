@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using StockBackend.Areas.Identity.Data;
 using StockBackend.Areas.Identity.Data.Models;
+using StockBackend.Models;
+using StockBackend.Models.DBContext;
 
 namespace StockBackend.Service;
 
@@ -16,6 +18,7 @@ public class FacilityService: IFacilityService
     public async Task<List<Facility>?> GetAllFacility()
     {
         var result = await _dbContext.Facilities.ToListAsync();
+
         return result ?? null;
 
     }

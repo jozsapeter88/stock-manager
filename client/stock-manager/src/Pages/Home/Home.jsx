@@ -4,43 +4,34 @@ import { Link, useParams } from "react-router-dom";
 import "./Home.css";
 import TopNavbar from "../Navbar";
 import { useAuth } from "../../Contexts/AuthContext";
+import Loading from "../Loading";
 
 export default function Home() {
   const [facilities, setFacilities] = useState(null);
-  const [facilitiesOfUser, setFacilitiesOfUser] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [show, setShow] = useState(true);
   const { user } = useAuth();
   const {id} = useParams();
-
-  console.log("home: "+user.userName)
-  console.log(user.id)
-console.log(facilitiesOfUser.length)
+  console.log(loading)
   useEffect(() => {
     const fetchFacilities = async () => {
       try {
         const response = await fetch( process.env.REACT_APP_API_URL + "/facility/facilities");
         const data = await response.json();
-        setFacilities(data);
+        console.log(data.$values)
+        setFacilities(data.$values);
+        setLoading(false);
       } catch (error) {
         throw error;
       }
     };
-
     fetchFacilities();
-    fetchFacilitiesOfUser();
   }, []);
 
-
-  const fetchFacilitiesOfUser = async () => {
-    try {
-      const response = await fetch( process.env.REACT_APP_API_URL + `/facility/facilities/${user.id}`);
-      const data = await response.json();
-      console.log(data)
-      setFacilitiesOfUser(data);
-    } catch (error) {
-      throw error;
-    }
-  };
+  if (loading) {
+    return <Loading />;
+  }
+  
   return (
     <div>
       <TopNavbar />

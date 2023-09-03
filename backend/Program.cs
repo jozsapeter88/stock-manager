@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StockBackend.Areas.Identity.Data;
 using StockBackend.Areas.Identity.Data.Models;
+using StockBackend.Models.DBContext;
 using StockBackend.Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +18,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
     
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -37,6 +41,21 @@ builder.Services.AddLogging(loggingBuilder =>
 
 });
 var app = builder.Build();
+
+using (var serviceScope = app.Services.CreateScope())
+{
+    var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    //context.Database.EnsureDeleted();
+
+    //true if has to be created, false if already exists
+    //always true if EnsureDeleted is allowed
+    if (context.Database.EnsureCreated())
+    {
+        //if it is newly created, seed data:
+       DataSeed.Initialize(context);
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
