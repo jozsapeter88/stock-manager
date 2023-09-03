@@ -22,6 +22,21 @@ namespace StockBackend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("FacilityUser", b =>
+                {
+                    b.Property<long>("FacilitiesOfUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("text");
+
+                    b.HasKey("FacilitiesOfUserId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("FacilityUser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -628,9 +643,6 @@ namespace StockBackend.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<long?>("FacilityId")
-                        .HasColumnType("bigint");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
 
@@ -654,25 +666,20 @@ namespace StockBackend.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
 
-                    b.Property<long>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("UserId"));
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FacilityId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -692,6 +699,21 @@ namespace StockBackend.Migrations
                         .HasColumnType("integer");
 
                     b.HasDiscriminator().HasValue("Role");
+                });
+
+            modelBuilder.Entity("FacilityUser", b =>
+                {
+                    b.HasOne("StockBackend.Areas.Identity.Data.Models.Facility", null)
+                        .WithMany()
+                        .HasForeignKey("FacilitiesOfUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StockBackend.Areas.Identity.Data.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -767,18 +789,9 @@ namespace StockBackend.Migrations
                     b.Navigation("Facility");
                 });
 
-            modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.User", b =>
-                {
-                    b.HasOne("StockBackend.Areas.Identity.Data.Models.Facility", null)
-                        .WithMany("Users")
-                        .HasForeignKey("FacilityId");
-                });
-
             modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.Facility", b =>
                 {
                     b.Navigation("Items");
-
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.Order", b =>

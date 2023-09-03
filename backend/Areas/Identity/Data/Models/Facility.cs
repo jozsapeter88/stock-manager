@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 using StockBackend.Areas.Identity.Enums;
 
 namespace StockBackend.Areas.Identity.Data.Models;
@@ -13,6 +14,8 @@ public class Facility
     public string PostCode { get; set; }
     public string City { get; set; }
     public string Address { get; set; }
-    public List<Item>? Items { get; set; }
-    public List<User>? Users { get; set; }
+
+    public List<Item>? Items { get; set; } 
+
+    [JsonIgnore] public List<User>? Users { get; set; } 
 }

@@ -1,17 +1,24 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Button, Alert } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import "./Home.css";
 import TopNavbar from "../Navbar";
+import { useAuth } from "../../Contexts/AuthContext";
 
 export default function Home() {
   const [facilities, setFacilities] = useState(null);
+  const [facilitiesOfUser, setFacilitiesOfUser] = useState([]);
   const [show, setShow] = useState(true);
+  const { user } = useAuth();
+  const {id} = useParams();
 
+  console.log("home: "+user.userName)
+  console.log(user.id)
+console.log(facilitiesOfUser.length)
   useEffect(() => {
     const fetchFacilities = async () => {
       try {
-        const response = await fetch("http://localhost:5001/api/facilities");
+        const response = await fetch( process.env.REACT_APP_API_URL + "/facility/facilities");
         const data = await response.json();
         setFacilities(data);
       } catch (error) {
@@ -20,8 +27,20 @@ export default function Home() {
     };
 
     fetchFacilities();
+    fetchFacilitiesOfUser();
   }, []);
 
+
+  const fetchFacilitiesOfUser = async () => {
+    try {
+      const response = await fetch( process.env.REACT_APP_API_URL + `/facility/facilities/${user.id}`);
+      const data = await response.json();
+      console.log(data)
+      setFacilitiesOfUser(data);
+    } catch (error) {
+      throw error;
+    }
+  };
   return (
     <div>
       <TopNavbar />

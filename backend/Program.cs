@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StockBackend.Areas.Identity.Data;
 using StockBackend.Areas.Identity.Data.Models;
@@ -17,9 +18,11 @@ builder.Services.AddIdentity<User, Role>(options => options.SignIn.RequireConfir
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews();
+    
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IFacilityService, FacilityService>();
 builder.Services.AddCors();
 
 builder.Services.AddLogging(loggingBuilder =>

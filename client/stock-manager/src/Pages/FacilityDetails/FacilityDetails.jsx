@@ -25,7 +25,7 @@ export default function FacilityDetails() {
     const fetchFacilityDetails = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5001/api/facilities/${id}`
+          process.env.REACT_APP_API_URL + `/facilities/${id}`
         );
         const data = await response.json();
         setFacility(data);
@@ -40,7 +40,7 @@ export default function FacilityDetails() {
     const fetchItemDetails = async (itemIds) => {
       try {
         const response = await fetch(
-          `http://localhost:5001/api/items?id=${itemIds.join(",")}`
+          process.env.REACT_APP_API_URL + `/items?id=${itemIds.join(",")}`
         );
         const data = await response.json();
         setItemDetails(data);
@@ -69,7 +69,7 @@ export default function FacilityDetails() {
         comment: comment,
       };
 
-      const response = await fetch("http://localhost:5001/api/orders", {
+      const response = await fetch( process.env.REACT_APP_API_URL + "/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

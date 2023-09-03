@@ -12,8 +12,8 @@ using StockBackend.Areas.Identity.Data;
 namespace StockBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230830201322_AddModels")]
-    partial class AddModels
+    [Migration("20230903095013_NewDataBase")]
+    partial class NewDataBase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,21 @@ namespace StockBackend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("FacilityUser", b =>
+                {
+                    b.Property<long>("FacilitiesOfUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("text");
+
+                    b.HasKey("FacilitiesOfUserId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("FacilityUser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -32,6 +47,10 @@ namespace StockBackend.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -49,6 +68,10 @@ namespace StockBackend.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -104,12 +127,10 @@ namespace StockBackend.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
@@ -146,12 +167,10 @@ namespace StockBackend.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Value")
                         .HasColumnType("text");
@@ -627,9 +646,6 @@ namespace StockBackend.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<long?>("FacilityId")
-                        .HasColumnType("bigint");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
 
@@ -653,6 +669,9 @@ namespace StockBackend.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -665,8 +684,6 @@ namespace StockBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FacilityId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -675,6 +692,31 @@ namespace StockBackend.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.Role", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
+
+                    b.Property<int>("RoleEnum")
+                        .HasColumnType("integer");
+
+                    b.HasDiscriminator().HasValue("Role");
+                });
+
+            modelBuilder.Entity("FacilityUser", b =>
+                {
+                    b.HasOne("StockBackend.Areas.Identity.Data.Models.Facility", null)
+                        .WithMany()
+                        .HasForeignKey("FacilitiesOfUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StockBackend.Areas.Identity.Data.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -750,18 +792,9 @@ namespace StockBackend.Migrations
                     b.Navigation("Facility");
                 });
 
-            modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.User", b =>
-                {
-                    b.HasOne("StockBackend.Areas.Identity.Data.Models.Facility", null)
-                        .WithMany("Users")
-                        .HasForeignKey("FacilityId");
-                });
-
             modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.Facility", b =>
                 {
                     b.Navigation("Items");
-
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("StockBackend.Areas.Identity.Data.Models.Order", b =>

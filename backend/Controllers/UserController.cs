@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using StockBackend.Areas.Identity.Data.Models;
+using StockBackend.Areas.Identity.Enums;
 using StockBackend.Service;
 
 namespace StockBackend.Controllers;
@@ -20,7 +21,7 @@ public class UserController: Controller
         Console.WriteLine(model.UserName);
         if (ModelState.IsValid)
         {
-            var user = new User { UserName = model.UserName, Email = model.Email };
+            var user = new User { UserName = model.UserName, Email = model.Email, Role = RoleEnum.User};
             var result = await _userService.RegisterUserAsync(user, model.Password);
 
             if (result.Succeeded)
@@ -41,10 +42,13 @@ public class UserController: Controller
             
             if (result.Succeeded)
             {
-                Console.WriteLine(model.UserName);
-                Console.WriteLine(model.Password);
+                var user = await _userService.GetUserByName(model.UserName);
+               
+                Console.WriteLine(user.UserName);
+                Console.WriteLine(user.Role);
                 Console.WriteLine(model.RememberMe);
-                return Ok();
+                return Ok(user);
+
             }
 
             return BadRequest("Login failed.");

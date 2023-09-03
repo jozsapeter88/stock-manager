@@ -23,4 +23,11 @@ public class UserService: IUserService
         Console.WriteLine("userserv:"+ userName);
       return await _signInManager.PasswordSignInAsync(userName, password, rememberMe, lockoutOnFailure: false);
     }
+
+    public async Task<User?> GetUserByName(string userName)
+    {
+        var user =  await _userManager.FindByNameAsync(userName);
+
+        return user ?? null;
+    }
 }
