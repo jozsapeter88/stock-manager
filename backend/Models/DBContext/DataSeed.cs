@@ -8,15 +8,6 @@ public class DataSeed
   
     public static void Initialize(ApplicationDbContext dbContext)
     {
-        if (!dbContext.Users.Any())
-        {
-            dbContext.Add(new User
-            {
-                UserName = "Admin",
-                PasswordHash = "admin",
-                Role = RoleEnum.Admin
-            });
-        }
         if (!dbContext.Facilities.Any())
         {
             var facilities = new[]

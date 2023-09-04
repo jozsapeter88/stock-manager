@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StockBackend.Areas.Identity.Data;
 using StockBackend.Areas.Identity.Data.Models;
+using StockBackend.Areas.Identity.Enums;
 using StockBackend.Models.DBContext;
 using StockBackend.Service;
 
@@ -15,7 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -56,6 +57,31 @@ using (var serviceScope = app.Services.CreateScope())
        DataSeed.Initialize(context);
     }
 }
+//Add adminUser
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    if (!await roleManager.RoleExistsAsync("Admin"))
+    {
+        var adminRole = new IdentityRole("Admin");
+        await roleManager.CreateAsync(adminRole);
+    }
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    var adminUser = new User
+    {
+        UserName = "admin",
+        Email = "admin@example.com",
+        Role = RoleEnum.Admin
+    };
+
+    var result = await userManager.CreateAsync(adminUser, "Admin1234!");
+    if (result.Succeeded)
+    {
+        await userManager.AddToRoleAsync(adminUser, "Admin");
+    }
+}
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

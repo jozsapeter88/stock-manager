@@ -45,7 +45,7 @@ public class UserController: Controller
                 var user = await _userService.GetUserByName(model.UserName);
                
                 Console.WriteLine(user.UserName);
-                Console.WriteLine(user.Role);
+                Console.WriteLine("role: " + user.Role);
                 Console.WriteLine(model.RememberMe);
                 return Ok(user);
 
