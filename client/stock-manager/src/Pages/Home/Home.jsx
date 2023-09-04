@@ -36,9 +36,6 @@ export default function Home() {
   const {id} = useParams();
   console.log(id);
 
-  const handleAddFascility = async (id)=> {
-    await addFacilityToUser(user.id, id);
-  }
   useEffect(() => {
     const fetchFacilities = async () => {
       try {
@@ -87,9 +84,6 @@ export default function Home() {
                     >
                       View
                     </Link>
-                    <Button onClick={() => handleAddFascility(facility.id)} variant="outline-secondary">
-                      Add
-                    </Button>
                   </td>
                 </tr>
               ))}

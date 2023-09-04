@@ -1,31 +1,32 @@
-import { Link, Outlet } from "react-router-dom";
-import { Table } from "react-bootstrap"; // Import Table component from react-bootstrap
+import { Table, Modal, Button } from "react-bootstrap";
 import { useAuth } from "../../Contexts/AuthContext";
 import { useState, useEffect } from "react";
 import TopNavbar from "../Navbar";
+import Loading from "../Loading";
 
 export default function AdminPage() {
   const { user } = useAuth();
 
-  const userData = [
-    {
-      id: 1,
-      UserName: "User1",
-      Email: "user1@example.com",
-      facilities: ["facility1", "facility2", "facility3", "facility4"],
-    },
-    {
-      id: 2,
-      UserName: "User2",
-      Email: "user2@example.com",
-      facilities: ["facility1", "facility2", "facility3", "facility4"],
-    },
-  ];
-
   const [facilities, setFacilities] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch(
+          process.env.REACT_APP_API_URL + "/user/getUsers"
+        );
+        const data = await response.json();
+        setUsers(data);
+        setLoading(false);
+      } catch (error) {
+        throw error;
+      }
+    };
+
     const fetchFacilities = async () => {
       try {
         const response = await fetch(
@@ -39,10 +40,15 @@ export default function AdminPage() {
       }
     };
     fetchFacilities();
+    fetchUsers();
   }, []);
 
   const handleAddFacility = async (id) => {
     await addFacilityToUser(user.id, id);
+  };
+
+  const handleRemoveFacility = (facilityId) => {
+    removeFacilityFromUser();
   };
 
   const addFacilityToUser = async (userId, facilityId) => {
@@ -68,8 +74,26 @@ export default function AdminPage() {
     }
   };
 
+  const removeFacilityFromUser = async (userId, facilityId) => {
+    console.log("user should be removed now");
+  };
+
+  const handleOpenModal = (user) => {
+    setSelectedUser(user);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <>
+      <TopNavbar />
       <div className="container mt-4">
         <Table striped bordered hover>
           <thead>
@@ -80,34 +104,76 @@ export default function AdminPage() {
             </tr>
           </thead>
           <tbody>
-            {user && user.length > 0 ? (
-              user.map((u) => (
-                <tr key={u.id}>
-                  <td>{u.UserName}</td>
-                  <td>{u.Email}</td>
+            {users && users.length > 0 ? (
+              users.map((user) => (
+                <tr key={user.id}>
+                  <td>{user.userName}</td>
+                  <td>{user.email}</td>
                   <td>
-                    <input
-                      type="checkbox"
-                      onChange={(e) => {
-                        const isChecked = e.target.checked;
-                      }}
-                    />
+                    <Button
+                      variant="primary"
+                      onClick={() => handleOpenModal(user)}
+                    >
+                      Manage Facilities
+                    </Button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
                 <td colSpan="3">
-                  {user === null
-                    ? ("No users found.")
-                    : "No users found."}
+                  {user === null ? "No users found." : "No users found."}
                 </td>
               </tr>
             )}
           </tbody>
         </Table>
       </div>
-      <Outlet />
+
+      {/* Facility Management Modal */}
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Manage Facilities for {selectedUser?.userName}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Facility Name</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {facilities.map((facility) => (
+                <tr key={facility.id}>
+                  <td>{facility.name}</td>
+                  <td>
+                    <Button
+                      variant="success"
+                      onClick={() => handleAddFacility(facility.id)}
+                    >
+                      Add
+                    </Button>
+                    <Button
+                      variant="danger"
+                      onClick={() => handleRemoveFacility(facility.id)}
+                    >
+                      Remove
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
