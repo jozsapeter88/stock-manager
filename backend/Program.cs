@@ -20,7 +20,7 @@ builder.Services.AddIdentity<User, Role>(options => options.SignIn.RequireConfir
     .AddDefaultTokenProviders();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
     
 
