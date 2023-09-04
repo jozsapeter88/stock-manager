@@ -32,7 +32,7 @@ export default function TopNavbar() {
           className="justify-content-end"
         >
           <Nav className="ml-auto">
-            {user && user.Role === 0 && (
+            {user && user.role === 0 && (
               <Nav.Item>
                 <Nav.Link
                   as={Link}
