@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using StockBackend.Areas.Identity.Data.Models;
+using StockBackend.Models.DBContext;
 
 namespace StockBackend.Service;
 
@@ -7,11 +9,13 @@ public class UserService: IUserService
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
+    private readonly ApplicationDbContext _dbContext;
 
-    public UserService(UserManager<User> userManager, SignInManager<User> signInManager)
+    public UserService(UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext dbContext)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _dbContext = dbContext;
     }
     public async Task<IdentityResult> RegisterUserAsync(User user, string password)
     {
@@ -29,5 +33,11 @@ public class UserService: IUserService
         var user =  await _userManager.FindByNameAsync(userName);
 
         return user ?? null;
+    }
+
+    public async Task<List<User>?> GetAllUsers()
+    {
+        var users = await _dbContext.Users.ToListAsync();
+        return users ?? null;
     }
 }
