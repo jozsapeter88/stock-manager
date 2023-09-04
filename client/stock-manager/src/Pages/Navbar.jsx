@@ -24,6 +24,19 @@ export default function TopNavbar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" style={{ fontWeight: "bold" }} className="justify-content-end">
           <Nav className="ml-auto">
+          <Nav.Item>
+              <Nav.Link
+                as={Link}
+                to="/admin"
+                style={{
+                  color: "black",
+                  fontWeight: "bold",
+                  marginRight: "10px",
+                }}
+              >
+                Admin Page
+              </Nav.Link>
+            </Nav.Item>
             <Nav.Item>
               <Nav.Link
                 as={Link}
@@ -86,7 +99,7 @@ export default function TopNavbar() {
                   marginRight: "10px",
                 }}
               >
-                FacilityDetails
+                Facility Details
               </Nav.Link>
             </Nav.Item>
           </Nav>
