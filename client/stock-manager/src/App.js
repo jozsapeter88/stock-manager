@@ -17,6 +17,7 @@ const App = () => {
   console.log(user)
   useEffect(() => {
     const userJSON = localStorage.getItem('user');
+    console.log(userJSON)
     if (userJSON) {
       const userData = JSON.parse(userJSON);
       login(userData); // Log the user in using the data from localStorage

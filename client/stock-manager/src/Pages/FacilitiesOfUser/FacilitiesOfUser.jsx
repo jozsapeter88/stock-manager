@@ -28,7 +28,7 @@ export default function FacilitiesOfUser() {
   //const [quantity, setQuantity] = useState(1);
   //const [comment, setComment] = useState("");
   const { user } = useAuth();
-
+console.log("fou" + user)
 
   useEffect(() => {
     const fetchFacilityDetails = async () => {
@@ -48,7 +48,7 @@ export default function FacilitiesOfUser() {
       }
     }
     fetchFacilityDetails();
-  }, []);
+  }, [user]);
   if (loading) {
     return <Loading />;
   }
