@@ -3,14 +3,18 @@ import { Navbar, Nav } from "react-bootstrap";
 import "./Navbar.css";
 import { useAuth } from "../Contexts/AuthContext";
 
-
 export default function TopNavbar() {
   const { user } = useAuth();
   console.log(user);
 
   return (
     <>
-      <Navbar expand="lg" variant="light" className="navbar" data-bs-theme="light">
+      <Navbar
+        expand="lg"
+        variant="light"
+        className="navbar"
+        data-bs-theme="light"
+      >
         <Navbar.Brand as={Link} to="/home" style={{ marginLeft: "20px" }}>
           <div className="logo">
             <img
@@ -22,21 +26,27 @@ export default function TopNavbar() {
           </div>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav" style={{ fontWeight: "bold" }} className="justify-content-end">
+        <Navbar.Collapse
+          id="basic-navbar-nav"
+          style={{ fontWeight: "bold" }}
+          className="justify-content-end"
+        >
           <Nav className="ml-auto">
-          <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to="/admin"
-                style={{
-                  color: "black",
-                  fontWeight: "bold",
-                  marginRight: "10px",
-                }}
-              >
-                Admin Page
-              </Nav.Link>
-            </Nav.Item>
+            {user && user.Role === 0 && (
+              <Nav.Item>
+                <Nav.Link
+                  as={Link}
+                  to="/admin"
+                  style={{
+                    color: "black",
+                    fontWeight: "bold",
+                    marginRight: "10px",
+                  }}
+                >
+                  Admin Page
+                </Nav.Link>
+              </Nav.Item>
+            )}
             <Nav.Item>
               <Nav.Link
                 as={Link}

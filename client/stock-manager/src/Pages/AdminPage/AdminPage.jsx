@@ -1,10 +1,14 @@
 import React from "react";
 import TopNavbar from "../Navbar";
+import { useAuth } from "../../Contexts/AuthContext";
 
 export default function AdminPage() {
-    return (
-        <>
-        <TopNavbar />
-        </>
-    )
+
+  const { user } = useAuth();
+
+  return (
+    <>
+      <TopNavbar />
+    </>
+  );
 }

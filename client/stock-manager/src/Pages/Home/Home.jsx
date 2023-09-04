@@ -61,19 +61,6 @@ export default function Home() {
   return (
     <div>
       <TopNavbar />
-      <Alert className="alert" show={show} variant="danger">
-        <Alert.Heading>Login to get access</Alert.Heading>
-        <p>
-          To see your personal dashboard and access your facilities, please log
-          in!
-        </p>
-        <hr />
-        <div className="d-flex justify-content-end">
-          <Button onClick={() => setShow(false)} variant="outline-secondary">
-            Close
-          </Button>
-        </div>
-      </Alert>
       <div className="table-container">
         <Table striped bordered hover>
           <thead>
