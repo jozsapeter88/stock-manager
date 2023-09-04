@@ -1,5 +1,6 @@
 import { AuthContextProvider, useAuth } from "./Contexts/AuthContext";
 import { Routes, Route } from "react-router-dom";
+import React, { useEffect} from "react";
 import Home from "./Pages/Home/Home";
 import ErrorPage from "./Pages/ErrorPage";
 import OrderHistory from "./Pages/OrderHistory/OrderHistory";
@@ -12,7 +13,15 @@ import FacilitiesOfUser from "./Pages/FacilitiesOfUser/FacilitiesOfUser";
 import AdminPage from "./Pages/AdminPage/AdminPage";
 
 const App = () => {
-  const { user } = useAuth();
+  const { user, login } = useAuth();
+  console.log(user)
+  useEffect(() => {
+    const userJSON = localStorage.getItem('user');
+    if (userJSON) {
+      const userData = JSON.parse(userJSON);
+      login(userData); // Log the user in using the data from localStorage
+    }
+  }, []);
 
   const isAuthenticated = (allowedRoles) => {
     if (user === null) return false;
@@ -47,8 +56,10 @@ const App = () => {
   );
 };
 
-export default () => (
+const AppWithAuthContext = () => (
   <AuthContextProvider>
     <App />
   </AuthContextProvider>
 );
+
+export default AppWithAuthContext;

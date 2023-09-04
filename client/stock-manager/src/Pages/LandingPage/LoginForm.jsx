@@ -71,8 +71,10 @@ const LoginForm = () => {
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
                   const userData = await response.json();
+                  localStorage.setItem('user', JSON.stringify(userData));
                   login(userData); // Update the user state in AuthContext
                   console.log(userData)
+
                     navigate('/home'); // Navigate to the home page
                 } else {
                   console.error('Login response is not JSON'); // Handle this case
