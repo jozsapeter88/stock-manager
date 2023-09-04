@@ -2,7 +2,7 @@
 <span style="color: blue">ℹ️ Please note that this is not the final version of the project, therefore bugs may appear. If you have any suggestions or observations, please do not hesitate to reach out to me!</span> 
 
 ## <span style="font-size: 24px"><b>Introduction 👋</b></span>
-Welcome to the Stock System Manager, a MERN stack project designed to help you manage your facilities and track their corresponding item stock. This system allows you to place orders for items linked to each facility and effectively manage the order process.
+Welcome to the Stock System Manager, a React / C# project designed to help you manage your facilities and track their corresponding item stock. This system allows you to place orders for items linked to each facility and effectively manage the order process.
 
 ## <span style="font-size: 24px"><b>Features 🚀</b></span>
 <i>(including TBA features)</i>
