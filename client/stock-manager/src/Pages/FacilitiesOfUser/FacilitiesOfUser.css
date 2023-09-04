@@ -1,0 +1,8 @@
+.table {
+    --bs-table-striped-bg: #ffc10741;
+}
+
+.table-container {
+    max-width: 1500px;
+    margin: 0 auto;
+}

@@ -12,6 +12,7 @@
   <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
     <None Remove="Views\**" />
+    <None Remove="Areas\Identity\Pages\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,14 +30,17 @@
     <Compile Remove="Views\**" />
     <Compile Remove="Controllers\HomeController.cs" />
     <Compile Remove="Models\ErrorViewModel.cs" />
+    <Compile Remove="Areas\Identity\Pages\**" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Remove="Views\**" />
+    <EmbeddedResource Remove="Areas\Identity\Pages\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Remove="Views\**" />
+    <Content Remove="Areas\Identity\Pages\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +52,7 @@
     <_ContentIncludedByDefault Remove="Views\Shared\_ValidationScriptsPartial.cshtml" />
     <_ContentIncludedByDefault Remove="Views\_ViewImports.cshtml" />
     <_ContentIncludedByDefault Remove="Views\_ViewStart.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Identity\Pages\_ViewStart.cshtml" />
   </ItemGroup>
 
 </Project>
