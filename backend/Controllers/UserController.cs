@@ -57,4 +57,12 @@ public class UserController: Controller
         return BadRequest(ModelState);
     }
 
+    [HttpGet("getUsers")]
+    public async Task<ActionResult<List<User>>> GetAll()
+    {
+        var result = await _userService.GetAllUsers();
+        if (result is not null) return Ok(result);
+        return NotFound("No users found");
+    }
+
 }
