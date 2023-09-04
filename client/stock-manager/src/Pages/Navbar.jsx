@@ -1,8 +1,13 @@
 import { Link, Outlet } from "react-router-dom";
 import { Navbar, Nav } from "react-bootstrap";
 import "./Navbar.css";
+import { useAuth } from "../Contexts/AuthContext";
+
 
 export default function TopNavbar() {
+  const { user } = useAuth();
+  console.log(user);
+
   return (
     <>
       <Navbar expand="lg" variant="light" className="navbar" data-bs-theme="light">
@@ -69,6 +74,19 @@ export default function TopNavbar() {
                 }}
               >
                 Statistics
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
+                as={Link}
+                to={`/facilities/:${user.id}`}
+                style={{
+                  color: "black",
+                  fontWeight: "bold",
+                  marginRight: "10px",
+                }}
+              >
+                FacilityDetails
               </Nav.Link>
             </Nav.Item>
           </Nav>

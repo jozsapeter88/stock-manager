@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace StockBackend.Areas.Identity.Data.Models;
+namespace StockBackend.Models;
 
 public class Statistic
 {
