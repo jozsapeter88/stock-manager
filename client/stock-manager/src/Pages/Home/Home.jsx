@@ -14,6 +14,7 @@ const addFacilityToUser = async (userId, facilityId) => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: "include",
         body: JSON.stringify({}),
       });
       if (response.ok) {

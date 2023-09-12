@@ -1,14 +1,12 @@
 ﻿using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using StockBackend.Areas.Identity.Data;
 using StockBackend.Areas.Identity.Data.Models;
 using StockBackend.Areas.Identity.Enums;
 using StockBackend.Models.DBContext;
 using StockBackend.Service;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -23,7 +21,19 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
-    
+
+builder.Services.AddAuthentication("CookieAuth").AddCookie("CookieAuth", options =>
+{
+    options.Cookie.Name = "CookieAuth";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Events.OnRedirectToAccessDenied =
+        options.Events.OnRedirectToLogin = c =>
+        {
+            c.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.CompletedTask;
+        };
+});
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IUserService, UserService>();
@@ -32,14 +42,9 @@ builder.Services.AddCors();
 
 builder.Services.AddLogging(loggingBuilder =>
 {
-    //  loggingBuilder.AddApplicationInsights(aiKey);
     loggingBuilder.AddConfiguration(builder.Configuration.GetSection("Logging"));
     loggingBuilder.AddConsole();
     loggingBuilder.AddDebug();
-    //  loggingBuilder.AddSerilog();
-    //  loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>
-    //             (typeof(Program).FullName, LogLevel.Trace);
-
 });
 var app = builder.Build();
 
@@ -80,8 +85,6 @@ using (var scope = app.Services.CreateScope())
         await userManager.AddToRoleAsync(adminUser, "Admin");
     }
 }
-
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

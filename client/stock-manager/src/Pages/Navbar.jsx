@@ -109,7 +109,7 @@ export default function TopNavbar() {
                   marginRight: "10px",
                 }}
               >
-                Facility Details
+                MyFacilities
               </Nav.Link>
             </Nav.Item>
           </Nav>
