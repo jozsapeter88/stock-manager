@@ -131,7 +131,7 @@ const OrderHistory = () => {
         </Form>
         <br />
 
-        <Table striped bordered hover>
+        <Table striped bordered hover style={{ outline: '2px solid'}}>
           <thead>
             <tr>
               <th>Facility</th>

@@ -5,7 +5,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: rgb(155, 154, 154);
+  background-color: rgb(233, 231, 231);
+}
+
+table {
+  border-color: black;
 }
 
 /* Custom scrollbar styles */

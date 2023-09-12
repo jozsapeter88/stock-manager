@@ -60,9 +60,9 @@ export default function Home() {
     <div>
       <TopNavbar />
       <div className="table-container">
-        <Table striped bordered hover>
-          <thead>
-            <tr>
+        <Table striped bordered hover style={{ outline: '2px solid'}}>
+          <thead style={{ outline: '2px solid'}}>
+            <tr style={{ outline: '2px solid'}}>
               <th>Name</th>
               <th>Sport</th>
               <th>City</th>

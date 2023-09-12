@@ -95,7 +95,7 @@ export default function AdminPage() {
     <>
       <TopNavbar />
       <div className="container mt-4">
-        <Table striped bordered hover>
+        <Table striped bordered hover style={{ outline: '2px solid'}}>
           <thead>
             <tr>
               <th>Username</th>
@@ -111,7 +111,7 @@ export default function AdminPage() {
                   <td>{user.email}</td>
                   <td>
                     <Button
-                      variant="primary"
+                      variant="warning"
                       onClick={() => handleOpenModal(user)}
                     >
                       Manage Facilities
