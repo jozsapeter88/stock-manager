@@ -63,14 +63,14 @@ export default function TopNavbar() {
             <Nav.Item>
               <Nav.Link
                 as={Link}
-                to="/itemlist"
+                to="/productlist"
                 style={{
                   color: "black",
                   fontWeight: "bold",
                   marginRight: "10px",
                 }}
               >
-                Item List
+               Product List
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>

@@ -11,7 +11,7 @@ const ItemList = () => {
 
   const fetchItems = async () => {
     try {
-      const response = await fetch("/api/items");
+      const response = await fetch(process.env.REACT_APP_API_URL + "/item/getItems");
       const data = await response.json();
       setProducts(data);
     } catch (error) {
