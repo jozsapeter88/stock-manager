@@ -9,6 +9,7 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import TopNavbar from "../Navbar";
+import { fetchItems } from "../Products/ProductList";
 
 export default function FacilityDetails() {
   const { id } = useParams();
@@ -21,31 +22,27 @@ export default function FacilityDetails() {
   const [quantity, setQuantity] = useState(1);
   const [comment, setComment] = useState("");
 
+
   useEffect(() => {
     const fetchFacilityDetails = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5001/api/facilities/${id}`
-        );
+          process.env.REACT_APP_API_URL + `/facility/getFacility/${id}`, {
+            method: "GET",
+            credentials: "include"
+          });
+       
         const data = await response.json();
         setFacility(data);
 
         // Fetch item details as well
-        await fetchItemDetails(data.items);
+         const items = await fetchItems();
+         const itemsData= await items.json();
+         setItemDetails(itemsData)
+         console.log("items"+ items.length)
+
       } catch (error) {
         console.error("Error fetching facility details:", error);
-      }
-    };
-
-    const fetchItemDetails = async (itemIds) => {
-      try {
-        const response = await fetch(
-          `http://localhost:5001/api/items?id=${itemIds.join(",")}`
-        );
-        const data = await response.json();
-        setItemDetails(data);
-      } catch (error) {
-        console.error("Error fetching item details:", error);
       }
     };
 

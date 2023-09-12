@@ -77,7 +77,7 @@ const LoginForm = () => {
                   login(userData); // Update the user state in AuthContext
                   console.log(userData)
 
-                    navigate('/home'); // Navigate to the home page
+                    navigate(`facilities/${userData.id}`); // Navigate to the home page
                 } else {
                   console.error('Login response is not JSON'); // Handle this case
                 }

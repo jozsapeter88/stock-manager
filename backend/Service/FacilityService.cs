@@ -31,6 +31,12 @@ public class FacilityService: IFacilityService
         return user?.FacilitiesOfUser != null ? user.FacilitiesOfUser.ToList() : null;
     }
 
+    public async Task<Facility?>? GetFacility(int fId)
+    {
+        var facility = await _dbContext.Facilities.FirstOrDefaultAsync(f => f.Id == fId);
+        return facility ?? null;
+    }
+
     public async Task<Facility?> AddFacilityToUser(int fId, string userId)
     {
         var facility = await _dbContext.Facilities.FirstOrDefaultAsync(f => f.Id == fId);

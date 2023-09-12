@@ -33,6 +33,14 @@ public class FacilityController : Controller
         return Ok(result);
     }
 
+    [HttpGet("getFacility/{fId}")]
+    public async Task<ActionResult<Facility>> GetFacility(int fId)
+    {
+        var result = await _facilityService.GetFacility(fId)!;
+        if (result is null) return NotFound("Facility is not found!");
+        return Ok(result);
+    } 
+
     [HttpPost("addFacility/{userId}/{fId}")]
     public async Task<ActionResult<Facility>> AddFacilityToUser(string userId, int fId)
     {
