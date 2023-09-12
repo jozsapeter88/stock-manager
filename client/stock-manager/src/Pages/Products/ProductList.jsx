@@ -2,22 +2,25 @@ import React, { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 import TopNavbar from "../Navbar";
 
+export const fetchItems = async () => {
+  try {
+    return await fetch(process.env.REACT_APP_API_URL + "/item/getItems");
+    
+  
+  } catch (error) {
+    console.error("Error fetching products:", error);
+  }
+};
 const ItemList = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetchItems();
+    fetchItems()
+    .then((data)=> data.json())
+    .then((itemData)=> setProducts(itemData));
   }, []);
 
-  const fetchItems = async () => {
-    try {
-      const response = await fetch("/api/items");
-      const data = await response.json();
-      setProducts(data);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
-  };
+  
 
   return (
     <div>

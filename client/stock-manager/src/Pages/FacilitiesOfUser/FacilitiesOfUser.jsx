@@ -78,14 +78,14 @@ console.log("fou" + user)
           <tbody>
             {facilities &&
               facilities.map((facility) => (
-                <tr key={facility._id}>
+                <tr key={facility.id}>
                   <td>{facility.name}</td>
                   <td>{facility.sport}</td>
                   <td>{facility.city}</td>
                   <td>{facility.address}</td>
                   <td>
                     <Link
-                      to={`/facilities/${facility._id}`}
+                      to={`/facilityDetails/${facility.id}`}
                       className="btn btn-warning btn-sm"
                     >
                       View
