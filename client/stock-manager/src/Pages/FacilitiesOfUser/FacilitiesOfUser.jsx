@@ -65,7 +65,7 @@ console.log("fou" + user)
         </Link>
         
         <div className="table-container">
-        <Table striped bordered hover>
+        <Table striped bordered hover style={{ outline: "2px solid"}}>
           <thead>
             <tr>
               <th>Name</th>
