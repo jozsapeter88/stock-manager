@@ -15,7 +15,7 @@ export default function TopNavbar() {
         className="navbar"
         data-bs-theme="light"
       >
-        <Navbar.Brand as={Link} to="/home" style={{ marginLeft: "20px" }}>
+        <Navbar.Brand as={Link} to={`/facilities/:${user.id}`} style={{ marginLeft: "20px" }}>
           <div className="logo">
             <img
               src={process.env.PUBLIC_URL + "/rac.png"}
@@ -97,19 +97,6 @@ export default function TopNavbar() {
                 }}
               >
                 Statistics
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to={`/facilities/:${user.id}`}
-                style={{
-                  color: "black",
-                  fontWeight: "bold",
-                  marginRight: "10px",
-                }}
-              >
-                MyFacilities
               </Nav.Link>
             </Nav.Item>
           </Nav>
