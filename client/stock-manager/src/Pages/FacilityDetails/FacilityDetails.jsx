@@ -10,6 +10,7 @@ import {
 } from "react-bootstrap";
 import TopNavbar from "../Navbar";
 import { fetchItems } from "../Products/ProductList";
+import { useAuth } from "../../Contexts/AuthContext";
 
 export default function FacilityDetails() {
   const { id } = useParams();
@@ -21,6 +22,7 @@ export default function FacilityDetails() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [comment, setComment] = useState("");
+  const { user } = useAuth();
 
 
   useEffect(() => {
@@ -88,7 +90,7 @@ export default function FacilityDetails() {
     <div>
       <TopNavbar />
       <div className="table-container">
-        <Link to="/home" variant="warning" style={{ marginBottom: "10px" }}>
+        <Link to={`/facilities/${user.id}`} variant="warning" style={{ marginBottom: "10px" }}>
           <Button variant="outline-warning">Back</Button>
         </Link>
         <Button
@@ -99,7 +101,7 @@ export default function FacilityDetails() {
           Order
         </Button>
         <h1>{facility.name}</h1>
-        <Table striped bordered hover>
+        <Table striped bordered hover style={{ outline: "2px solid"}}>
           <tbody>
             <tr>
               <td>Sport</td>
@@ -120,7 +122,7 @@ export default function FacilityDetails() {
           </tbody>
         </Table>
         <h2>Item Stock:</h2>
-        <Table striped bordered hover>
+        <Table striped bordered hover style={{ outline: "2px solid"}}>
           <thead>
             <tr>
               <th>Category</th>
