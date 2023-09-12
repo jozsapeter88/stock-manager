@@ -10,4 +10,5 @@ public class User : IdentityUser
     
     public RoleEnum Role { get; set; }
     public List<Facility>? FacilitiesOfUser { get; set; } 
+    public List<Order>? OrdersOfUser { get; set; }
 }

@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Form, Modal } from "react-bootstrap";
 import TopNavbar from "../Navbar";
+import { useAuth } from "../../Contexts/AuthContext";
+
+const fetchOrderHistory = async (user) => {
+  try {
+    return await fetch(process.env.REACT_APP_API_URL + `/order/getOrders/${user.id}`);
+    
+  } catch (error) {
+    console.error("Error fetching order history:", error);
+  }
+};
 
 const OrderHistory = () => {
   const [orderHistory, setOrderHistory] = useState([]);
@@ -8,30 +18,15 @@ const OrderHistory = () => {
   const [selectedFacility, setSelectedFacility] = useState("All facilities");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const { user } = useAuth();
 
   useEffect(() => {
-    fetchOrderHistory();
+    fetchOrderHistory(user)
+    .then((data) => data.json())
+    .then((orders)=> setOrderHistory(orders));
   }, []);
 
-  const fetchOrderHistory = async () => {
-    try {
-      const response = await fetch("http://localhost:5001/api/order-history");
-      const data = await response.json();
-
-      for (const order of data) {
-        const facilityId = order.facility;
-        const facilityResponse = await fetch(
-          `http://localhost:5001/api/facilities/${facilityId}`
-        );
-        const facilityData = await facilityResponse.json();
-        order.facility = facilityData.name;
-      }
-
-      setOrderHistory(data);
-    } catch (error) {
-      console.error("Error fetching order history:", error);
-    }
-  };
+  
 
   const deleteOrder = async (orderId) => {
     try {
@@ -143,8 +138,8 @@ const OrderHistory = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredOrderHistory.map((order) => (
-              <tr key={order._id}>
+            {orderHistory.map((order) => (
+              <tr key={order.id}>
                 <td>{order.facility}</td>
                 <td>{order.items.map((item) => item.name).join(", ")}</td>
                 <td>{order.quantity}</td>

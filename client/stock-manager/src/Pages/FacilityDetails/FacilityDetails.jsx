@@ -62,13 +62,13 @@ export default function FacilityDetails() {
   const placeOrder = async () => {
     try {
       const order = {
-        facility: facility._id,
-        items: [selectedItem._id],
+        facility: facility,
+        items: [selectedItem],
         quantity: quantity,
-        comment: comment,
+        comment: comment
       };
-
-      const response = await fetch("http://localhost:5001/api/orders", {
+      console.log(order)
+      const response = await fetch(process.env.REACT_APP_API_URL + `/order/addOrder/${user.id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

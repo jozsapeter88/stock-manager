@@ -6,7 +6,7 @@ using StockBackend.Service;
 namespace StockBackend.Controllers;
 [ApiController]
 [Route("api/[controller]")]
-public class FacilityController : Controller
+public class FacilityController : ControllerBase
 {
     private readonly IFacilityService _facilityService;
     private readonly IUserService _userService;
