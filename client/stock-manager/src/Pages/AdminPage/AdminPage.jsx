@@ -44,7 +44,7 @@ export default function AdminPage() {
   }, []);
 
   const handleAddFacility = async (id) => {
-    await addFacilityToUser(user.id, id);
+    await addFacilityToUser(selectedUser.id, id);
   };
 
   const handleRemoveFacility = (facilityId) => {
