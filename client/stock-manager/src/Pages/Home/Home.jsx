@@ -14,6 +14,7 @@ const addFacilityToUser = async (userId, facilityId) => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: "include",
         body: JSON.stringify({}),
       });
       if (response.ok) {
@@ -36,9 +37,6 @@ export default function Home() {
   const {id} = useParams();
   console.log(id);
 
-  const handleAddFascility = async (id)=> {
-    await addFacilityToUser(user.id, id);
-  }
   useEffect(() => {
     const fetchFacilities = async () => {
       try {
@@ -61,19 +59,6 @@ export default function Home() {
   return (
     <div>
       <TopNavbar />
-      <Alert className="alert" show={show} variant="danger">
-        <Alert.Heading>Login to get access</Alert.Heading>
-        <p>
-          To see your personal dashboard and access your facilities, please log
-          in!
-        </p>
-        <hr />
-        <div className="d-flex justify-content-end">
-          <Button onClick={() => setShow(false)} variant="outline-secondary">
-            Close
-          </Button>
-        </div>
-      </Alert>
       <div className="table-container">
         <Table striped bordered hover>
           <thead>
@@ -100,9 +85,6 @@ export default function Home() {
                     >
                       View
                     </Link>
-                    <Button onClick={() => handleAddFascility(facility.id)} variant="outline-secondary">
-                      Add
-                    </Button>
                   </td>
                 </tr>
               ))}

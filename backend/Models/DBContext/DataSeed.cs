@@ -1,3 +1,4 @@
+using StockBackend.Areas.Identity.Data.Models;
 using StockBackend.Areas.Identity.Enums;
 
 namespace StockBackend.Models.DBContext;

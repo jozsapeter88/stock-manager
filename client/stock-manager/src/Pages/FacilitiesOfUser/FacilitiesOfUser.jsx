@@ -28,16 +28,20 @@ export default function FacilitiesOfUser() {
   //const [quantity, setQuantity] = useState(1);
   //const [comment, setComment] = useState("");
   const { user } = useAuth();
+console.log("fou" + user)
 
 
   useEffect(() => {
     const fetchFacilityDetails = async () => {
       try {
         const response = await fetch(
-          process.env.REACT_APP_API_URL + `/facility/facilities/${user.id}`
-        );
+          process.env.REACT_APP_API_URL + `/facility/facilities/${user.id}`, {
+            method: "GET",
+            credentials: "include"
+          })
         const data = await response.json();
         console.log(data)
+      
         setFacilities(data);
         setLoading(false);
 
@@ -48,7 +52,7 @@ export default function FacilitiesOfUser() {
       }
     }
     fetchFacilityDetails();
-  }, []);
+  }, [user]);
   if (loading) {
     return <Loading />;
   }
