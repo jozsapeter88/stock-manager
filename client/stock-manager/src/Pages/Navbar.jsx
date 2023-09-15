@@ -50,19 +50,6 @@ export default function TopNavbar() {
             <Nav.Item>
               <Nav.Link
                 as={Link}
-                to="/home"
-                style={{
-                  color: "black",
-                  fontWeight: "bold",
-                  marginRight: "10px",
-                }}
-              >
-                Facility List
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link
-                as={Link}
                 to="/productlist"
                 style={{
                   color: "black",
