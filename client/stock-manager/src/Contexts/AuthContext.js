@@ -8,12 +8,12 @@ export const AuthContextProvider = (props) => {
 
    console.log("auth: " + user)
     const login = (userData) => {
-       
-        setUser(userData);
+      sessionStorage.setItem('user', JSON.stringify(userData))
+      setUser(userData);
       };
     
       const logout = () => {
-       
+        sessionStorage.clear();
         setUser(null);
       };
     

@@ -3,7 +3,7 @@ import SignIn from "../SignIn/SignIn";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Contexts/AuthContext";
 
-const LoginUser = async (user) => {
+/*const LoginUser = async (user) => {
     console.log(user);
 
     try {
@@ -36,7 +36,7 @@ const LoginUser = async (user) => {
       return { status: 500 };
     }
   };
-  export {LoginUser};
+  export {LoginUser};*/
 
 const LoginForm = () => {
     const navigate = useNavigate();
@@ -50,19 +50,18 @@ const LoginForm = () => {
     const onSubmit = async (e) => {
         setShowMsg(true);
         e.preventDefault();
-    
+        sessionStorage.clear()
+        
         const user ={
             userName: e.target.formBasicUsername.value,
             passWord: e.target.formBasicPassword.value,
             rememberMe: rememberMe
         }
         try {
-            // Implement your login logic here
             const response = await fetch(process.env.REACT_APP_API_URL + '/user/login', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                
               },
               credentials: "include",
               body: JSON.stringify( user),
@@ -73,11 +72,9 @@ const LoginForm = () => {
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
                   const userData = await response.json();
-                  localStorage.setItem('user', JSON.stringify(userData));
                   login(userData); // Update the user state in AuthContext
                   console.log(userData)
-
-                    navigate(`facilities/${userData.id}`); // Navigate to the home page
+                  navigate(`facilities/${userData.id}`); // Navigate to the home page
                 } else {
                   console.error('Login response is not JSON'); // Handle this case
                 }
@@ -90,7 +87,6 @@ const LoginForm = () => {
               console.error('Error logging in:', error);
             }
           };
-    
     
     return (
     <SignIn 

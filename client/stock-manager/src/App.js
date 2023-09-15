@@ -17,7 +17,7 @@ const App = () => {
   const { user, login } = useAuth();
   console.log(user)
   useEffect(() => {
-    const userJSON = localStorage.getItem('user');
+    const userJSON = sessionStorage.getItem('user');
     console.log(userJSON)
     if (userJSON) {
       const userData = JSON.parse(userJSON);

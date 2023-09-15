@@ -15,8 +15,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+    //.AddDefaultTokenProviders();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -25,7 +25,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddAuthentication("CookieAuth").AddCookie("CookieAuth", options =>
 {
     options.Cookie.Name = "CookieAuth";
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
     options.Cookie.SameSite = SameSiteMode.None;
     options.Events.OnRedirectToAccessDenied =
         options.Events.OnRedirectToLogin = c =>
