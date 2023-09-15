@@ -12,4 +12,5 @@ public class Order
     public DateTime CreatedAt { get; set; }
     public Facility Facility { get; set; }
     public List<Item> Items { get; set; }
+    public User UserOfOrder { get; set; }
 }
