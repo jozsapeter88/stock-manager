@@ -15,6 +15,7 @@ export const AuthContextProvider = (props) => {
       const logout = () => {
         sessionStorage.clear();
         setUser(null);
+        console.log("user is logged out")
       };
     
       return (

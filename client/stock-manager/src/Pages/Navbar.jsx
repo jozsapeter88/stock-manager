@@ -4,7 +4,7 @@ import "./Navbar.css";
 import { useAuth } from "../Contexts/AuthContext";
 
 export default function TopNavbar() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   console.log(user);
 
   return (
@@ -84,6 +84,20 @@ export default function TopNavbar() {
                 }}
               >
                 Statistics
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
+                as={Link}
+                to="/login"
+                style={{
+                  color: "black",
+                  fontWeight: "bold",
+                  marginRight: "10px",
+                }}
+                onClick={logout}
+              >
+                Logout
               </Nav.Link>
             </Nav.Item>
           </Nav>
