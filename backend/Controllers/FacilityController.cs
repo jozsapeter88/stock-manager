@@ -9,11 +9,8 @@ namespace StockBackend.Controllers;
 public class FacilityController : ControllerBase
 {
     private readonly IFacilityService _facilityService;
-    private readonly IUserService _userService;
-
-    public FacilityController(IUserService userService, IFacilityService facilityService)
+    public FacilityController(IFacilityService facilityService)
     {
-        _userService = userService;
         _facilityService = facilityService;
     }
 

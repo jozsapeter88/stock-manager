@@ -22,7 +22,7 @@ public class OrderService: IOrderService
             .Include(order => order.UserOfOrder)
             .Where(o => o.UserOfOrder.Id == userId)
             .ToListAsync();
-        return orders ?? null;
+        return orders;
     }
 
     public async Task<Order?> AddOrder(OrderDto order, string userId)

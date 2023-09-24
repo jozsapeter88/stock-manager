@@ -20,6 +20,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.10" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -54,6 +55,9 @@
     <_ContentIncludedByDefault Remove="Views\_ViewImports.cshtml" />
     <_ContentIncludedByDefault Remove="Views\_ViewStart.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Identity\Pages\_ViewStart.cshtml" />
+    <_ContentIncludedByDefault Remove="StockBackendTest\obj\project.assets.json" />
+    <_ContentIncludedByDefault Remove="StockBackendTest\obj\project.packagespec.json" />
+    <_ContentIncludedByDefault Remove="StockBackendTest\obj\StockBackendTest.csproj.nuget.dgspec.json" />
   </ItemGroup>
 
 

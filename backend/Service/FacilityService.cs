@@ -28,7 +28,7 @@ public class FacilityService: IFacilityService
         var user = await _dbContext.Users
             .Include(u => u.FacilitiesOfUser)
             .FirstOrDefaultAsync(u => u.Id == userId);
-        return user?.FacilitiesOfUser != null ? user.FacilitiesOfUser.ToList() : null;
+        return user?.FacilitiesOfUser?.ToList();
     }
 
     public async Task<Facility?>? GetFacility(int fId)
@@ -40,7 +40,7 @@ public class FacilityService: IFacilityService
     public async Task<Facility?> AddFacilityToUser(int fId, string userId)
     {
         var facility = await _dbContext.Facilities.FirstOrDefaultAsync(f => f.Id == fId);
-        var user =  await _dbContext.Users
+        var user =  await _dbContext.Users.Include(user => user.FacilitiesOfUser)
             .FirstOrDefaultAsync(u => u.Id == userId);
         if (user is not null)
         {
