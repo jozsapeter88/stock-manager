@@ -1,12 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using StockBackend.Areas.Identity.Data.Models;
-using StockBackend.Areas.Identity.Enums;
-using StockBackend.Models;
 using StockBackend.Models.DBContext;
 using StockBackend.Service;
 using StockBackendTest.Fixtures;
 
-namespace StockBackendTest;
+namespace StockBackendTest.ServiceTests;
 [Collection("ServiceCollection")]
 public class FacilityServiceTest
 {

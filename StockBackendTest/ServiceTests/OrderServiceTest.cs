@@ -1,14 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using StockBackend.Areas.Identity.Data.Models;
-using StockBackend.Areas.Identity.Enums;
-using StockBackend.Models;
 using StockBackend.Models.DBContext;
 using StockBackend.Models.DTO;
 using StockBackend.Service;
 using StockBackendTest.Fixtures;
 using Xunit.Abstractions;
 
-namespace StockBackendTest;
+namespace StockBackendTest.ServiceTests;
 [Collection("ServiceCollection")]
 public class OrderServiceTest
 {
