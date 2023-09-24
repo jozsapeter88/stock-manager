@@ -1,8 +1,10 @@
 # <span style="font-size: 30px"><b>Stock System Manager 📦🏢</b></span>
-<span style="color: blue">ℹ️ Please note that this is not the final version of the project, therefore bugs may appear. If you have any suggestions or observations, please do not hesitate to reach out to me!</span> 
+<span style="color: blue">ℹ️ Please note that this is not the final version of the project, therefore bugs may appear. If you have any suggestions or observations, please do not hesitate to reach out to us!</span> 
 
 ## <span style="font-size: 24px"><b>Introduction 👋</b></span>
-Welcome to the Stock System Manager, a React / C# project designed to help you manage your facilities and track their corresponding item stock. This system allows you to place orders for items linked to each facility and effectively manage the order process.
+Welcome to the Stock System Manager, this a project by two of us, [jozsapeter88](https://github.com/jozsapeter88) and [hajosroli](https://github.com/hajosroli). 
+
+A React / C# project designed to help you manage your facilities and track their corresponding item stock. This system allows you to place orders for items linked to each facility and effectively manage the order process.
 
 ## <span style="font-size: 24px"><b>Features 🚀</b></span>
 <i>(including TBA features)</i>
@@ -11,7 +13,9 @@ Welcome to the Stock System Manager, a React / C# project designed to help you m
 
 • Place Orders: Easily place orders for items from their corresponding facilities.
 
-• MERN Stack: The project is built using the MERN (MongoDB, Express, React, Node.js) stack.
+• MERN Stack: The project was originally developed using the MERN stack, which includes MongoDB, Express, React, and Node.js.
+
+• ASP.NET Web API: Subsequently, we opted to transition the backend to an ASP.NET Web API, paired with a PostgreSQL database.
 
 • Manage Facilities: Add, edit, and remove facilities, each with its own stock information.
 
@@ -26,24 +30,36 @@ Follow these instructions to set up the Stock System Manager on your local machi
 
 Clone the repository to your local system using Git.
 ```bash
-# Clone the repository to your local system using Git.
-$ git clone https://github.com/your-username/stock-system-manager.git
+# Clone the repository to your local system.
+$ git clone https://github.com/jozsapeter88/stock-manager.git
 
+# Open the solution
 # Navigate to the project directory.
 $ cd stock-system-manager
 
-# Install the project dependencies.
-$ npm install
+# Make a copy of the .env_public files
+In the project root folder find .env_public_compose, rename it to .env and add your strong password,
+(in the frontend folder find .env_public_frontend you can modify the URL as well if you want)
 
-# Set up the environment variables.
-# Rename the .env.example file to .env and update the values accordingly.
-$ mv .env.example .env
+# Open the appsettings.json file and you can update the "DockerCommandsConnectionString" value with your database connection string.
 
-# Start the development server.
-$ npm start
+# Build Docker Images:
+Navigate to the project directory and build the Docker images using the following command:
 
-# Once the server has started, you can access the Stock System Manager on your local machine using the specified port (e.g., http://localhost:3000).
+$ docker-compose build
+
+# Start the containers in the following order
+
+# Start the database container
+$ docker-compose up -d db
+
+# Start backend container
+$ docker-compose up -d stockbackend
+
+# Start frontend container
+$ docker-compose up -d stockfrontend
+
+# Open your web browser and go to http://localhost:3000 to explore the Stock System Manager.
 ```
-
 # Stats
 <img alt="GitHub Language Count" src="https://img.shields.io/github/languages/count/jozsapeter88/stock-manager" /> <img alt="GitHub Top Language" src="https://img.shields.io/github/languages/top/jozsapeter88/stock-manager" /> <img alt="" src="https://img.shields.io/github/repo-size/jozsapeter88/stock-manager" /> <img alt="GitHub Contributors" src="https://img.shields.io/github/contributors/jozsapeter88/stock-manager" /> <img alt="GitHub Last Commit" src="https://img.shields.io/github/last-commit/jozsapeter88/stock-manager" />
