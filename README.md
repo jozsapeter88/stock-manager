@@ -13,10 +13,6 @@ A React / C# project designed to help you manage your facilities and track their
 
 • Place Orders: Easily place orders for items from their corresponding facilities.
 
-• MERN Stack: The project was originally developed using the MERN stack, which includes MongoDB, Express, React, and Node.js.
-
-• ASP.NET Web API: Subsequently, we opted to transition the backend to an ASP.NET Web API, paired with a PostgreSQL database.
-
 • Manage Facilities: Add, edit, and remove facilities, each with its own stock information.
 
 • Responsive UI: Create a user-friendly interface that adapts to various screen sizes and devices.
@@ -24,6 +20,18 @@ A React / C# project designed to help you manage your facilities and track their
 • User Authentication: Implement user authentication and authorization to ensure data security and privacy.
 
 • Data Visualization: Utilize charts and graphs to visualize stock trends and order history.
+
+## <span style="font-size: 24px"><b>Technologies and Tools Used</b></span>
+
+• MERN Stack: The project was originally developed using the MERN stack, which includes MongoDB, Express, React, and Node.js.
+
+• ASP.NET Web API: Subsequently, we opted to transition the backend to an ASP.NET Web API, paired with a PostgreSQL database.
+
+• Entity Framework: For our data access layer, we utilized Entity Framework, a popular ORM (Object-Relational Mapping) framework for .NET.
+
+• Identity Framework: To manage user authentication and authorization, we integrated the ASP.NET Identity Framework.
+
+• xUnit: For unit testing, we chose xUnit, ensuring the reliability and robustness of our application.
 
 ## <span style="font-size: 24px"><b>Instructions 🔧</b></span>
 Follow these instructions to set up the Stock System Manager on your local machine:
