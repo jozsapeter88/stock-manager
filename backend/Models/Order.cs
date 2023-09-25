@@ -13,4 +13,5 @@ public class Order
     public Facility Facility { get; set; }
     public List<Item> Items { get; set; }
     public User UserOfOrder { get; set; }
+    public bool IsDelivered { get; set; } = false;
 }

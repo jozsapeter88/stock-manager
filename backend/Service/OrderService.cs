@@ -5,7 +5,7 @@ using StockBackend.Models.DTO;
 
 namespace StockBackend.Service;
 
-public class OrderService: IOrderService
+public class OrderService : IOrderService
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -27,7 +27,7 @@ public class OrderService: IOrderService
 
     public async Task<Order?> AddOrder(OrderDto order, string userId)
     {
-        var user =  await _dbContext.Users.Include(user => user.OrdersOfUser)
+        var user = await _dbContext.Users.Include(user => user.OrdersOfUser)
             .FirstOrDefaultAsync(u => u.Id == userId);
         var newOrder = new Order();
         if (user is not null)
@@ -40,21 +40,47 @@ public class OrderService: IOrderService
                 Facility = order.Facility,
                 Items = order.Items,
                 UserOfOrder = user
-
             };
             if (user.OrdersOfUser is null)
             {
                 user.OrdersOfUser = new List<Order> { newOrder };
-                Console.WriteLine("if: "+ user.OrdersOfUser.Count);
+                Console.WriteLine("if: " + user.OrdersOfUser.Count);
             }
             else
             {
                 user.OrdersOfUser.Add(newOrder);
-                Console.WriteLine("else: "+ user.OrdersOfUser.Count);
+                Console.WriteLine("else: " + user.OrdersOfUser.Count);
             }
         }
+
         await _dbContext.SaveChangesAsync();
         return newOrder ?? null;
+    }
 
+    public async Task<bool> DeleteOrder(long orderId)
+    {
+        var order = await _dbContext.Orders.FindAsync(orderId);
+        if (order is null)
+        {
+            return false;
+        }
+
+        _dbContext.Orders.Remove(order);
+        await _dbContext.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> ConfirmOrder(long orderId)
+    {
+        var order = await _dbContext.Orders.FindAsync(orderId);
+
+        if (order is null)
+        {
+            return false;
+        }
+
+        order.IsDelivered = true;
+
+        return true;
     }
 }
