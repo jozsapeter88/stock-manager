@@ -11,6 +11,10 @@ const OrderHistory = () => {
   const [selectedFacility, setSelectedFacility] = useState("All facilities");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedOrderIdForDeletion, setSelectedOrderIdForDeletion] =
+    useState(null);
+
   const { user } = useAuth();
 
   const fetchOrderHistory = async (user) => {
@@ -164,10 +168,13 @@ const OrderHistory = () => {
                 <td>
                   <Button
                     variant="danger"
-                    onClick={() => deleteOrder(order.id)}
+                    onClick={() => {
+                      setSelectedOrderIdForDeletion(order.id);
+                      setShowDeleteModal(true);
+                    }}
                   >
                     Delete
-                  </Button>{" "}
+                  </Button>
                   <Button
                     variant="success"
                     onClick={() => {
@@ -210,6 +217,37 @@ const OrderHistory = () => {
               }}
             >
               Confirm
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* Confirm Delete Modal */}
+        <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Delete Order</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>Are you sure you want to delete this order?</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setShowDeleteModal(false);
+                setSelectedOrderIdForDeletion(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => {
+                deleteOrder(selectedOrderIdForDeletion);
+                setShowDeleteModal(false);
+                setSelectedOrderIdForDeletion(null);
+              }}
+            >
+              Confirm Delete
             </Button>
           </Modal.Footer>
         </Modal>
