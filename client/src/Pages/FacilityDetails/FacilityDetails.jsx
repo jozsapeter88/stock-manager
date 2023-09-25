@@ -18,31 +18,32 @@ export default function FacilityDetails() {
   const [itemDetails, setItemDetails] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [comment, setComment] = useState("");
   const { user } = useAuth();
 
-
   useEffect(() => {
     const fetchFacilityDetails = async () => {
       try {
         const response = await fetch(
-          process.env.REACT_APP_API_URL + `/facility/getFacility/${id}`, {
+          process.env.REACT_APP_API_URL + `/facility/getFacility/${id}`,
+          {
             method: "GET",
-            credentials: "include"
-          });
-       
+            credentials: "include",
+          }
+        );
+
         const data = await response.json();
         setFacility(data);
 
-        // Fetch item details as well
-         const items = await fetchItems();
-         const itemsData= await items.json();
-         setItemDetails(itemsData)
-         console.log("items"+ items.length)
-
+        const items = await fetchItems();
+        const itemsData = await items.json();
+        setItemDetails(itemsData);
+        console.log("items" + items.length);
       } catch (error) {
         console.error("Error fetching facility details:", error);
       }
@@ -65,32 +66,48 @@ export default function FacilityDetails() {
         facility: facility,
         items: [selectedItem],
         quantity: quantity,
-        comment: comment
+        comment: comment,
       };
-      console.log(order)
-      const response = await fetch(process.env.REACT_APP_API_URL + `/order/addOrder/${user.id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(order),
-      });
+      console.log(order);
+      const response = await fetch(
+        process.env.REACT_APP_API_URL + `/order/addOrder/${user.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(order),
+        }
+      );
 
       const data = await response.json();
 
       console.log("Order placed successfully:", data);
-
+      setSuccessMessage("Order placed successfully!");
       setShowModal(false);
+      setSelectedItem(null);
+      setQuantity(1);
+      setComment("");
+
+      setShowSuccessMessage(true);
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 3000);
     } catch (error) {
       console.error("Error placing order:", error);
     }
   };
-  
+
   return (
     <div>
       <TopNavbar />
+
       <div className="table-container">
-        <Link to={`/facilities/${user.id}`} variant="warning" style={{ marginBottom: "10px" }}>
+        <Link
+          to={`/facilities/${user.id}`}
+          variant="warning"
+          style={{ marginBottom: "10px" }}
+        >
           <Button variant="outline-warning">Back</Button>
         </Link>
         <Button
@@ -101,7 +118,13 @@ export default function FacilityDetails() {
           Order
         </Button>
         <h1>{facility.name}</h1>
-        <Table striped bordered hover style={{ outline: "2px solid"}}>
+        {/* Success message */}
+        {showSuccessMessage && (
+          <div className="alert alert-success" role="alert">
+            {successMessage}
+          </div>
+        )}
+        <Table striped bordered hover style={{ outline: "2px solid" }}>
           <tbody>
             <tr>
               <td>Sport</td>
@@ -122,7 +145,7 @@ export default function FacilityDetails() {
           </tbody>
         </Table>
         <h2>Item Stock:</h2>
-        <Table striped bordered hover style={{ outline: "2px solid"}}>
+        <Table striped bordered hover style={{ outline: "2px solid" }}>
           <thead>
             <tr>
               <th>Category</th>
