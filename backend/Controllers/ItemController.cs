@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using StockBackend.Models;
 using StockBackend.Service;
 
 namespace StockBackend.Controllers;
@@ -15,7 +16,7 @@ public class ItemController: ControllerBase
 
     [HttpGet("getItems")]
 
-    public async Task<ActionResult> GetItems()
+    public async Task<ActionResult<List<Item>>> GetItems()
     {
         var result = await _itemService.GetItems();
         if (result is null) return NotFound("No items available");

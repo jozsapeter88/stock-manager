@@ -29,26 +29,24 @@ public class OrderServiceTest
         var seed = await _serviceFixture.AddUserAndFacilityToInMemoryDb(options);
 
         //Act
-        await using (var context = new ApplicationDbContext(options))
+        await using var context = new ApplicationDbContext(options);
+        var orderService = new OrderService(context);
+        var orderToAdd = new OrderDto()
         {
-            var orderService = new OrderService(context);
-            var orderToAdd = new OrderDto()
-            {
-                Quantity = 10,
-                Comment = "test_comment",
-                Facility = seed.Item2,
-                Items = seed.Item3,
-            };
-            await orderService.AddOrder(orderToAdd, "test-Id");
-            var user =  await context.Users
-                .Include(user => user.OrdersOfUser)!.ThenInclude(order => order.Items)
-                .Include(user => user.OrdersOfUser)!.ThenInclude(order => order.Facility)
-                .FirstOrDefaultAsync(u => u.UserName == "testUser");
-            
-            Assert.True(user?.OrdersOfUser?.First().Items?.Count == 2);
-           user?.OrdersOfUser?.First().Items.ForEach(f => _testOutputHelper.WriteLine(f.Name));
-            Assert.True(user?.OrdersOfUser?.First().Facility.Name == "TestFacility");
-            Assert.Equal(10, user?.OrdersOfUser?.First().Quantity);
-        }
+            Quantity = 10,
+            Comment = "test_comment",
+            Facility = seed.Item2,
+            Items = seed.Item3,
+        };
+        await orderService.AddOrder(orderToAdd, "test-Id");
+        var user =  await context.Users
+            .Include(user => user.OrdersOfUser)!.ThenInclude(order => order.Items)
+            .Include(user => user.OrdersOfUser)!.ThenInclude(order => order.Facility)
+            .FirstOrDefaultAsync(u => u.UserName == "testUser");
+        //Assert
+        Assert.True(user?.OrdersOfUser?.First().Items?.Count == 2);
+        user?.OrdersOfUser?.First().Items.ForEach(f => _testOutputHelper.WriteLine(f.Name));
+        Assert.True(user?.OrdersOfUser?.First().Facility.Name == "TestFacility");
+        Assert.Equal(10, user?.OrdersOfUser?.First().Quantity);
     }
 }
