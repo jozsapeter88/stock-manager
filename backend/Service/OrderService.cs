@@ -55,6 +55,32 @@ public class OrderService: IOrderService
         }
         await _dbContext.SaveChangesAsync();
         return newOrder ?? null;
+    }
+    
+    public async Task<bool> DeleteOrder(long orderId)
+    {
+        var order = await _dbContext.Orders.FindAsync(orderId);
+        if (order is null)
+        {
+            return false;
+        }
 
+        _dbContext.Orders.Remove(order);
+        await _dbContext.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> ConfirmOrder(long orderId)
+    {
+        var order = await _dbContext.Orders.FindAsync(orderId);
+
+        if (order is null)
+        {
+            return false;
+        }
+
+        order.IsDelivered = true;
+
+        return true;
     }
 }
