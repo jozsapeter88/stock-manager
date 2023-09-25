@@ -112,6 +112,22 @@ const OrderHistory = () => {
     }
   };
 
+  const filteredOrders = orderHistory.filter((order) => {
+    // Filter by selected facility
+    const isFacilityFiltered =
+      selectedFacility === "All facilities" ||
+      order.facility.name === selectedFacility;
+
+    // Filter by item name search query
+    const isItemNameFiltered =
+      searchItem === "" ||
+      order.items.some((item) =>
+        item.name.toLowerCase().includes(searchItem.toLowerCase())
+      );
+
+    return isFacilityFiltered && isItemNameFiltered;
+  });
+
   return (
     <div>
       <TopNavbar />
@@ -123,6 +139,7 @@ const OrderHistory = () => {
               value={selectedFacility}
               onChange={(e) => setSelectedFacility(e.target.value)}
             >
+              <option value="All facilities">All facilities</option>
               {facilities.map((facility) => (
                 <option key={facility.id} value={facility.name}>
                   {facility.name}
@@ -153,7 +170,7 @@ const OrderHistory = () => {
             </tr>
           </thead>
           <tbody>
-            {orderHistory.map((order) => (
+            {filteredOrders.map((order) => (
               <tr
                 key={order.id}
                 className={
