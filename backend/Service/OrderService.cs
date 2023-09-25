@@ -80,6 +80,7 @@ public class OrderService: IOrderService
         }
 
         order.IsDelivered = true;
+        await _dbContext.SaveChangesAsync();
 
         return true;
     }

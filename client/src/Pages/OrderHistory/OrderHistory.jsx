@@ -1,105 +1,117 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Form, Modal } from "react-bootstrap";
-import TopNavbar from "../Navbar";
 import { useAuth } from "../../Contexts/AuthContext";
-
-const fetchOrderHistory = async (user) => {
-  try {
-    return await fetch(process.env.REACT_APP_API_URL + `/order/getOrders/${user.id}`);
-    
-  } catch (error) {
-    console.error("Error fetching order history:", error);
-  }
-};
 
 const OrderHistory = () => {
   const [orderHistory, setOrderHistory] = useState([]);
+  const [facilities, setFacilities] = useState([]);
   const [searchItem, setSearchItem] = useState("");
   const [selectedFacility, setSelectedFacility] = useState("All facilities");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const { user } = useAuth();
-
-  useEffect(() => {
-    fetchOrderHistory(user)
-    .then((data) => data.json())
-    .then((orders)=> setOrderHistory(orders));
-  }, []);
-
   
+  const fetchOrderHistory = async (user) => {
+    try {
+      return await fetch(
+        `${process.env.REACT_APP_API_URL}/order/getOrders/${user.id}`
+      );
+    } catch (error) {
+      console.error("Error fetching order history:", error);
+    }
+  };
+  
+  const fetchFacilityDetails = async (user) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/facility/facilities/${user.id}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+  
+      if (response.ok) {
+        const data = await response.json();
+        setFacilities(data);
+      } else {
+        console.error("Failed to fetch facilities");
+      }
+    } catch (error) {
+      console.error("Error fetching facility details:", error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchFacilityDetails(user);
+
+    fetchOrderHistory(user)
+      .then((data) => data.json())
+      .then((orders) => setOrderHistory(orders));
+  }, [user]);
+
+
 
   const deleteOrder = async (orderId) => {
     try {
       const response = await fetch(
-        `http://localhost:5001/api/orders/${orderId}`,
+        `${process.env.REACT_APP_API_URL}/order/deleteOrder/${user.id}/${orderId}`,
         {
           method: "DELETE",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
-
-      const data = await response.json();
-      console.log("Order deleted successfully:", data);
-
-      fetchOrderHistory();
+  
+      if (response.ok) {
+        const data = await response.json();
+        setOrderHistory(data);
+        console.log("Order successfully deleted")
+      } else {
+        console.error("Failed to fetch orders");
+      }
     } catch (error) {
       console.error("Error deleting order:", error);
+      return false;
     }
   };
 
   const confirmDelivered = async () => {
     try {
-      if (selectedOrderId) {
-        const response = await fetch(
-          `http://localhost:5001/api/orders/${selectedOrderId}/confirm`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-  
-        if (response.ok) {
-          console.log("Order confirmed and removed successfully.");
-          fetchOrderHistory(); // Fetch updated order history after confirming delivery
-        } else {
-          console.error("Failed to confirm order. Status:", response.status);
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/order/confirmOrder/${selectedOrderId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
+      );
+      if (response.ok) {
+        
+        let order = orderHistory.find(o => o.id === selectedOrderId);
+        console.log(order)
+        order.isDelivered = true;
+        let data = [...orderHistory];
+        let orderInData = data.findIndex(o => o.id === selectedOrderId);
+        console.log(orderInData)
+        data[orderInData] = order;
+        console.log(data)
+        setOrderHistory([...data]);
       } else {
-        console.error("Selected order ID is not valid.");
+        console.error("Failed to confirm order");
       }
-  
-      setShowConfirmModal(false);
-      setSelectedOrderId(null);
     } catch (error) {
-      console.error("Error confirming delivery:", error);
+      console.error("Error confirming order:", error);
+      return false;
     }
   };
 
-  const uniqueFacilities = [
-    "All facilities",
-    ...new Set(orderHistory.map((order) => order.facility)),
-  ];
-
-  const filteredOrderHistory = orderHistory.filter((order) => {
-    const itemNames = order.items?.map((item) => item.name.toLowerCase());
-    const facilityMatch =
-      selectedFacility === "All facilities" ||
-      order.facility === selectedFacility;
-
-    return (
-      itemNames?.some((itemName) =>
-        itemName.includes(searchItem.toLowerCase())
-      ) && facilityMatch
-    );
-  });
-
   return (
     <div>
-      <TopNavbar />
+      {/* <TopNavbar /> */}
       <div className="table-container">
         <h1>Order History</h1>
         <Form>
@@ -108,9 +120,9 @@ const OrderHistory = () => {
               value={selectedFacility}
               onChange={(e) => setSelectedFacility(e.target.value)}
             >
-              {uniqueFacilities.map((facility) => (
-                <option key={facility} value={facility}>
-                  {facility}
+              {facilities.map((facility) => (
+                <option key={facility.id} value={facility.name}>
+                  {facility.name}
                 </option>
               ))}
             </Form.Select>
@@ -126,7 +138,7 @@ const OrderHistory = () => {
         </Form>
         <br />
 
-        <Table striped bordered hover style={{ outline: '2px solid'}}>
+        <Table striped bordered hover style={{ outline: "2px solid" }}>
           <thead>
             <tr>
               <th>Facility</th>
@@ -140,7 +152,7 @@ const OrderHistory = () => {
           <tbody>
             {orderHistory.map((order) => (
               <tr key={order.id}>
-                <td>{order.facility}</td>
+                <td>{order.facility.name}</td>
                 <td>{order.items.map((item) => item.name).join(", ")}</td>
                 <td>{order.quantity}</td>
                 <td>{order.comment}</td>
@@ -148,14 +160,14 @@ const OrderHistory = () => {
                 <td>
                   <Button
                     variant="danger"
-                    onClick={() => deleteOrder(order._id)}
+                    onClick={() => deleteOrder(order.id)}
                   >
                     Delete
                   </Button>{" "}
                   <Button
                     variant="success"
                     onClick={() => {
-                      setSelectedOrderId(order._id);
+                      setSelectedOrderId(order.id);
                       setShowConfirmModal(true);
                     }}
                   >
@@ -185,7 +197,10 @@ const OrderHistory = () => {
             >
               Cancel
             </Button>
-            <Button variant="success" onClick={confirmDelivered}>
+            <Button variant="success" 
+            onClick={() => {  
+              confirmDelivered();
+              setShowConfirmModal(false)}}>
               Confirm
             </Button>
           </Modal.Footer>
