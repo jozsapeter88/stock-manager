@@ -1,4 +1,5 @@
-# <span style="font-size: 30px"><b>Stock System Manager 📦🏢</b></span>
+![header](https://github.com/jozsapeter88/stock-manager/assets/113460628/f7f63c31-10bd-43fc-81a7-736467bb36ba)
+
 <span style="color: blue">ℹ️ Please note that this is not the final version of the project, therefore bugs may appear. If you have any suggestions or observations, please do not hesitate to reach out to us!</span> 
 
 ## <span style="font-size: 24px"><b>Introduction 👋</b></span>
