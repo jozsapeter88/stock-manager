@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using StockBackend.Areas.Identity.Enums;
+using StockBackend.Models;
 using StockBackend.Models.DBContext;
 using StockBackend.Service;
 using StockBackendTest.Fixtures;
@@ -19,11 +21,11 @@ public class FacilityServiceTest
     public async Task AddFacilityToUser_ToUserWithoutFacilities()
     {
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase($"StockDBForTesting")
+            .UseInMemoryDatabase($"StockDBForTesting{Guid.NewGuid()}")
             .Options;
         //Seed InMemoryDb with a user and a facility
         await _serviceFixture.AddUserAndFacilityToInMemoryDb(options);
-
+       
         await using var context = new ApplicationDbContext(options);
         //Act
         var facilityService = new FacilityService(context);
@@ -36,6 +38,29 @@ public class FacilityServiceTest
         Assert.Equal(1, 
             user!.FacilitiesOfUser!
                 .First(facility => facility.Name == "TestFacility").Id);
+        Assert.Single(user!.FacilitiesOfUser!);
     }
     
+    [Fact]
+    public async Task AddFacilityToUser_ToUserWithFacility()
+    {
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseInMemoryDatabase($"StockDBForTesting{Guid.NewGuid()}")
+            .Options;
+        
+        //Seed InMemoryDb with a user and a facility and items
+        await _serviceFixture.AddUserAndFacilityToInMemoryDb(options);
+
+        await using var context = new ApplicationDbContext(options);
+        //Act
+        var facilityService = new FacilityService(context);
+        await facilityService.AddFacilityToUser(1, "test-Id2");
+        await context.SaveChangesAsync();
+        //Assert
+        var user = await context.Users
+            .Include(user => user.FacilitiesOfUser)
+            .FirstOrDefaultAsync(u => u.UserName == "testUserAlreadyHasFacility");
+        Assert.Equal(2, user!.FacilitiesOfUser!.Count);
+    }
+
 }
