@@ -21,7 +21,7 @@ public class FacilityServiceTest
     public async Task AddFacilityToUser_ToUserWithoutFacilities()
     {
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase($"StockDBForTesting")
+            .UseInMemoryDatabase($"StockDBForTesting{Guid.NewGuid()}")
             .Options;
         //Seed InMemoryDb with a user and a facility
         await _serviceFixture.AddUserAndFacilityToInMemoryDb(options);
@@ -38,15 +38,16 @@ public class FacilityServiceTest
         Assert.Equal(1, 
             user!.FacilitiesOfUser!
                 .First(facility => facility.Name == "TestFacility").Id);
-        Assert.Equal(1, user!.FacilitiesOfUser!.Count);
+        Assert.Single(user!.FacilitiesOfUser!);
     }
     
     [Fact]
     public async Task AddFacilityToUser_ToUserWithFacility()
     {
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase($"StockDBForTesting")
+            .UseInMemoryDatabase($"StockDBForTesting{Guid.NewGuid()}")
             .Options;
+        
         //Seed InMemoryDb with a user and a facility and items
         await _serviceFixture.AddUserAndFacilityToInMemoryDb(options);
 

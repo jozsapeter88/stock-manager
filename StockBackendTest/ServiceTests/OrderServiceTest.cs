@@ -23,7 +23,7 @@ public class OrderServiceTest
     public async Task AddOrder_ByUserWithoutOrders()
     {
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase($"StockDbForTesting")
+            .UseInMemoryDatabase($"StockDbForTesting{Guid.NewGuid()}")
             .Options;
         //Arrange
         var seed = await _serviceFixture.AddUserAndFacilityToInMemoryDb(options);

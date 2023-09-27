@@ -20,7 +20,7 @@ public class ItemServiceTest
     public async Task GetItems_MustReturnListOfItems()
     {
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase($"StockDbForTesting")
+            .UseInMemoryDatabase($"StockDbForTesting{Guid.NewGuid()}")
             .Options;
         //Arrange
          await _serviceFixture.AddUserAndFacilityToInMemoryDb(options);
@@ -37,7 +37,7 @@ public class ItemServiceTest
     public async Task GetItems_MustReturnEmptyList()
     {
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase($"StockDbForTesting")
+            .UseInMemoryDatabase($"StockDbForTesting{Guid.NewGuid()}")
             .Options;
         //Arrange
         //Act
