@@ -104,145 +104,151 @@ const StatisticsPage = () => {
 
   const calculateInventoryValue = (facility) => {
     if (!facility.Items) return 0;
-    return facility.Items.reduce((total, item) => total + item.Price * item.Quantity, 0);
+    return facility.Items.reduce(
+      (total, item) => total + item.Price * item.Quantity,
+      0
+    );
   };
 
   const calculateOrdersLinked = (facility) => {
-    return ordersData.filter((order) => order.FacilityId === facility.id).length;
+    return ordersData.filter((order) => order.FacilityId === facility.id)
+      .length;
   };
-  
+
   return (
-    <div className="main-container">
+    <>
       <TopNavbar />
-      <h1>Global statistics</h1>
-      {/* Cards */}
+      <div className="main-container">
+        <h1>Global statistics</h1>
+        {/* Cards */}
 
-      <Row>
-        <Col md={4}>
-          <Card>
-            <Card.Body>
-              <Card.Title>Number of Facilities</Card.Title>
-              <Card.Text>{facilitiesData.length}</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        <Col md={4}>
-          <Card>
-            <Card.Body>
-              <Card.Title>Number of Orders</Card.Title>
-              <Card.Text>{ordersData.length}</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        <Col md={4}>
-          <Card>
-            <Card.Body>
-              <Card.Title>Item Types</Card.Title>
-              <Card.Text>{itemsData.length}</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col md={4}>
-          <Card>
-            <Card.Body>
-              <Card.Title>Overall Quantity of Items</Card.Title>
-              <Card.Text>
-                {itemsData.reduce((total, item) => total + item.quantity, 0)}
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        <Col md={4}>
-          <Card>
-            <Card.Body>
-              <Card.Title>Average Value of Items</Card.Title>
-              <Card.Text>
-                {itemsData.length > 0
-                  ? (
-                      itemsData.reduce((total, item) => {
-                        if (!isNaN(item.Price) && !isNaN(item.Quantity)) {
-                          return total + item.Price * item.Quantity;
-                        }
-                        return total;
-                      }, 0) /
-                      itemsData.reduce((totalQuantity, item) => {
-                        if (!isNaN(item.Quantity)) {
-                          return totalQuantity + item.Quantity;
-                        }
-                        return totalQuantity;
-                      }, 0)
-                    ).toFixed(2)
-                  : "N/A"}
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        <Col md={4}>
-          <Card>
-            <Card.Body>
-              <Card.Title>Overall Value of Items</Card.Title>
-              <Card.Text>
-                {itemsData.reduce((total, item) => total + item.value, 0)}
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      <h1>Your statistics</h1>
-      <Row>
-        {ownFacilitiesData.map((facility) => (
-          <Col key={facility.id} md={4}>
+        <Row>
+          <Col md={4}>
             <Card>
               <Card.Body>
-                <Card.Title>{facility.name}</Card.Title>
+                <Card.Title>Number of Facilities</Card.Title>
+                <Card.Text>{facilitiesData.length}</Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+
+          <Col md={4}>
+            <Card>
+              <Card.Body>
+                <Card.Title>Number of Orders</Card.Title>
+                <Card.Text>{ordersData.length}</Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+
+          <Col md={4}>
+            <Card>
+              <Card.Body>
+                <Card.Title>Item Types</Card.Title>
+                <Card.Text>{itemsData.length}</Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col md={4}>
+            <Card>
+              <Card.Body>
+                <Card.Title>Overall Quantity of Items</Card.Title>
                 <Card.Text>
-                  Number of Items in Inventory:{" "}
-                  {calculateInventoryItems(facility)}
-                </Card.Text>
-                <Card.Text>
-                  Overall Value of Inventory:{" "}
-                  {calculateInventoryValue(facility).toFixed(2)}
-                </Card.Text>
-                <Card.Text>
-                  Orders Linked: {calculateOrdersLinked(facility)}
+                  {itemsData.reduce((total, item) => total + item.quantity, 0)}
                 </Card.Text>
               </Card.Body>
             </Card>
           </Col>
-        ))}
-      </Row>
 
-      {/* Items */}
-      <h2>Items</h2>
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Item Name</th>
-            <th>Quantity</th>
-          </tr>
-        </thead>
-        <tbody>
-          {itemsToDisplay.map((item) => (
-            <tr key={item.id}>
-              <td>{item.name}</td>
-              <td>{item.quantity}</td>
-            </tr>
+          <Col md={4}>
+            <Card>
+              <Card.Body>
+                <Card.Title>Average Value of Items</Card.Title>
+                <Card.Text>
+                  {itemsData.length > 0
+                    ? (
+                        itemsData.reduce((total, item) => {
+                          if (!isNaN(item.Price) && !isNaN(item.Quantity)) {
+                            return total + item.Price * item.Quantity;
+                          }
+                          return total;
+                        }, 0) /
+                        itemsData.reduce((totalQuantity, item) => {
+                          if (!isNaN(item.Quantity)) {
+                            return totalQuantity + item.Quantity;
+                          }
+                          return totalQuantity;
+                        }, 0)
+                      ).toFixed(2)
+                    : "N/A"}
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+
+          <Col md={4}>
+            <Card>
+              <Card.Body>
+                <Card.Title>Overall Value of Items</Card.Title>
+                <Card.Text>
+                  {itemsData.reduce((total, item) => total + item.value, 0)}
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+
+        <h1>Your statistics</h1>
+        <Row>
+          {ownFacilitiesData.map((facility) => (
+            <Col key={facility.id} md={4}>
+              <Card>
+                <Card.Body>
+                  <Card.Title>{facility.name}</Card.Title>
+                  <Card.Text>
+                    Number of Items in Inventory:{" "}
+                    {calculateInventoryItems(facility)}
+                  </Card.Text>
+                  <Card.Text>
+                    Overall Value of Inventory:{" "}
+                    {calculateInventoryValue(facility).toFixed(2)}
+                  </Card.Text>
+                  <Card.Text>
+                    Orders Linked: {calculateOrdersLinked(facility)}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
           ))}
-        </tbody>
-      </Table>
+        </Row>
 
-      {/* Pagination */}
-      <Pagination size="md">
-        {Array.from({ length: Math.ceil(itemsData.length / itemsPerPage) }).map(
-          (_, index) => (
+        {/* Items */}
+        <h2>Items</h2>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Item Name</th>
+              <th>Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {itemsToDisplay.map((item) => (
+              <tr key={item.id}>
+                <td>{item.name}</td>
+                <td>{item.quantity}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+
+        {/* Pagination */}
+        <Pagination size="md">
+          {Array.from({
+            length: Math.ceil(itemsData.length / itemsPerPage),
+          }).map((_, index) => (
             <PageItem
               key={index}
               active={index + 1 === currentPage}
@@ -250,10 +256,10 @@ const StatisticsPage = () => {
             >
               {index + 1}
             </PageItem>
-          )
-        )}
-      </Pagination>
-    </div>
+          ))}
+        </Pagination>
+      </div>
+    </>
   );
 };
 
