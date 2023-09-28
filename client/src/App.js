@@ -35,7 +35,6 @@ const App = () => {
       <Routes>
         <Route path="/" element={<LoginForm />} />
         <Route path="register" element={<RegisterFormNew />} />
-        <Route path="home" element={<Home />} />
         <Route path="login" element={<LoginForm />} />
         <Route path="facilities/:id" element={<FacilitiesOfUser />} />
         <Route path="facilityDetails/:id" element={<FacilityDetails />} />

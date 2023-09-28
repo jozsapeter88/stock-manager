@@ -50,9 +50,6 @@ export default function FacilitiesOfUser() {
     <div>
       <TopNavbar />
       <div className="table-container">
-        <Link to="/home" variant="warning" style={{ marginBottom: "10px" }}>
-          <Button variant="outline-warning">Back</Button>
-        </Link>
         
         <div className="table-container">
         <Table striped bordered hover style={{ outline: "2px solid"}}>
