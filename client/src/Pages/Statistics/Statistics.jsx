@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Col, Row, Card, Table, Pagination, PageItem } from "react-bootstrap";
 import TopNavbar from "../Navbar";
 import "./Statistics.css";
+import { useAuth } from "../../Contexts/AuthContext";
 
 const StatisticsPage = () => {
   const [facilitiesData, setFacilitiesData] = useState([]);
+  const [ownFacilitiesData, setOwnFacilitiesData] = useState([]);
   const [itemsData, setItemsData] = useState([]);
   const [ordersData, setOrdersData] = useState([]);
+  const { user } = useAuth();
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -26,6 +29,23 @@ const StatisticsPage = () => {
         setFacilitiesData(data);
       } catch (error) {
         console.error("Error fetching facilities:", error);
+      }
+    };
+
+    const fetchOwnFacilities = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/facility/facilities/${user.id}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch own facilities");
+        }
+
+        const data = await response.json();
+        setOwnFacilitiesData(data);
+      } catch (error) {
+        console.error("Error fetching own facilities:", error);
       }
     };
 
@@ -64,9 +84,10 @@ const StatisticsPage = () => {
     };
 
     fetchFacilities();
+    fetchOwnFacilities();
     fetchItems();
     fetchOrders();
-  }, []);
+  }, [user]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -76,10 +97,24 @@ const StatisticsPage = () => {
   const endIndex = startIndex + itemsPerPage;
   const itemsToDisplay = itemsData.slice(startIndex, endIndex);
 
+  const calculateInventoryItems = (facility) => {
+    if (!facility.Items) return 0;
+    return facility.Items.reduce((total, item) => total + item.Quantity, 0);
+  };
+
+  const calculateInventoryValue = (facility) => {
+    if (!facility.Items) return 0;
+    return facility.Items.reduce((total, item) => total + item.Price * item.Quantity, 0);
+  };
+
+  const calculateOrdersLinked = (facility) => {
+    return ordersData.filter((order) => order.FacilityId === facility.id).length;
+  };
+  
   return (
     <div className="main-container">
       <TopNavbar />
-      <h1>Statistics Page</h1>
+      <h1>Global statistics</h1>
       {/* Cards */}
 
       <Row>
@@ -159,6 +194,30 @@ const StatisticsPage = () => {
             </Card.Body>
           </Card>
         </Col>
+      </Row>
+
+      <h1>Your statistics</h1>
+      <Row>
+        {ownFacilitiesData.map((facility) => (
+          <Col key={facility.id} md={4}>
+            <Card>
+              <Card.Body>
+                <Card.Title>{facility.name}</Card.Title>
+                <Card.Text>
+                  Number of Items in Inventory:{" "}
+                  {calculateInventoryItems(facility)}
+                </Card.Text>
+                <Card.Text>
+                  Overall Value of Inventory:{" "}
+                  {calculateInventoryValue(facility).toFixed(2)}
+                </Card.Text>
+                <Card.Text>
+                  Orders Linked: {calculateOrdersLinked(facility)}
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
       </Row>
 
       {/* Items */}
