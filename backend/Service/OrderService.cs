@@ -14,6 +14,16 @@ public class OrderService: IOrderService
         _dbContext = dbContext;
     }
 
+    public async Task<List<Order>?> GetAllOrders()
+    {
+        var orders = await _dbContext.Orders
+            .Include(order => order.Items)
+            .Include(order => order.Facility)
+            .Include(order => order.UserOfOrder)
+            .ToListAsync();
+        return orders;
+    }
+    
     public async Task<List<Order>?> GetOrdersOfUser(string userId)
     {
         var orders = await _dbContext.Orders

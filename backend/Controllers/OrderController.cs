@@ -15,6 +15,13 @@ public class OrderController: ControllerBase
         _orderService = orderService;
     }
 
+    [HttpGet("getAllOrders")]
+    public async Task<ActionResult<List<Order>>> GetAllOrders()
+    {
+        var result = await _orderService.GetAllOrders();
+        return Ok(result);
+    }
+    
     [HttpGet("getOrders/{userId}")]
     public async Task<ActionResult<List<Order>>> GetOrdersOfUser(string userId)
     {
