@@ -4,25 +4,25 @@ using StockBackend.Service;
 
 namespace StockBackend.Controllers
 {
-    [Route("api/suppliers")]
     [ApiController]
+    [Route("api/[controller]")]
     public class SupplierController : ControllerBase
     {
         private readonly ISupplierService _supplierService;
 
         public SupplierController(ISupplierService supplierService)
         {
-            _supplierService = supplierService ?? throw new ArgumentNullException(nameof(supplierService));
+            _supplierService = supplierService;
         }
 
-        [HttpGet]
+        [HttpGet("getAllSuppliers")]
         public async Task<IActionResult> GetAllSuppliers()
         {
             var suppliers = await _supplierService.GetAllSuppliers();
             return Ok(suppliers);
         }
 
-        [HttpPost]
+        [HttpPost("addSupplier")]
         public async Task<IActionResult> AddSupplier([FromBody] Supplier newSupplier)
         {
             if (newSupplier == null)
