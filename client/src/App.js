@@ -12,6 +12,7 @@ import ProductList from "./Pages/Products/ProductList";
 import FacilitiesOfUser from "./Pages/FacilitiesOfUser/FacilitiesOfUser";
 import AdminPage from "./Pages/AdminPage/AdminPage";
 import FacilityDetails from "./Pages/FacilityDetails/FacilityDetails";
+import SupplierPage from "./Pages/SupplierPage/SupplierPage";
 
 const App = () => {
   const { user, login } = useAuth();
@@ -41,6 +42,7 @@ const App = () => {
         <Route path="orderhistory/:id" element={<OrderHistory />} />
         <Route path="order-history" element={<OrderHistory />} />
         <Route path="statistics" element={<Statistics />} />
+        <Route path="suppliers" element={<SupplierPage />} />
         <Route path="*" element={<ErrorPage />} />
         <Route
           path="admin"
