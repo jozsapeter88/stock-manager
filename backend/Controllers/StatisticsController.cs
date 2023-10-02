@@ -4,7 +4,7 @@ using StockBackend.Service;
 namespace StockBackend.Controllers;
 
 [ApiController]
-[Route("api")]
+[Route("api/[controller]")]
 public class StatisticsController : ControllerBase
 {
     private readonly IStatisticsService _statisticsService;

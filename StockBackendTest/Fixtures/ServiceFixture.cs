@@ -6,7 +6,7 @@ using StockBackend.Models.DBContext;
 
 namespace StockBackendTest.Fixtures;
 
-public class ServiceFixture : IDisposable
+public class ServiceFixture //: IDisposable
 {
   public async Task<(List<User>, Facility, List<Item>)> AddUserAndFacilityToInMemoryDb(DbContextOptions<ApplicationDbContext> options)
 {
@@ -67,7 +67,7 @@ public class ServiceFixture : IDisposable
             Name = "Boxing Gloves",
             Sport = SportEnum.CombatSports,
             Price = 79.99,
-            Quantity = 10
+            
         },
         new Item
         {
@@ -75,7 +75,7 @@ public class ServiceFixture : IDisposable
             Name = "Mouthguard",
             Sport = SportEnum.CombatSports,
             Price = 9.99,
-            Quantity = 20
+            
         }
     };
     context.Items.AddRange(items);
@@ -86,8 +86,8 @@ public class ServiceFixture : IDisposable
 }
 
 
-    public void Dispose()
+   /* public void Dispose()
     {
         
-    }
+    }*/
 }
