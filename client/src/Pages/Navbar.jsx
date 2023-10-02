@@ -5,7 +5,6 @@ import { useAuth } from "../Contexts/AuthContext";
 
 export default function TopNavbar() {
   const { user, logout } = useAuth();
-  console.log(user);
 
   return (
     <>

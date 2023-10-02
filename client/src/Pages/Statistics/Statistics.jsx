@@ -189,17 +189,17 @@ const StatisticsPage = () => {
                   <Card.Title>{facility.name}</Card.Title>
                   <Card.Text>
                     Number of Items in Inventory:{" "}
-                    {calculateInventoryItems(facilitiesData)}
+                    {/* {calculateInventoryItems(facilitiesData)} */}
                   </Card.Text>
                   <Card.Text>
                     Overall Value of Inventory:{" "}
-                    {calculateInventoryValue(facilitiesData).toFixed(2)}
+                    {/* {calculateInventoryValue(facilitiesData).toFixed(2)} */}
                   </Card.Text>
                   <Card.Text>
-                    Active orders: {calculateOrdersLinked(facilitiesData)}
+                    {/* Active orders: {calculateOrdersLinked(facilitiesData)} */}
                   </Card.Text>
                   <Card.Text>
-                    All orders: {calculateOrdersLinked(facilitiesData)}
+                    {/* All orders: {calculateOrdersLinked(facilitiesData)} */}
                   </Card.Text>
                 </Card.Body>
               </Card>
@@ -217,7 +217,7 @@ const StatisticsPage = () => {
             </tr>
           </thead>
           <tbody>
-            {itemsToDisplay.map((item) => (
+            {itemsData.map((item) => (
               <tr key={item.id}>
                 <td>{item.name}</td>
                 <td>{item.quantity}</td>
