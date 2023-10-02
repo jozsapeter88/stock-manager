@@ -14,74 +14,75 @@ const StatisticsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  const fetchFacilities = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/facility/facilities`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch facilities");
+      }
+
+      const data = await response.json();
+      setFacilitiesData(data);
+    } catch (error) {
+      console.error("Error fetching facilities:", error);
+    }
+  };
+
+  const fetchOwnFacilities = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/facility/facilities/${user.id}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch own facilities");
+      }
+
+      const data = await response.json();
+      setOwnFacilitiesData(data);
+    } catch (error) {
+      console.error("Error fetching own facilities:", error);
+    }
+  };
+
+  const fetchItems = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/item/getItems`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch items");
+      }
+
+      const data = await response.json();
+      setItemsData(data);
+    } catch (error) {
+      console.error("Error fetching items:", error);
+    }
+  };
+
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/order/getAllOrders`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch orders");
+      }
+
+      const data = await response.json();
+      setOrdersData(data);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchFacilities = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/facility/facilities`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch facilities");
-        }
-
-        const data = await response.json();
-        setFacilitiesData(data);
-      } catch (error) {
-        console.error("Error fetching facilities:", error);
-      }
-    };
-
-    const fetchOwnFacilities = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/facility/facilities/${user.id}`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch own facilities");
-        }
-
-        const data = await response.json();
-        setOwnFacilitiesData(data);
-      } catch (error) {
-        console.error("Error fetching own facilities:", error);
-      }
-    };
-
-    const fetchItems = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/item/getItems`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch items");
-        }
-
-        const data = await response.json();
-        setItemsData(data);
-      } catch (error) {
-        console.error("Error fetching items:", error);
-      }
-    };
-
-    const fetchOrders = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/order/getAllOrders`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch orders");
-        }
-
-        const data = await response.json();
-        setOrdersData(data);
-      } catch (error) {
-        console.error("Error fetching orders:", error);
-      }
-    };
 
     fetchFacilities();
     fetchOwnFacilities();
@@ -91,28 +92,6 @@ const StatisticsPage = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-  };
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const itemsToDisplay = itemsData.slice(startIndex, endIndex);
-
-  const calculateInventoryItems = (facility) => {
-    if (!facility.Items) return 0;
-    return facility.Items.reduce((total, item) => total + item.Quantity, 0);
-  };
-
-  const calculateInventoryValue = (facility) => {
-    if (!facility.Items) return 0;
-    return facility.Items.reduce(
-      (total, item) => total + item.Price * item.Quantity,
-      0
-    );
-  };
-
-  const calculateOrdersLinked = (facility) => {
-    return ordersData.filter((order) => order.FacilityId === facility.id)
-      .length;
   };
 
   return (
@@ -210,14 +189,17 @@ const StatisticsPage = () => {
                   <Card.Title>{facility.name}</Card.Title>
                   <Card.Text>
                     Number of Items in Inventory:{" "}
-                    {calculateInventoryItems(facility)}
+                    {calculateInventoryItems(facilitiesData)}
                   </Card.Text>
                   <Card.Text>
                     Overall Value of Inventory:{" "}
-                    {calculateInventoryValue(facility).toFixed(2)}
+                    {calculateInventoryValue(facilitiesData).toFixed(2)}
                   </Card.Text>
                   <Card.Text>
-                    Orders Linked: {calculateOrdersLinked(facility)}
+                    Active orders: {calculateOrdersLinked(facilitiesData)}
+                  </Card.Text>
+                  <Card.Text>
+                    All orders: {calculateOrdersLinked(facilitiesData)}
                   </Card.Text>
                 </Card.Body>
               </Card>
