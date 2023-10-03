@@ -22,6 +22,19 @@ namespace StockBackend.Controllers
             return Ok(suppliers);
         }
 
+        [HttpGet("getSupplier/{supplierId}")]
+        public async Task<IActionResult> GetSupplierById(int supplierId)
+        {
+            var supplier = await _supplierService.GetSupplierById(supplierId);
+
+            if (supplier == null)
+            {
+                return NotFound("Supplier not found.");
+            }
+
+            return Ok(supplier);
+        }
+        
         [HttpPost("addSupplier")]
         public async Task<IActionResult> AddSupplier([FromBody] Supplier newSupplier)
         {

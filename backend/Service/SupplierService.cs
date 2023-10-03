@@ -20,14 +20,38 @@ namespace StockBackend.Service
             var suppliers = await _dbContext.Suppliers.ToListAsync();
             return suppliers;
         }
+        
+        public async Task<Supplier> GetSupplierById(int supplierId)
+        {
+            var supplier = await _dbContext.Suppliers.FirstOrDefaultAsync(s => s.Id == supplierId);
+            return supplier;
+        }
 
         public async Task<Supplier> AddSupplier(Supplier newSupplier)
         {
-            // Add the new supplier to the database
             _dbContext.Suppliers.Add(newSupplier);
             await _dbContext.SaveChangesAsync();
 
             return newSupplier;
+        }
+        
+        public async Task<Supplier> EditSupplier(int supplierId, Supplier updatedSupplier)
+        {
+            var existingSupplier = await _dbContext.Suppliers.FirstOrDefaultAsync(s => s.Id == supplierId);
+
+            if (existingSupplier == null)
+            {
+                throw new InvalidOperationException("Supplier not found.");
+            }
+
+            existingSupplier.Name = updatedSupplier.Name;
+            existingSupplier.Category = updatedSupplier.Category;
+            existingSupplier.Location = updatedSupplier.Location;
+            existingSupplier.Comment = updatedSupplier.Comment;
+
+            await _dbContext.SaveChangesAsync();
+
+            return existingSupplier;
         }
     }
 }
