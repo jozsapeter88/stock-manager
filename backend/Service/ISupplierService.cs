@@ -8,4 +8,5 @@ public interface ISupplierService
     Task<Supplier> GetSupplierById(int supplierId);
     Task<Supplier> AddSupplier(Supplier newSupplier);
     Task<Supplier> EditSupplier(int supplierId, Supplier updatedSupplier);
+    Task DeleteSupplierById(int supplierId);
 }

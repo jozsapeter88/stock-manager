@@ -53,5 +53,25 @@ namespace StockBackend.Service
 
             return existingSupplier;
         }
+        
+        public async Task DeleteSupplierById(int supplierId)
+        {
+            try
+            {
+                var existingSupplier = await _dbContext.Suppliers.FirstOrDefaultAsync(s => s.Id == supplierId);
+
+                if (existingSupplier == null)
+                {
+                    throw new InvalidOperationException("Supplier not found.");
+                }
+
+                _dbContext.Suppliers.Remove(existingSupplier);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Error deleting supplier: {ex.Message}");
+            }
+        }
     }
 }

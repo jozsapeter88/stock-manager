@@ -66,5 +66,23 @@ namespace StockBackend.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        
+        [HttpDelete("deleteSupplier/{id}")]
+        public async Task<IActionResult> DeleteSupplier(int id)
+        {
+            try
+            {
+                await _supplierService.DeleteSupplierById(id);
+                return Ok("Supplier deleted successfully");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }
