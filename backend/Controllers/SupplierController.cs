@@ -34,7 +34,7 @@ namespace StockBackend.Controllers
 
             return Ok(supplier);
         }
-        
+
         [HttpPost("addSupplier")]
         public async Task<IActionResult> AddSupplier([FromBody] Supplier newSupplier)
         {
@@ -45,6 +45,26 @@ namespace StockBackend.Controllers
 
             var addedSupplier = await _supplierService.AddSupplier(newSupplier);
             return Ok(addedSupplier);
+        }
+
+        [HttpPut("editSupplier/{supplierId}")]
+        public async Task<IActionResult> EditSupplier(int supplierId, [FromBody] Supplier updatedSupplier)
+        {
+            try
+            {
+                var existingSupplier = await _supplierService.EditSupplier(supplierId, updatedSupplier);
+
+                if (existingSupplier == null)
+                {
+                    return NotFound("Supplier not found.");
+                }
+
+                return Ok(existingSupplier);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

@@ -2,16 +2,65 @@ import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form } from "react-bootstrap";
 import TopNavbar from "../Navbar";
 import "./SupplierPage.css";
+import EditSupplierModal from "./EditSupplierModal";
 
 function SupplierPage() {
   const [suppliers, setSuppliers] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     category: "",
     location: "",
     comment: "",
   });
+
+  const handleRowClick = (supplier) => {
+    setSelectedSupplier(supplier);
+    setShowEditModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedSupplier(null);
+    setShowEditModal(false);
+  };
+
+  const handleSaveSupplier = async (editedSupplier) => {
+    try {
+      const response = await fetch(
+        process.env.REACT_APP_API_URL +
+          `/supplier/editSupplier/${editedSupplier.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editedSupplier),
+        }
+      );
+
+      if (!response.ok) {
+        console.log(editedSupplier);
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const updatedSupplier = await response.json();
+      console.log("Updated supplier:", updatedSupplier);
+
+      // Update the 'suppliers' state with the edited data
+      setSuppliers((prevSuppliers) =>
+        prevSuppliers.map((supplier) =>
+          supplier.id === updatedSupplier.id ? updatedSupplier : supplier
+        )
+      );
+
+      // Close the modal
+      handleCloseModal();
+    } catch (error) {
+      console.error("Error updating supplier:", error);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,7 +69,6 @@ function SupplierPage() {
 
   const handleAddSupplier = () => {
     const newSupplier = {
-      id: suppliers.length + 1,
       ...formData,
     };
 
@@ -60,12 +108,13 @@ function SupplierPage() {
       const response = await fetch(
         process.env.REACT_APP_API_URL + `/supplier/addSupplier`,
         {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newSupplier),
-      });
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newSupplier),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -97,7 +146,6 @@ function SupplierPage() {
       <div className="main-container">
         <h1>Suppliers</h1>
 
-        {/* Table */}
         <Table striped bordered hover style={{ outline: "2px solid" }}>
           <thead>
             <tr>
@@ -109,7 +157,11 @@ function SupplierPage() {
           </thead>
           <tbody>
             {suppliers.map((supplier) => (
-              <tr key={supplier.id}>
+              <tr
+                key={supplier.id}
+                onClick={() => handleRowClick(supplier)}
+                style={{ cursor: "pointer" }}
+              >
                 <td>{supplier.name}</td>
                 <td>{supplier.category}</td>
                 <td>{supplier.location}</td>
@@ -118,12 +170,18 @@ function SupplierPage() {
             ))}
           </tbody>
         </Table>
-
+        {selectedSupplier && (
+          <EditSupplierModal
+            show={showEditModal}
+            onClose={handleCloseModal}
+            supplier={selectedSupplier}
+            onSave={handleSaveSupplier}
+          />
+        )}
         <Button variant="warning" onClick={() => setShowModal(true)}>
           Register New Supplier
         </Button>
 
-        {/* Modal for adding new suppliers */}
         <Modal show={showModal} onHide={() => setShowModal(false)}>
           <Modal.Header closeButton>
             <Modal.Title>Register New Supplier</Modal.Title>
