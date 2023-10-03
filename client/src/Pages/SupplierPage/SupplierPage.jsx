@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Modal, Form } from "react-bootstrap";
+import { Table, Button, Modal, Form, Alert } from "react-bootstrap";
 import TopNavbar from "../Navbar";
 import "./SupplierPage.css";
 import EditSupplierModal from "./EditSupplierModal";
@@ -16,8 +16,13 @@ function SupplierPage() {
     comment: "",
   });
 
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertVariant, setAlertVariant] = useState("success");
+  const [alertMessage, setAlertMessage] = useState("");
+
   const handleRowClick = (supplier) => {
     setSelectedSupplier(supplier);
+    console.log("Selected Supplier:", supplier);
     setShowEditModal(true);
   };
 
@@ -48,16 +53,24 @@ function SupplierPage() {
       const updatedSupplier = await response.json();
       console.log("Updated supplier:", updatedSupplier);
 
-      // Update the 'suppliers' state with the edited data
       setSuppliers((prevSuppliers) =>
         prevSuppliers.map((supplier) =>
           supplier.id === updatedSupplier.id ? updatedSupplier : supplier
         )
       );
 
-      // Close the modal
-      handleCloseModal();
+      setShowAlert(true);
+      setAlertVariant("success");
+      setAlertMessage("Supplier update successful");
+
+      setTimeout(() => {
+        setShowAlert(false);
+        handleCloseModal();
+      }, 5000);
     } catch (error) {
+      setShowAlert(true);
+      setAlertVariant("danger");
+      setAlertMessage(`Error updating supplier: ${error.message}`);
       console.error("Error updating supplier:", error);
     }
   };
@@ -67,23 +80,56 @@ function SupplierPage() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleAddSupplier = () => {
+  const handleAddSupplier = async () => {
     const newSupplier = {
       ...formData,
     };
 
-    setSuppliers([...suppliers, newSupplier]);
+    try {
+      const response = await fetch(
+        process.env.REACT_APP_API_URL + `/supplier/addSupplier`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newSupplier),
+        }
+      );
 
-    setFormData({
-      name: "",
-      category: "",
-      location: "",
-      comment: "",
-    });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
 
-    setShowModal(false);
+      const data = await response.json();
+      console.log("New supplier saved:", data);
 
-    createSupplier(newSupplier);
+      setSuppliers([...suppliers, data]);
+
+      setFormData({
+        name: "",
+        category: "",
+        location: "",
+        comment: "",
+      });
+
+      setShowAlert(true);
+      setAlertVariant("success");
+      setAlertMessage("Supplier registration successful");
+
+      // Close the modal after a short delay
+      setTimeout(() => {
+        setShowAlert(false); // Hide the alert after 5 seconds
+        setShowModal(false);
+      }, 5000); // 5000 milliseconds (5 seconds) delay
+    } catch (error) {
+      console.error("Error saving supplier:", error);
+
+      // Show an error alert
+      setShowAlert(true);
+      setAlertVariant("danger");
+      setAlertMessage("Error saving supplier");
+    }
   };
 
   const fetchAllSuppliers = async () => {
@@ -144,32 +190,46 @@ function SupplierPage() {
     <>
       <TopNavbar />
       <div className="main-container">
-        <h1>Suppliers</h1>
-
-        <Table striped bordered hover style={{ outline: "2px solid" }}>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Location</th>
-              <th>Comment</th>
-            </tr>
-          </thead>
-          <tbody>
-            {suppliers.map((supplier) => (
-              <tr
-                key={supplier.id}
-                onClick={() => handleRowClick(supplier)}
-                style={{ cursor: "pointer" }}
-              >
-                <td>{supplier.name}</td>
-                <td>{supplier.category}</td>
-                <td>{supplier.location}</td>
-                <td>{supplier.comment}</td>
+      <p style={{ textAlign: "right" }}><i className="fas fa-info-circle"></i> You can click on a Supplier to edit it</p>
+        {showAlert && (
+          <Alert
+            variant={alertVariant}
+            onClose={() => setShowAlert(false)}
+            dismissible
+          >
+            {alertMessage}
+          </Alert>
+        )}
+        {isNaN(suppliers.length) ? (
+          <p
+          className="no-suppliers-message"
+          >No suppliers available.</p>
+        ) : (
+          <Table striped bordered hover style={{ outline: "2px solid" }}>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Location</th>
+                <th>Comment</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {suppliers.map((supplier) => (
+                <tr
+                  key={supplier.id}
+                  onClick={() => handleRowClick(supplier)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <td>{supplier.name}</td>
+                  <td>{supplier.category}</td>
+                  <td>{supplier.location}</td>
+                  <td>{supplier.comment}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
         {selectedSupplier && (
           <EditSupplierModal
             show={showEditModal}
