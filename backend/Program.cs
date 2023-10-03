@@ -44,6 +44,8 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IFacilityService, FacilityService>();
 builder.Services.AddTransient<IItemService, ItemService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<ISupplierService, SupplierService>();
+
 builder.Services.AddCors();
 
 builder.Services.AddLogging(loggingBuilder =>
