@@ -1,8 +1,35 @@
 .table {
     --bs-table-striped-bg: #ffc10741;
+    border-radius: 10px;
 }
 
 .table-container {
     max-width: 1500px;
     margin: 0 auto;
+    margin-top: 5vh;
 }
+
+thead {
+    background-color: #6e530041;
+}
+
+/* FacilitiesOfUser.css */
+
+.additional-text-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1500px;
+    margin: 0 auto;
+    height: 40vh;
+  }
+  
+  .additional-text {
+    text-align: center;
+    font-size: 1.5rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  
+  
