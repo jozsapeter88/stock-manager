@@ -16,7 +16,8 @@ public class Facility
     public string City { get; set; }
     public string Address { get; set; }
 
-    public List<Item>? Items { get; set; } 
+    public List<Item>? Items { get; set; } = new List<Item>();
 
     [JsonIgnore] public List<User>? Users { get; set; } 
 }
+

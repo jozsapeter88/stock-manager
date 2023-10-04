@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using StockBackend.Models;
 using StockBackend.Models.DBContext;
 using StockBackend.Models.DTO;
@@ -28,6 +29,7 @@ public class OrderService: IOrderService
     {
         var orders = await _dbContext.Orders
             .Include(order => order.OrderItemQuantities)
+            .ThenInclude(i => i.Item)
             .Include(order => order.Facility)
             .Include(order => order.UserOfOrder)
             .Where(o => o.UserOfOrder.Id == userId)
@@ -37,44 +39,41 @@ public class OrderService: IOrderService
 
     public async Task<Order?> AddOrder(OrderDto order, string userId)
     {
-        var user =  await _dbContext.Users.Include(user => user.OrdersOfUser)
-            .FirstOrDefaultAsync(u => u.Id == userId);
+        var user =  await _dbContext.Users
+            .FirstOrDefaultAsync(u => u.Id == userId)!;
+        var facility = await _dbContext.Facilities
+            .FirstOrDefaultAsync(f => f.Id == order.FacilityId);
         var newOrder = new Order();
         if (user is not null)
         {
             newOrder = new Order
             {
-                
                 Comment = order.Comment,
                 CreatedAt = DateTime.UtcNow,
-                Facility = order.Facility,
-                OrderItemQuantities = order.ItemQuantities.Select(i => new OrderItemQuantity()
-                {
-                    OrderId = newOrder.Id,
-                    Order = newOrder,
-                    Item = i.Item,
-                    ItemId = i.Item.Id,
-                    Quantity = i.Quantity
-                    
-                }).ToList(),
+                Facility = facility!,
+                OrderItemQuantities = new List<OrderItemQuantity>(),
                 UserOfOrder = user
-
             };
-            if (user.OrdersOfUser is null)
+            foreach (var iq in order.ItemQuantities)
             {
-                user.OrdersOfUser = new List<Order> { newOrder };
-                Console.WriteLine("if: "+ user.OrdersOfUser.Count);
-            }
-            else
-            {
-                user.OrdersOfUser.Add(newOrder);
-                Console.WriteLine("else: "+ user.OrdersOfUser.Count);
+                var item = await _dbContext.Items.FirstOrDefaultAsync(i => i.Id ==iq.ItemId);
+                if (item != null)
+                {
+                    var orderItemQuantity = new OrderItemQuantity
+                    {
+                        Item = item,
+                        Quantity = iq.Quantity
+                    };
+                    newOrder.OrderItemQuantities.Add(orderItemQuantity);
+                }
             }
         }
+        _dbContext.Orders.Add(newOrder); 
         await _dbContext.SaveChangesAsync();
         return newOrder ?? null;
     }
     
+
     public async Task<bool> DeleteOrder(long orderId)
     {
         var order = await _dbContext.Orders.FindAsync(orderId);
@@ -82,7 +81,6 @@ public class OrderService: IOrderService
         {
             return false;
         }
-
         _dbContext.Orders.Remove(order);
         await _dbContext.SaveChangesAsync();
         return true;
@@ -94,6 +92,7 @@ public class OrderService: IOrderService
             .Include(order => order.Facility)
             .ThenInclude(facility => facility.Items)
             .Include(order => order.OrderItemQuantities)
+            .ThenInclude(o => o.Item)
             .FirstOrDefaultAsync(order => order.Id == orderId);
         
         if (order is null)
@@ -102,16 +101,7 @@ public class OrderService: IOrderService
         }
         order.IsDelivered = true;
         var facility =  order.Facility;
-        if (facility.Items is null)
-        {
-            facility.Items = new List<Item>();
-            IncreaseOrderItemsQuantity(order.OrderItemQuantities,facility.Items);
-            //facility.Items.AddRange(order.ItemWithQuantity.Items);
-        }
-        else
-        {
-            IncreaseOrderItemsQuantity(order.OrderItemQuantities, facility.Items);
-        }
+        IncreaseOrderItemsQuantity(order.OrderItemQuantities, facility.Items!);
         await _dbContext.SaveChangesAsync();
         return true;
     }
@@ -135,7 +125,6 @@ public class OrderService: IOrderService
                 }
             }
         }
-        facilityItems.AddRange(orderedItems.Select(orderedItem => orderedItem.Item));
     }
 
     private bool CheckIfFacilityHavingItem(Item item, List<Item> itemsOfFacility)
@@ -146,17 +135,13 @@ public class OrderService: IOrderService
     private  void IncreaseOrderItemsQuantity(List<OrderItemQuantity> orderedItems, List<Item> itemsOfFacility)
     {
         AddItemsToFacility(orderedItems, itemsOfFacility);
-        foreach (var orderedItem in orderedItems)
+       foreach (var orderedItem in orderedItems)
         {
             foreach (var item in itemsOfFacility)
             {
                 if (orderedItem.Item.Name == item.Name)
                 {
                     item.Quantity += orderedItem.Quantity;
-                }
-                else
-                {
-                    item.Quantity = orderedItem.Quantity;
                 }
             }
         }

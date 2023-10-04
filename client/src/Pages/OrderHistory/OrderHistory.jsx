@@ -14,6 +14,7 @@ const OrderHistory = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedOrderIdForDeletion, setSelectedOrderIdForDeletion] =
     useState(null);
+    console.log(selectedOrderIdForDeletion)
 
   const { user } = useAuth();
 
@@ -58,30 +59,30 @@ const OrderHistory = () => {
 
   const deleteOrder = async (orderId) => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/order/deleteOrder/${user.id}/${orderId}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
+      const apiUrl = `${process.env.REACT_APP_API_URL}/order/deleteOrder/${user.id}/${orderId}`;
+      console.log(`Sending DELETE request to: ${apiUrl}`);
+  
+      const response = await fetch(apiUrl, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
       if (response.ok) {
         const data = await response.json();
         setOrderHistory(data);
         console.log("Order successfully deleted");
       } else {
-        console.error("Failed to fetch orders");
+        console.error(`Failed to delete order. Status: ${response.status}`);
       }
     } catch (error) {
       console.error("Error deleting order:", error);
       return false;
     }
   };
-
+ 
   const confirmDelivered = async () => {
     try {
       const response = await fetch(
@@ -162,8 +163,7 @@ const OrderHistory = () => {
           <thead>
             <tr>
               <th>Facility</th>
-              <th>Items</th>
-              <th>Quantity</th>
+              <th>Items/Quantity</th>
               <th>Comment</th>
               <th>Date</th>
               <th>Action</th>
@@ -178,8 +178,13 @@ const OrderHistory = () => {
                 }
               >
                 <td>{order.facility.name}</td>
-                <td>{order.items.map((item) => item.name).join(", ")}</td>
-                <td>{order.quantity}</td>
+                {order.orderItemQuantities.map((i) => (
+                <tr key={i.item.id}>
+                  <td>{i.item.name}</td>:
+                  <td>{i.quantity}</td>
+                </tr>
+                ))}
+
                 <td>{order.comment}</td>
                 <td>{new Date(order.createdAt).toLocaleString()}</td>
                 <td>
