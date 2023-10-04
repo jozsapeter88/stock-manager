@@ -83,7 +83,6 @@ const StatisticsPage = () => {
   };
 
   useEffect(() => {
-
     fetchFacilities();
     fetchOwnFacilities();
     fetchItems();
@@ -93,6 +92,11 @@ const StatisticsPage = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const itemsToShow = itemsData.slice(startIndex, endIndex);
 
   return (
     <>
@@ -217,7 +221,7 @@ const StatisticsPage = () => {
             </tr>
           </thead>
           <tbody>
-            {itemsData.map((item) => (
+            {itemsToShow.map((item) => (
               <tr key={item.id}>
                 <td>{item.name}</td>
                 <td>{item.quantity}</td>
@@ -226,7 +230,6 @@ const StatisticsPage = () => {
           </tbody>
         </Table>
 
-        {/* Pagination */}
         <Pagination size="md">
           {Array.from({
             length: Math.ceil(itemsData.length / itemsPerPage),
