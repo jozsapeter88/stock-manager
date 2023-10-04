@@ -8,13 +8,13 @@ const SignIn = ({ onSubmit, showMsg, rememberMe, handleRememberMeChange }) => {
         <Row className="vh-100 d-flex justify-content-center align-items-center">
           <Col md={4} lg={6} xs={12}>
             <img
-              src={process.env.PUBLIC_URL + "/logo_transparent.png"}
+              src={process.env.PUBLIC_URL + "/newlogo_transparent.png"}
               alt="img"
               className="img-fluid"
               style={{
                 marginLeft: "",
-                maxWidth: "500px",
-                maxHeight: "500px",
+                maxWidth: "600px",
+                maxHeight: "600px",
               }}
             />{" "}
           </Col>

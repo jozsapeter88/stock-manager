@@ -18,10 +18,10 @@ export default function TopNavbar() {
         <Navbar.Brand as={Link} to={`/facilities/:${user.id}`} style={{ marginLeft: "20px" }}>
           <div className="logo">
             <img
-              src={process.env.PUBLIC_URL + "/rac.png"}
+              src={process.env.PUBLIC_URL + "/menulogo.png"}
               alt=""
-              height="75"
-              width="110"
+              height="95"
+              width="130"
             />
           </div>
         </Navbar.Brand>
