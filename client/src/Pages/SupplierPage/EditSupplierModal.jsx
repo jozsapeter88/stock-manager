@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
-function EditSupplierModal({ show, onClose, supplier, onSave }) {
+function EditSupplierModal({ show, onClose, supplier, onSave, fetchAllSuppliers }) {
   const [editedSupplier, setEditedSupplier] = useState({ ...supplier });
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState(null);
@@ -59,7 +59,8 @@ function EditSupplierModal({ show, onClose, supplier, onSave }) {
         }
   
         console.log("Supplier deleted successfully.");
-        handleCloseModal();
+        onClose();
+        fetchAllSuppliers();
       } catch (error) {
         console.error("Error deleting supplier:", error);
       }

@@ -61,7 +61,7 @@ function SupplierPage() {
 
       setShowAlert(true);
       setAlertVariant("success");
-      setAlertMessage("Supplier update successful");
+      setAlertMessage("Supplier Update Successful!");
 
       setTimeout(() => {
         setShowAlert(false);
@@ -70,7 +70,7 @@ function SupplierPage() {
     } catch (error) {
       setShowAlert(true);
       setAlertVariant("danger");
-      setAlertMessage(`Error updating supplier: ${error.message}`);
+      setAlertMessage(`Error Updating Supplier: ${error.message}`);
       console.error("Error updating supplier:", error);
     }
   };
@@ -113,19 +113,17 @@ function SupplierPage() {
         comment: "",
       });
 
+      setShowModal(false);
       setShowAlert(true);
       setAlertVariant("success");
       setAlertMessage("Supplier registration successful");
 
-      // Close the modal after a short delay
       setTimeout(() => {
-        setShowAlert(false); // Hide the alert after 5 seconds
-        setShowModal(false);
-      }, 5000); // 5000 milliseconds (5 seconds) delay
+        setShowAlert(false);
+      }, 5000);
     } catch (error) {
       console.error("Error saving supplier:", error);
 
-      // Show an error alert
       setShowAlert(true);
       setAlertVariant("danger");
       setAlertMessage("Error saving supplier");
@@ -190,20 +188,20 @@ function SupplierPage() {
     <>
       <TopNavbar />
       <div className="main-container">
-      <p style={{ textAlign: "right" }}><i className="fas fa-info-circle"></i> You can click on a Supplier to edit it</p>
         {showAlert && (
           <Alert
-            variant={alertVariant}
-            onClose={() => setShowAlert(false)}
-            dismissible
+          variant={alertVariant}
+          onClose={() => setShowAlert(false)}
+          dismissible
           >
             {alertMessage}
           </Alert>
         )}
+        <p style={{ textAlign: "right" }}><i className="fas fa-info-circle"></i> You can click on a Supplier to edit it</p>
         {isNaN(suppliers.length) ? (
           <p
           className="no-suppliers-message"
-          >No suppliers available.</p>
+          >No Suppliers Available</p>
         ) : (
           <Table striped bordered hover style={{ outline: "2px solid" }}>
             <thead>
@@ -236,6 +234,7 @@ function SupplierPage() {
             onClose={handleCloseModal}
             supplier={selectedSupplier}
             onSave={handleSaveSupplier}
+            fetchAllSuppliers={fetchAllSuppliers}
           />
         )}
         <Button variant="warning" onClick={() => setShowModal(true)}>
