@@ -12,6 +12,28 @@ import TopNavbar from "../Navbar";
 import { fetchItems } from "../Products/ProductList";
 import { useAuth } from "../../Contexts/AuthContext";
 
+function OrderItem({ item, onChange }) {
+  const [quantity, setQuantity] = useState(1);
+
+  useEffect(() => {
+    onChange(item, quantity);
+  }, [item, quantity]);
+
+  return (
+    <li key={item._id}>
+      <strong>{item.name}</strong>
+      <InputGroup className="mb-3">
+        <InputGroup.Text>Quantity</InputGroup.Text>
+        <Form.Control
+          type="number"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+        />
+      </InputGroup>
+    </li>
+  );
+}
+
 export default function FacilityDetails() {
   const { id } = useParams();
   const [facility, setFacility] = useState(null);
@@ -21,8 +43,8 @@ export default function FacilityDetails() {
   const [successMessage, setSuccessMessage] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [quantity, setQuantity] = useState(1);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [orderItems, setOrderItems] = useState([]);
   const [comment, setComment] = useState("");
   const { user } = useAuth();
 
@@ -60,33 +82,25 @@ export default function FacilityDetails() {
     (item) => item.sport === facility.sport
   );
 
+  const addToOrder = (item, quantity) => {
+    setSelectedItems([...selectedItems, item]);
+    setOrderItems([...orderItems, { item, quantity }]);
+  };
+
   const placeOrder = async () => {
     try {
-      const order = {
+      const selectedOrder = {
         facility: facility,
-        items: [selectedItem],
-        quantity: quantity,
+        items: orderItems,
         comment: comment,
       };
-      console.log(order);
-      const response = await fetch(
-        process.env.REACT_APP_API_URL + `/order/addOrder/${user.id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(order),
-        }
-      );
 
-      const data = await response.json();
+      console.log(selectedOrder);
 
-      console.log("Order placed successfully:", data);
       setSuccessMessage("Order placed successfully!");
       setShowModal(false);
-      setSelectedItem(null);
-      setQuantity(1);
+      setSelectedItems([]);
+      setOrderItems([]);
       setComment("");
 
       setShowSuccessMessage(true);
@@ -172,7 +186,9 @@ export default function FacilityDetails() {
         show={showModal}
         onHide={() => {
           setShowModal(false);
-          setSelectedItem(null);
+          setSelectedItems([]);
+          setOrderItems([]);
+          setComment("");
         }}
       >
         <Modal.Header closeButton>
@@ -186,13 +202,15 @@ export default function FacilityDetails() {
                   variant="outline-secondary"
                   id="dropdown-basic"
                 >
-                  {selectedItem ? selectedItem.name : "Select an item"}
+                  {selectedItems.length > 0
+                    ? selectedItems.map((item) => item.name).join(", ")
+                    : "Select items"}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   {filteredItems.map((item) => (
                     <Dropdown.Item
                       key={item._id}
-                      onClick={() => setSelectedItem(item)}
+                      onClick={() => addToOrder(item, 1)} // Set initial quantity to 1
                     >
                       {item.name}
                     </Dropdown.Item>
@@ -200,14 +218,26 @@ export default function FacilityDetails() {
                 </Dropdown.Menu>
               </Dropdown>
             </Form.Group>
-            <InputGroup className="mb-3">
-              <InputGroup.Text>Quantity</InputGroup.Text>
-              <Form.Control
-                aria-label="Quantity"
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-              />
-            </InputGroup>
+            {selectedItems.length > 0 && (
+              <div>
+                <h4>Selected Items:</h4>
+                <ul>
+                  {orderItems.map((orderItem, index) => (
+                    <OrderItem
+                      key={index}
+                      item={orderItem.item}
+                      onChange={(item, quantity) =>
+                        setOrderItems((prevItems) => {
+                          const updatedItems = [...prevItems];
+                          updatedItems[index] = { item, quantity };
+                          return updatedItems;
+                        })
+                      }
+                    />
+                  ))}
+                </ul>
+              </div>
+            )}
             <InputGroup>
               <InputGroup.Text>Add your comment</InputGroup.Text>
               <Form.Control

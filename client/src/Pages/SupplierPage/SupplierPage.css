@@ -1,0 +1,11 @@
+.main-container {
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.no-suppliers-message {
+    font-size: 24px;
+    font-weight: bold;
+    color: red;
+  }
+  

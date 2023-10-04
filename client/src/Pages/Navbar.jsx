@@ -5,7 +5,6 @@ import { useAuth } from "../Contexts/AuthContext";
 
 export default function TopNavbar() {
   const { user, logout } = useAuth();
-  console.log(user);
 
   return (
     <>
@@ -50,19 +49,6 @@ export default function TopNavbar() {
             <Nav.Item>
               <Nav.Link
                 as={Link}
-                to="/productlist"
-                style={{
-                  color: "black",
-                  fontWeight: "bold",
-                  marginRight: "10px",
-                }}
-              >
-               Product List
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link
-                as={Link}
                 to="/order-history"
                 style={{
                   color: "black",
@@ -71,6 +57,19 @@ export default function TopNavbar() {
                 }}
               >
                 Order History
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
+                as={Link}
+                to="/suppliers"
+                style={{
+                  color: "black",
+                  fontWeight: "bold",
+                  marginRight: "10px",
+                }}
+              >
+                Suppliers
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
