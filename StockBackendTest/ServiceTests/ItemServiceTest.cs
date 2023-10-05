@@ -30,7 +30,7 @@ public class ItemServiceTest
         var itemService = new ItemService(context);
         var result = await itemService.GetItems();
 
-        Assert.Equal(2, result!.Count);
+        Assert.Equal(3, result!.Count);
     }
     
     [Fact]

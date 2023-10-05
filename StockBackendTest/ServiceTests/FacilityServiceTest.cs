@@ -60,7 +60,7 @@ public class FacilityServiceTest
         var user = await context.Users
             .Include(user => user.FacilitiesOfUser)
             .FirstOrDefaultAsync(u => u.UserName == "testUserAlreadyHasFacility");
-        Assert.Equal(2, user!.FacilitiesOfUser!.Count);
+        Assert.Equal(3, user!.FacilitiesOfUser!.Count);
     }
 
 }
