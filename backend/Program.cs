@@ -15,7 +15,11 @@ string envType = builder.Environment.IsDevelopment()
     : "DockerCommandsConnectionString";
 var connectionString = builder.Configuration.GetConnectionString(envType) ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+{
+    options.UseNpgsql(connectionString);
+    options.EnableSensitiveDataLogging();
+});
+    
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)

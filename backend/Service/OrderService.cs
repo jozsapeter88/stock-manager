@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using StockBackend.Models;
 using StockBackend.Models.DBContext;
 using StockBackend.Models.DTO;
@@ -17,7 +18,7 @@ public class OrderService: IOrderService
     public async Task<List<Order>?> GetAllOrders()
     {
         var orders = await _dbContext.Orders
-            .Include(order => order.Items)
+            .Include(order => order.OrderItemQuantities)
             .Include(order => order.Facility)
             .Include(order => order.UserOfOrder)
             .ToListAsync();
@@ -27,7 +28,8 @@ public class OrderService: IOrderService
     public async Task<List<Order>?> GetOrdersOfUser(string userId)
     {
         var orders = await _dbContext.Orders
-            .Include(order => order.Items)
+            .Include(order => order.OrderItemQuantities)
+            .ThenInclude(i => i.Item)
             .Include(order => order.Facility)
             .Include(order => order.UserOfOrder)
             .Where(o => o.UserOfOrder.Id == userId)
@@ -37,36 +39,41 @@ public class OrderService: IOrderService
 
     public async Task<Order?> AddOrder(OrderDto order, string userId)
     {
-        var user =  await _dbContext.Users.Include(user => user.OrdersOfUser)
-            .FirstOrDefaultAsync(u => u.Id == userId);
+        var user =  await _dbContext.Users
+            .FirstOrDefaultAsync(u => u.Id == userId)!;
+        var facility = await _dbContext.Facilities
+            .FirstOrDefaultAsync(f => f.Id == order.FacilityId);
         var newOrder = new Order();
         if (user is not null)
         {
             newOrder = new Order
             {
-                Quantity = order.Quantity,
                 Comment = order.Comment,
                 CreatedAt = DateTime.UtcNow,
-                Facility = order.Facility,
-                Items = order.Items,
+                Facility = facility!,
+                OrderItemQuantities = new List<OrderItemQuantity>(),
                 UserOfOrder = user
-
             };
-            if (user.OrdersOfUser is null)
+            foreach (var iq in order.ItemQuantities)
             {
-                user.OrdersOfUser = new List<Order> { newOrder };
-                Console.WriteLine("if: "+ user.OrdersOfUser.Count);
-            }
-            else
-            {
-                user.OrdersOfUser.Add(newOrder);
-                Console.WriteLine("else: "+ user.OrdersOfUser.Count);
+                var item = await _dbContext.Items.FirstOrDefaultAsync(i => i.Id ==iq.ItemId);
+                if (item != null)
+                {
+                    var orderItemQuantity = new OrderItemQuantity
+                    {
+                        Item = item,
+                        Quantity = iq.Quantity
+                    };
+                    newOrder.OrderItemQuantities.Add(orderItemQuantity);
+                }
             }
         }
+        _dbContext.Orders.Add(newOrder); 
         await _dbContext.SaveChangesAsync();
         return newOrder ?? null;
     }
     
+
     public async Task<bool> DeleteOrder(long orderId)
     {
         var order = await _dbContext.Orders.FindAsync(orderId);
@@ -74,7 +81,6 @@ public class OrderService: IOrderService
         {
             return false;
         }
-
         _dbContext.Orders.Remove(order);
         await _dbContext.SaveChangesAsync();
         return true;
@@ -82,16 +88,65 @@ public class OrderService: IOrderService
 
     public async Task<bool> ConfirmOrder(long orderId)
     {
-        var order = await _dbContext.Orders.FindAsync(orderId);
-
+        var order = await _dbContext.Orders
+            .Include(order => order.Facility)
+            .ThenInclude(facility => facility.Items)
+            .Include(order => order.OrderItemQuantities)
+            .ThenInclude(o => o.Item)
+            .FirstOrDefaultAsync(order => order.Id == orderId);
+        
         if (order is null)
         {
             return false;
         }
-
         order.IsDelivered = true;
+        var facility = await _dbContext.Facilities
+            .Include(facility => facility.Items!)
+            .FirstOrDefaultAsync(f => f.Id == order.FacilityId);
+        IncreaseOrderItemsQuantity(order.OrderItemQuantities, facility?.Items!);
+        Console.WriteLine(facility.Items.Count);
         await _dbContext.SaveChangesAsync();
-
         return true;
+    }
+
+    public void AddItemsToFacility(List<OrderItemQuantity> orderedItems, List<Item> facilityItems)
+    {
+        if (facilityItems.Count == 0 )
+        {
+            foreach (var orderItemQuantity in orderedItems)
+            {
+                facilityItems.Add(orderItemQuantity.Item);
+            }
+        }
+        else
+        {
+            foreach (var orderedItem in orderedItems)
+            {
+                if (!CheckIfFacilityHavingItem(orderedItem.Item, facilityItems))
+                {
+                    facilityItems.Add(orderedItem.Item);
+                }
+            }
+        }
+    }
+
+    public bool CheckIfFacilityHavingItem(Item item, List<Item> itemsOfFacility)
+    {
+        return itemsOfFacility.Any(itemFacility => itemFacility.Name == item.Name);
+    }
+
+    public void IncreaseOrderItemsQuantity(List<OrderItemQuantity> orderedItems, List<Item> itemsOfFacility)
+    {
+        AddItemsToFacility(orderedItems, itemsOfFacility);
+       foreach (var orderedItem in orderedItems)
+        {
+            foreach (var item in itemsOfFacility)
+            {
+                if (orderedItem.Item.Name == item.Name)
+                {
+                    item.Quantity += orderedItem.Quantity;
+                }
+            }
+        }
     }
 }

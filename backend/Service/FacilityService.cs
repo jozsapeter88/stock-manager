@@ -33,7 +33,9 @@ public class FacilityService: IFacilityService
 
     public async Task<Facility?>? GetFacility(int fId)
     {
-        var facility = await _dbContext.Facilities.FirstOrDefaultAsync(f => f.Id == fId);
+        var facility = await _dbContext.Facilities
+            .Include(facility => facility.Items)
+            .FirstOrDefaultAsync(f => f.Id == fId);
         return facility ?? null;
     }
 

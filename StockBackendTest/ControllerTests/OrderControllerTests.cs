@@ -6,6 +6,7 @@ using StockBackend.Controllers;
 using StockBackend.Models;
 using StockBackend.Models.DTO;
 using StockBackend.Service;
+using NotFoundObjectResult = Microsoft.AspNetCore.Mvc.NotFoundObjectResult;
 
 namespace StockBackendTest.ControllerTests;
 
@@ -15,6 +16,8 @@ public class OrderControllerTests
     private readonly Mock<IOrderService> _mockOrderService;
     private readonly Order _firstOrder;
     private readonly Facility _firstFacility;
+    private readonly Item _secondItem;
+    private readonly Item _thirdItem;
 
     public OrderControllerTests()
     {
@@ -43,19 +46,44 @@ public class OrderControllerTests
         _firstOrder = new Order()
         {
             Id = 1,
-            Quantity = 2,
             Comment = "testOrder_comment",
             CreatedAt = DateTime.UtcNow,
             Facility = _firstFacility,
-            Items = new List<Item>()
-            {
-                new()
-                {
-                    Id = 1, Name = "testItem", Price = 10, Quantity = 2,
-                    Sport = SportEnum.Soccer
+            OrderItemQuantities = new List<OrderItemQuantity>()
+                { 
+                    new OrderItemQuantity()
+                    { 
+                        OrderId = 1,
+                        Order = _firstOrder!,
+                        ItemId = 1,
+                        Item = new Item() 
+                    { 
+                        Id = 1, 
+                        Name = "testItem1", 
+                        Price = 10, 
+                        Quantity = 2, 
+                        Sport = SportEnum.Soccer 
+                    }, 
+                        Quantity  = 15// This is the quantity for the first item
                 }
             },
             UserOfOrder = firstUser
+        };
+
+        _secondItem = new Item()
+        {
+            Id = 2,
+            Name = "testItem2",
+            Price = 20,
+            Sport = SportEnum.Basketball
+        };
+        
+       _thirdItem = new Item()
+        {
+            Id = 3,
+            Name = "testItem3",
+            Price = 30,
+            Sport = SportEnum.Basketball
         };
     }
 
@@ -103,13 +131,25 @@ public class OrderControllerTests
             .ReturnsAsync(_firstOrder);
         
         //Act
-        var orderDto = new OrderDto(){
-            Quantity = 2,
-            Comment = "testOrder_comment", 
-            Facility = _firstFacility,
-            Items = new List<Item>()
-            { new(){ Id = 1, Name = "testItem", Price = 10, Quantity = 2, Sport = SportEnum.Soccer }}
-            };
+        var orderDto = new OrderDto()
+        {
+
+            Comment = "testOrder_comment",
+            FacilityId = _firstFacility.Id,
+            ItemQuantities = new List<ItemQuantityDto>
+            {
+                new ItemQuantityDto
+                {
+                    ItemId = _secondItem.Id,
+                    Quantity = 10
+                },
+                new ItemQuantityDto
+                {
+                    ItemId = _thirdItem.Id,
+                    Quantity = 20
+                }
+            }
+        };
         var result = await _orderController
             .AddOrder(orderDto, "test-Id");
         
@@ -130,11 +170,17 @@ public class OrderControllerTests
         
         //Act
         var orderDto = new OrderDto(){
-            Quantity = 2,
+       
             Comment = "testOrder_comment", 
-            Facility = _firstFacility,
-            Items = new List<Item>()
-                { new(){ Id = 1, Name = "testItem", Price = 10, Quantity = 2, Sport = SportEnum.Soccer }}
+            FacilityId = _firstFacility.Id,
+            ItemQuantities = new System.Collections.Generic.List<ItemQuantityDto>
+            {
+                new ItemQuantityDto
+                {
+                    ItemId= _secondItem.Id,
+                    Quantity = 10
+                }
+            }
         };
         var result = await _orderController
             .AddOrder(orderDto, "test-Id");

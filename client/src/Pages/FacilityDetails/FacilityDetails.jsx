@@ -20,7 +20,7 @@ function OrderItem({ item, onChange }) {
   }, [item, quantity]);
 
   return (
-    <li key={item._id}>
+    <li key={item.id}>
       <strong>{item.name}</strong>
       <InputGroup className="mb-3">
         <InputGroup.Text>Quantity</InputGroup.Text>
@@ -45,6 +45,7 @@ export default function FacilityDetails() {
 
   const [selectedItems, setSelectedItems] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
+  console.log(orderItems)
   const [comment, setComment] = useState("");
   const { user } = useAuth();
 
@@ -87,26 +88,46 @@ export default function FacilityDetails() {
     setOrderItems([...orderItems, { item, quantity }]);
   };
 
+  const convertOrderItems = () => {
+    let orderItemsArray = [];
+    for (let iq of orderItems) {
+      console.log(iq)
+      orderItemsArray.push({itemId: iq.item.id, quantity: iq.quantity })
+    }
+    return orderItemsArray;
+  }
   const placeOrder = async () => {
     try {
       const selectedOrder = {
-        facility: facility,
-        items: orderItems,
+        facilityId: facility.id,
+        itemquantities: convertOrderItems(),
         comment: comment,
       };
-
       console.log(selectedOrder);
-
-      setSuccessMessage("Order placed successfully!");
-      setShowModal(false);
-      setSelectedItems([]);
-      setOrderItems([]);
-      setComment("");
-
-      setShowSuccessMessage(true);
-      setTimeout(() => {
-        setShowSuccessMessage(false);
-      }, 3000);
+      const response = await fetch(
+        process.env.REACT_APP_API_URL +
+          `/order/addOrder/${user.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(selectedOrder),
+        }
+      );
+      if(response.ok){
+        setSuccessMessage("Order placed successfully!");
+        setShowModal(false);
+        setSelectedItems([]);
+        setOrderItems([]);
+        setComment("");
+        setShowSuccessMessage(true);
+        setTimeout(() => {
+          setShowSuccessMessage(false);
+        }, 3000);
+      }else if(response.status === 404){
+        console.error("User is not found!")
+      } 
     } catch (error) {
       console.error("Error placing order:", error);
     }
@@ -115,7 +136,6 @@ export default function FacilityDetails() {
   return (
     <div>
       <TopNavbar />
-
       <div className="table-container">
         <Link
           to={`/facilities/${user.id}`}
@@ -170,7 +190,7 @@ export default function FacilityDetails() {
           </thead>
           <tbody>
             {filteredItems.map((item) => (
-              <tr key={item._id}>
+              <tr key={item.id}>
                 <td>{item.sport}</td>
                 <td>
                   <strong>{item.name}</strong>
@@ -209,7 +229,7 @@ export default function FacilityDetails() {
                 <Dropdown.Menu>
                   {filteredItems.map((item) => (
                     <Dropdown.Item
-                      key={item._id}
+                      key={item.id}
                       onClick={() => addToOrder(item, 1)} // Set initial quantity to 1
                     >
                       {item.name}
