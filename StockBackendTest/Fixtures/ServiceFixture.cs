@@ -39,24 +39,45 @@ public class ServiceFixture //: IDisposable
                     PostCode = "ExamplePostCode",
                     City = "TestCity",
                     Address = "TestAddress"
+                },
+                new Facility
+                {
+                    Id = 3,
+                    Name = "TestFacility3",
+                    Sport = SportEnum.CombatSports,
+                    CountryCode = "ExampleCode",
+                    PostCode = "ExamplePostCode",
+                    City = "TestCity",
+                    Address = "TestAddress",
+                    Items = new List<Item>
+                    {
+                        new Item()
+                        {
+                            Id = 30,
+                            Name = "Swimming Training Cones",
+                            Sport = SportEnum.Swimming,
+                            Price = 9.99,
+                            Quantity = 15
+                        }
+                    }
                 }
             }
-        }
-    };
-    context.Users.AddRange(users);
+        } };
+        context.Users.AddRange(users);
 
-    // Seed Facility
-    var facility = new Facility
-    {
-        Id = 1,
-        Name = "TestFacility",
-        Sport = SportEnum.Soccer,
-        CountryCode = "ExampleCode",
-        PostCode = "ExamplePostCode",
-        City = "TestCity",
-        Address = "TestAddress"
-    };
-    context.Facilities.Add(facility);
+        // Seed Facility
+        var facility = new Facility()
+        {
+            Id = 1,
+            Name = "TestFacility",
+            Sport = SportEnum.Soccer,
+            CountryCode = "ExampleCode",
+            PostCode = "ExamplePostCode",
+            City = "TestCity",
+            Address = "TestAddress"
+        };
+
+    context.Facilities.AddRange(facility);
 
     // Seed Items
     var items = new List<Item>
@@ -79,6 +100,45 @@ public class ServiceFixture //: IDisposable
         }
     };
     context.Items.AddRange(items);
+
+    var orders = new List<Order>
+    {
+        new Order()
+        {
+            Id = 1,
+            Comment = "testOrder_comment",
+            CreatedAt = DateTime.UtcNow,
+            FacilityId = 2,
+            OrderItemQuantities = new List<OrderItemQuantity>()
+            {
+                new OrderItemQuantity()
+                {
+                    OrderId = 1,
+                    ItemId = 1,
+                    Quantity = 15 // This is the quantity for the first item
+                }
+            },
+            UserOfOrder = users[1]
+        },
+        new Order()
+        {
+            Id = 2,
+            Comment = "testOrder_comment",
+            CreatedAt = DateTime.UtcNow,
+            FacilityId = 3,
+            OrderItemQuantities = new List<OrderItemQuantity>()
+            {
+                new OrderItemQuantity()
+                {
+                    OrderId = 2,
+                    ItemId = 30,
+                    Quantity = 15 // This is the quantity for the first item
+                }
+            },
+            UserOfOrder = users[1]
+        }
+    };
+    context.Orders.AddRange(orders);
 
     await context.SaveChangesAsync();
 

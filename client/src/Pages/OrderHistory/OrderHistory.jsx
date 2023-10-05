@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Form, Modal, Navbar } from "react-bootstrap";
+import { Table, Button, Form, Modal} from "react-bootstrap";
 import { useAuth } from "../../Contexts/AuthContext";
 import TopNavbar from "../Navbar";
 import "./OrderHistory.css";
@@ -14,8 +14,6 @@ const OrderHistory = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedOrderIdForDeletion, setSelectedOrderIdForDeletion] =
     useState(null);
-    console.log(selectedOrderIdForDeletion)
-
   const { user } = useAuth();
 
   const fetchOrderHistory = async (user) => {
@@ -59,12 +57,9 @@ const OrderHistory = () => {
 
   const deleteOrder = async (orderId) => {
     try {
-      const apiUrl = `${process.env.REACT_APP_API_URL}/order/deleteOrder/${user.id}/${orderId}`;
-      console.log(`Sending DELETE request to: ${apiUrl}`);
-  
+      const apiUrl = `${process.env.REACT_APP_API_URL}/order/deleteOrder/${user.id}/${orderId}`;  
       const response = await fetch(apiUrl, {
         method: "DELETE",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

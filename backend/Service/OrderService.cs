@@ -100,13 +100,16 @@ public class OrderService: IOrderService
             return false;
         }
         order.IsDelivered = true;
-        var facility =  order.Facility;
-        IncreaseOrderItemsQuantity(order.OrderItemQuantities, facility.Items!);
+        var facility = await _dbContext.Facilities
+            .Include(facility => facility.Items!)
+            .FirstOrDefaultAsync(f => f.Id == order.FacilityId);
+        IncreaseOrderItemsQuantity(order.OrderItemQuantities, facility?.Items!);
+        Console.WriteLine(facility.Items.Count);
         await _dbContext.SaveChangesAsync();
         return true;
     }
 
-    private void AddItemsToFacility(List<OrderItemQuantity> orderedItems, List<Item> facilityItems)
+    public void AddItemsToFacility(List<OrderItemQuantity> orderedItems, List<Item> facilityItems)
     {
         if (facilityItems.Count == 0 )
         {
@@ -127,12 +130,12 @@ public class OrderService: IOrderService
         }
     }
 
-    private bool CheckIfFacilityHavingItem(Item item, List<Item> itemsOfFacility)
+    public bool CheckIfFacilityHavingItem(Item item, List<Item> itemsOfFacility)
     {
         return itemsOfFacility.Any(itemFacility => itemFacility.Name == item.Name);
     }
 
-    private  void IncreaseOrderItemsQuantity(List<OrderItemQuantity> orderedItems, List<Item> itemsOfFacility)
+    public void IncreaseOrderItemsQuantity(List<OrderItemQuantity> orderedItems, List<Item> itemsOfFacility)
     {
         AddItemsToFacility(orderedItems, itemsOfFacility);
        foreach (var orderedItem in orderedItems)

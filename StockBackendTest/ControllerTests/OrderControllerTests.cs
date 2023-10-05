@@ -16,6 +16,8 @@ public class OrderControllerTests
     private readonly Mock<IOrderService> _mockOrderService;
     private readonly Order _firstOrder;
     private readonly Facility _firstFacility;
+    private readonly Item _secondItem;
+    private readonly Item _thirdItem;
 
     public OrderControllerTests()
     {
@@ -67,6 +69,22 @@ public class OrderControllerTests
             },
             UserOfOrder = firstUser
         };
+
+        _secondItem = new Item()
+        {
+            Id = 2,
+            Name = "testItem2",
+            Price = 20,
+            Sport = SportEnum.Basketball
+        };
+        
+       _thirdItem = new Item()
+        {
+            Id = 3,
+            Name = "testItem3",
+            Price = 30,
+            Sport = SportEnum.Basketball
+        };
     }
 
     [Fact]
@@ -117,27 +135,17 @@ public class OrderControllerTests
         {
 
             Comment = "testOrder_comment",
-            Facility = _firstFacility,
-            ItemQuantities = new System.Collections.Generic.List<ItemQuantityDto>
+            FacilityId = _firstFacility.Id,
+            ItemQuantities = new List<ItemQuantityDto>
             {
                 new ItemQuantityDto
                 {
-                    Item = new Item
-                    {
-                        Name = "testItem",
-                        Sport = SportEnum.Basketball,
-                        Price = 10.00
-                    },
+                    ItemId = _secondItem.Id,
                     Quantity = 10
                 },
                 new ItemQuantityDto
                 {
-                    Item = new Item
-                    {
-                        Name = "testItem2",
-                        Sport = SportEnum.Basketball,
-                        Price = 12.00
-                    },
+                    ItemId = _thirdItem.Id,
                     Quantity = 20
                 }
             }
@@ -164,17 +172,12 @@ public class OrderControllerTests
         var orderDto = new OrderDto(){
        
             Comment = "testOrder_comment", 
-            Facility = _firstFacility,
+            FacilityId = _firstFacility.Id,
             ItemQuantities = new System.Collections.Generic.List<ItemQuantityDto>
             {
                 new ItemQuantityDto
                 {
-                    Item = new Item
-                    {
-                        Name = "testItem",
-                        Sport = SportEnum.Basketball,
-                        Price = 10.00
-                    },
+                    ItemId= _secondItem.Id,
                     Quantity = 10
                 }
             }
