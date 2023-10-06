@@ -7,8 +7,6 @@ namespace StockBackend.Models.DBContext;
 public class ApplicationDbContext : IdentityDbContext<User>
 {
     public DbSet<Facility> Facilities { get; set; }
-    public DbSet<Statistic> Statistics { get; set; }
-    public DbSet<ShippedItems> ShippedItems { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItemQuantity> OrderItemQuantities { get; set; }
     public DbSet<Item> Items { get; set; }

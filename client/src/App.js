@@ -1,14 +1,12 @@
 import { AuthContextProvider, useAuth } from "./Contexts/AuthContext";
 import { Routes, Route } from "react-router-dom";
 import React, { useEffect} from "react";
-import Home from "./Pages/Home/Home";
 import ErrorPage from "./Pages/ErrorPage";
 import OrderHistory from "./Pages/OrderHistory/OrderHistory";
 import Statistics from "./Pages/Statistics/Statistics";
 import "./index.css";
 import LoginForm from "./Pages/LandingPage/LoginForm";
 import RegisterFormNew from "./Pages/LandingPage/RegisterFormNew";
-import ProductList from "./Pages/Products/ProductList";
 import FacilitiesOfUser from "./Pages/FacilitiesOfUser/FacilitiesOfUser";
 import AdminPage from "./Pages/AdminPage/AdminPage";
 import FacilityDetails from "./Pages/FacilityDetails/FacilityDetails";
