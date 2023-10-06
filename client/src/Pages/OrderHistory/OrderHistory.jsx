@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Form, Modal} from "react-bootstrap";
+import { Table, Button, Form, Modal } from "react-bootstrap";
 import { useAuth } from "../../Contexts/AuthContext";
 import TopNavbar from "../Navbar";
 import "./OrderHistory.css";
@@ -57,14 +57,14 @@ const OrderHistory = () => {
 
   const deleteOrder = async (orderId) => {
     try {
-      const apiUrl = `${process.env.REACT_APP_API_URL}/order/deleteOrder/${user.id}/${orderId}`;  
+      const apiUrl = `${process.env.REACT_APP_API_URL}/order/deleteOrder/${user.id}/${orderId}`;
       const response = await fetch(apiUrl, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         setOrderHistory(data);
@@ -77,7 +77,7 @@ const OrderHistory = () => {
       return false;
     }
   };
- 
+
   const confirmDelivered = async () => {
     try {
       const response = await fetch(
@@ -109,16 +109,14 @@ const OrderHistory = () => {
   };
 
   const filteredOrders = orderHistory.filter((order) => {
-    // Filter by selected facility
     const isFacilityFiltered =
       selectedFacility === "All facilities" ||
       order.facility.name === selectedFacility;
 
-    // Filter by item name search query
     const isItemNameFiltered =
-      searchItem === "" ||
-      order.items.some((item) =>
-        item.name.toLowerCase().includes(searchItem.toLowerCase())
+      searchItem.trim() === "" ||
+      order.orderItemQuantities.some((itemQuantity) =>
+        itemQuantity.item.name.toLowerCase().includes(searchItem.toLowerCase())
       );
 
     return isFacilityFiltered && isItemNameFiltered;
@@ -174,10 +172,9 @@ const OrderHistory = () => {
               >
                 <td>{order.facility.name}</td>
                 {order.orderItemQuantities.map((i) => (
-                <tr key={i.item.id}>
-                  <td>{i.item.name}</td>:
-                  <td>{i.quantity}</td>
-                </tr>
+                  <tr key={i.item.id}>
+                    <td>{i.item.name}</td>:<td>{i.quantity}</td>
+                  </tr>
                 ))}
 
                 <td>{order.comment}</td>
