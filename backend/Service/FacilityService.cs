@@ -26,7 +26,8 @@ public class FacilityService: IFacilityService
     public async Task<List<Facility>?> GetFacilitiesOfUser(string userId)
     {
         var user = await _dbContext.Users
-            .Include(u => u.FacilitiesOfUser)
+            .Include(u => u.FacilitiesOfUser)!
+            .ThenInclude(facility => facility.Items)
             .FirstOrDefaultAsync(u => u.Id == userId);
         return user?.FacilitiesOfUser?.ToList();
     }

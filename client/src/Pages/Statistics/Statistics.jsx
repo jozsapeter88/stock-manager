@@ -14,16 +14,22 @@ const StatisticsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+
+  useEffect(() => {
+    fetchFacilities();
+    fetchOwnFacilities();
+    fetchItems();
+    fetchOrders();
+  }, []);
+  
   const fetchFacilities = async () => {
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/facility/facilities`
       );
-
       if (!response.ok) {
         throw new Error("Failed to fetch facilities");
       }
-
       const data = await response.json();
       setFacilitiesData(data);
     } catch (error) {
@@ -65,6 +71,56 @@ const StatisticsPage = () => {
     }
   };
 
+
+  const calculateInventoryItems = (facilityItems) => {
+    console.log(facilityItems.length)
+    return facilityItems.reduce((sum, item) => sum + item.quantity, 0);
+  }
+
+  const calculateInventoryValue = (facilityItems) => {
+    let totalValue = 0;
+    for(let i = 0; i < facilityItems.length; i++){
+      let price = facilityItems[i].price.toFixed(2)*facilityItems[i].quantity;
+      totalValue += price;
+    }
+    return totalValue.toFixed(2);
+  }
+
+  const getActiveOrdersOfFacility = (idOfFacility) => {
+    let activeOrders = 0;
+     for(let i= 0; i < ordersData.length; i++){
+      if(ordersData[i].facilityId === idOfFacility 
+        && ordersData[i].isDelivered === false){
+          activeOrders++;}
+        }
+        return activeOrders;
+     }
+     
+  const allOrdersOfFacility = (idOfFacility) => {
+     return ordersData.filter(o => o.facilityId === idOfFacility).length;
+  }
+
+  const overallQuantityOfItems = ()=> {
+   return itemsData.reduce((total, item) => total + item.quantity, 0)
+  }
+  
+  const overallValueOfItems = () => {
+  let totalValue = 0;
+  for(let i = 0; i < itemsData.length; i++){
+    let price = itemsData[i].price.toFixed(2)*itemsData[i].quantity;
+    totalValue += price;
+  }
+  return totalValue;
+}
+
+const sortedItemsByQuantity = () => {
+  let copyItems = [...itemsData];
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const itemsToShow = copyItems.sort((a, b)=> b.quantity -a.quantity)
+  .slice(startIndex, endIndex);
+  return itemsToShow;
+}
   const fetchOrders = async () => {
     try {
       const response = await fetch(
@@ -82,22 +138,15 @@ const StatisticsPage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchFacilities();
-    fetchOwnFacilities();
-    fetchItems();
-    fetchOrders();
-  }, [user]);
+  
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  
 
-  const itemsToShow = itemsData.slice(startIndex, endIndex);
-
+  
   return (
     <>
       <TopNavbar />
@@ -140,7 +189,7 @@ const StatisticsPage = () => {
               <Card.Body>
                 <Card.Title>Overall Quantity of Items</Card.Title>
                 <Card.Text>
-                  {itemsData.reduce((total, item) => total + item.quantity, 0)}
+                  {overallQuantityOfItems()}
                 </Card.Text>
               </Card.Body>
             </Card>
@@ -152,20 +201,8 @@ const StatisticsPage = () => {
                 <Card.Title>Average Value of Items</Card.Title>
                 <Card.Text>
                   {itemsData.length > 0
-                    ? (
-                        itemsData.reduce((total, item) => {
-                          if (!isNaN(item.Price) && !isNaN(item.Quantity)) {
-                            return total + item.Price * item.Quantity;
-                          }
-                          return total;
-                        }, 0) /
-                        itemsData.reduce((totalQuantity, item) => {
-                          if (!isNaN(item.Quantity)) {
-                            return totalQuantity + item.Quantity;
-                          }
-                          return totalQuantity;
-                        }, 0)
-                      ).toFixed(2)
+                    ? `${(overallValueOfItems()/overallQuantityOfItems()
+                    ).toFixed(2)}$`
                     : "N/A"}
                 </Card.Text>
               </Card.Body>
@@ -177,7 +214,7 @@ const StatisticsPage = () => {
               <Card.Body>
                 <Card.Title>Overall Value of Items</Card.Title>
                 <Card.Text>
-                  {itemsData.reduce((total, item) => total + item.value, 0)}
+                  {`${overallValueOfItems()}$`}
                 </Card.Text>
               </Card.Body>
             </Card>
@@ -193,17 +230,19 @@ const StatisticsPage = () => {
                   <Card.Title>{facility.name}</Card.Title>
                   <Card.Text>
                     Number of Items in Inventory:{" "}
-                    {/* {calculateInventoryItems(facilitiesData)} */}
+                    { calculateInventoryItems(facility.items) }
                   </Card.Text>
                   <Card.Text>
                     Overall Value of Inventory:{" "}
-                    {/* {calculateInventoryValue(facilitiesData).toFixed(2)} */}
+                    { `${calculateInventoryValue(facility.items)}$` }
                   </Card.Text>
                   <Card.Text>
-                    {/* Active orders: {calculateOrdersLinked(facilitiesData)} */}
+                    Active orders:
+                    { getActiveOrdersOfFacility(facility.id) }
                   </Card.Text>
                   <Card.Text>
-                    {/* All orders: {calculateOrdersLinked(facilitiesData)} */}
+                    All orders:
+                    {  allOrdersOfFacility(facility.id) }
                   </Card.Text>
                 </Card.Body>
               </Card>
@@ -221,7 +260,7 @@ const StatisticsPage = () => {
             </tr>
           </thead>
           <tbody>
-            {itemsToShow.map((item) => (
+            {sortedItemsByQuantity().map((item) => (
               <tr key={item.id}>
                 <td>{item.name}</td>
                 <td>{item.quantity}</td>
