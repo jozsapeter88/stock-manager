@@ -156,7 +156,7 @@ const OrderHistory = () => {
           <thead>
             <tr>
               <th>Facility</th>
-              <th>Items/Quantity</th>
+              <th>Content</th>
               <th>Comment</th>
               <th>Date</th>
               <th>Action</th>
@@ -171,12 +171,15 @@ const OrderHistory = () => {
                 }
               >
                 <td>{order.facility.name}</td>
-                {order.orderItemQuantities.map((i) => (
-                  <tr key={i.item.id}>
-                    <td>{i.item.name}</td>:<td>{i.quantity}</td>
-                  </tr>
-                ))}
-
+                <td>
+                  {order.orderItemQuantities.map((itemQuantity) => (
+                    <tr key={itemQuantity.item.id}>
+                      <td>
+                        {itemQuantity.item.name}: {itemQuantity.quantity}
+                      </td>
+                    </tr>
+                  ))}
+                </td>
                 <td>{order.comment}</td>
                 <td>{new Date(order.createdAt).toLocaleString()}</td>
                 <td>
