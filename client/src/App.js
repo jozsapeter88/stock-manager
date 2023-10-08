@@ -32,26 +32,17 @@ const App = () => {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<LoginForm />} />
+        <Route path="/" element={ <LoginForm />} />
         <Route path="register" element={<RegisterFormNew />} />
         <Route path="login" element={<LoginForm />} />
-        <Route path="facilities/:id" element={<FacilitiesOfUser />} />
-        <Route path="facilityDetails/:id" element={<FacilityDetails />} />
-        <Route path="orderhistory/:id" element={<OrderHistory />} />
-        <Route path="order-history" element={<OrderHistory />} />
-        <Route path="statistics" element={<Statistics />} />
-        <Route path="suppliers" element={<SupplierPage />} />
+        <Route path="facilities/:id" element={isAuthenticated([0,1]) ? <FacilitiesOfUser /> : <LoginForm/>} />
+        <Route path="facilityDetails/:id" element={isAuthenticated([0,1]) ? <FacilityDetails /> : <LoginForm />} />
+        <Route path="orderhistory/:id" element={isAuthenticated([0,1]) ? <OrderHistory /> : <LoginForm/>} />
+        <Route path="statistics" element={isAuthenticated([0,1]) ? <Statistics /> : <LoginForm/>} />
+        <Route path="suppliers" element={isAuthenticated([0,1]) ? <SupplierPage /> : <LoginForm/>} />
         <Route path="*" element={<ErrorPage />} />
-        <Route
-          path="admin"
-          element={
-            isAuthenticated([0]) ? (
-              <AdminPage />
-            ) : (
-              <p>You are not authorized to access this page.</p>
-            )
-          }
-        />
+        <Route path="admin" element={ isAuthenticated([0]) ? (<AdminPage />) : (
+              <p>You are not authorized to access this page.</p>)}/>
       </Routes>
     </div>
   );

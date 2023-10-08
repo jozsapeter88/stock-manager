@@ -49,7 +49,7 @@ export default function TopNavbar() {
             <Nav.Item>
               <Nav.Link
                 as={Link}
-                to="/order-history"
+                to={`/orderhistory/${user.id}`}
                 style={{
                   color: "black",
                   fontWeight: "bold",

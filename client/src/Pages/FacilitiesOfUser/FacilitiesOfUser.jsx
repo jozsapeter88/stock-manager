@@ -40,7 +40,7 @@ export default function FacilitiesOfUser() {
     <div>
       <TopNavbar />
       <div className="table-container">
-        {facilities && facilities.length > 0 ? (
+        {(facilities && facilities.length > 0) || user.role === 0 ? (
           <Table striped bordered hover style={{ outline: "2px solid" }}>
             <thead>
               <tr>
