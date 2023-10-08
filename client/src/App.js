@@ -6,7 +6,7 @@ import OrderHistory from "./Pages/OrderHistory/OrderHistory";
 import Statistics from "./Pages/Statistics/Statistics";
 import "./index.css";
 import LoginForm from "./Pages/LandingPage/LoginForm";
-import RegisterFormNew from "./Pages/LandingPage/RegisterFormNew";
+import RegisterForm from "./Pages/LandingPage/RegisterForm";
 import FacilitiesOfUser from "./Pages/FacilitiesOfUser/FacilitiesOfUser";
 import AdminPage from "./Pages/AdminPage/AdminPage";
 import FacilityDetails from "./Pages/FacilityDetails/FacilityDetails";
@@ -33,7 +33,7 @@ const App = () => {
     <div className="App">
       <Routes>
         <Route path="/" element={ <LoginForm />} />
-        <Route path="register" element={<RegisterFormNew />} />
+        <Route path="register" element={<RegisterForm />} />
         <Route path="login" element={<LoginForm />} />
         <Route path="facilities/:id" element={isAuthenticated([0,1]) ? <FacilitiesOfUser /> : <LoginForm/>} />
         <Route path="facilityDetails/:id" element={isAuthenticated([0,1]) ? <FacilityDetails /> : <LoginForm />} />

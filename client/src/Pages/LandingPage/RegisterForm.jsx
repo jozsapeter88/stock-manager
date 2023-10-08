@@ -1,38 +1,43 @@
-import { useState } from "react"
-import SignUp from "../Pages/SignUp/SignUp"
+import React, { useState } from 'react';
+import SignUp from '../SignUp/SignUp';
 import { useNavigate } from "react-router-dom";
-import Cookie from "universal-cookie";
-import { useCookies } from "react-cookie";
 
-
-const Authorize = async (username, password) => {
-    const loginObj = {"UserName": username, "Password": password}
-    return await fetch("/api/user/register", {
-        method: "POST", 
-        headers: {
-            "Content-Type": "application/json"
-        }, 
-        body: JSON.stringify(loginObj)
-    }).then(res => {
-        return  {"status": res.status, "token": res.text()}; 
-     })
-}
+const Register = async (formData) => {
+    console.log(JSON.stringify(formData));
+    try {
+        const response = await fetch(process.env.REACT_APP_API_URL + '/user/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+        return { status: response.status };
+    } catch (error) {
+        // Handle network or other errors
+        console.error("Error:", error);
+        return { status: 500 };
+    }
+};
 
 function timeout(delay) {
     return new Promise( res => setTimeout(res, delay) );
 }
 
-const RegisterForm = () => {
-    const navigate = useNavigate();
-    const [cookies, setCookie] = useCookies();
+const RegistrationForm = () => {
+   // const [formData, setFormData] = useState({});
     const [showMsg, setShowMsg] = useState(true);
     const [successfulReg, setReg] = useState(false);
+    const navigate = useNavigate();
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        const username = e.target.formBasicUsername.value;
-        const password = e.target.formBasicPassword.value;
-        const auth = await Authorize(username, password);
+        const regObj = {
+            userName: e.target.formBasicUsername.value,
+            email: e.target.formBasicEmail.value,
+            password: e.target.formBasicPassword.value,
+        }
+        const auth = await Register(regObj);
         if(auth.status === 401) {
             setShowMsg(false);
             console.error("Username is already taken!")
@@ -41,7 +46,6 @@ const RegisterForm = () => {
             console.error("Can't communicate with server!")
         }
         else if(auth.status === 200){
-            //setCookie("token", await auth.token)
             setShowMsg(true);
             setReg(true)
             console.log("Registration successful!")
@@ -49,8 +53,10 @@ const RegisterForm = () => {
             navigate("/");
         }
     }
-    
-    return <SignUp onSubmit={onSubmit} showMsg={showMsg} successfulReg={successfulReg}></SignUp>
+        
+    return (
+        <SignUp onSubmit={onSubmit} showMsg={showMsg} successfulReg={successfulReg}></SignUp>
+    );
 }
 
-export default RegisterForm
+export default RegistrationForm;

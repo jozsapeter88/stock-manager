@@ -1,7 +1,7 @@
 import { Link, Outlet } from "react-router-dom";
 import { Navbar, Nav } from "react-bootstrap";
 import "./Navbar.css";
-import { useAuth } from "../Contexts/AuthContext";
+import { useAuth } from "../../Contexts/AuthContext";
 
 export default function TopNavbar() {
   const { user, logout } = useAuth();

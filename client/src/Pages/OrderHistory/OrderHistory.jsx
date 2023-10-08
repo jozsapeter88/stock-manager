@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Form, Modal } from "react-bootstrap";
 import { useAuth } from "../../Contexts/AuthContext";
-import TopNavbar from "../Navbar";
+import TopNavbar from "../Navbar/Navbar";
 import "./OrderHistory.css";
 
 const OrderHistory = () => {
