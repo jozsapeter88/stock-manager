@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Alert } from "react-bootstrap";
-import TopNavbar from "../Navbar";
+import TopNavbar from "../Navbar/Navbar";
 import "./SupplierPage.css";
 import EditSupplierModal from "./EditSupplierModal";
 

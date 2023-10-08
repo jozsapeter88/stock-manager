@@ -1,7 +1,7 @@
 import { Link, Outlet } from "react-router-dom";
 import { Navbar, Nav } from "react-bootstrap";
 import "./Navbar.css";
-import { useAuth } from "../Contexts/AuthContext";
+import { useAuth } from "../../Contexts/AuthContext";
 
 export default function TopNavbar() {
   const { user, logout } = useAuth();
@@ -49,7 +49,7 @@ export default function TopNavbar() {
             <Nav.Item>
               <Nav.Link
                 as={Link}
-                to="/order-history"
+                to={`/orderhistory/${user.id}`}
                 style={{
                   color: "black",
                   fontWeight: "bold",

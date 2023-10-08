@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Col, Row, Card, Table, Pagination, PageItem } from "react-bootstrap";
-import TopNavbar from "../Navbar";
+import TopNavbar from "../Navbar/Navbar";
 import "./Statistics.css";
 import { useAuth } from "../../Contexts/AuthContext";
 

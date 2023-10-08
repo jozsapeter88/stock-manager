@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Table, Alert } from "react-bootstrap";
-import TopNavbar from "../Navbar";
+import TopNavbar from "../Navbar/Navbar";
 import { useAuth } from "../../Contexts/AuthContext";
 import { FaSearch } from "react-icons/fa";
 import "./FacilitiesOfUser.css";
@@ -40,7 +40,7 @@ export default function FacilitiesOfUser() {
     <div>
       <TopNavbar />
       <div className="table-container">
-        {facilities && facilities.length > 0 ? (
+        {(facilities && facilities.length > 0) || user.role === 0 ? (
           <Table striped bordered hover style={{ outline: "2px solid" }}>
             <thead>
               <tr>

@@ -8,8 +8,7 @@ import {
   Dropdown,
   InputGroup,
 } from "react-bootstrap";
-import TopNavbar from "../Navbar";
-import { fetchItems } from "../Products/ProductList";
+import TopNavbar from "../Navbar/Navbar";
 import { useAuth } from "../../Contexts/AuthContext";
 
 function OrderItem({ item, onChange }) {
@@ -33,6 +32,14 @@ function OrderItem({ item, onChange }) {
     </li>
   );
 }
+
+const fetchItems = async () => {
+  try {
+    return await fetch(process.env.REACT_APP_API_URL + "/item/getItems");
+  } catch (error) {
+    console.error("Error fetching products:", error);
+  }
+};
 
 export default function FacilityDetails() {
   const { id } = useParams();

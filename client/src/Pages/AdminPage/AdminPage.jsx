@@ -1,7 +1,7 @@
 import { Table, Modal, Button } from "react-bootstrap";
 import { useAuth } from "../../Contexts/AuthContext";
 import { useState, useEffect } from "react";
-import TopNavbar from "../Navbar";
+import TopNavbar from "../Navbar/Navbar";
 import Loading from "../Loading";
 
 export default function AdminPage() {
