@@ -19,5 +19,6 @@ namespace StockBackend.Models
         public string Comment { get; set; }
 
         public List<Order>? OrderList { get; set; }
+        
     }
 }

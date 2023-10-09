@@ -32,6 +32,7 @@ public class OrderService: IOrderService
             .ThenInclude(i => i.Item)
             .Include(order => order.Facility)
             .Include(order => order.UserOfOrder)
+            .Include(order => order.Supplier)
             .Where(o => o.UserOfOrder.Id == userId)
             .ToListAsync();
         return orders;
@@ -43,6 +44,8 @@ public class OrderService: IOrderService
             .FirstOrDefaultAsync(u => u.Id == userId)!;
         var facility = await _dbContext.Facilities
             .FirstOrDefaultAsync(f => f.Id == order.FacilityId);
+        var supplier = await _dbContext.Suppliers
+            .FirstOrDefaultAsync(s => s.Id == order.SupplierId);
         var newOrder = new Order();
         if (user is not null)
         {
@@ -51,6 +54,7 @@ public class OrderService: IOrderService
                 Comment = order.Comment,
                 CreatedAt = DateTime.UtcNow,
                 Facility = facility!,
+                Supplier = supplier!,
                 OrderItemQuantities = new List<OrderItemQuantity>(),
                 UserOfOrder = user
             };

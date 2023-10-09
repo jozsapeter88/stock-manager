@@ -4,6 +4,20 @@ import TopNavbar from "../Navbar/Navbar";
 import "./SupplierPage.css";
 import EditSupplierModal from "./EditSupplierModal";
 
+export const fetchAllSuppliers = async () => {
+  try {
+    return await fetch(
+      process.env.REACT_APP_API_URL + `/supplier/getAllSuppliers`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+  } catch (error) {
+    console.error("Error fetching suppliers", error);
+  }
+};
+
 function SupplierPage() {
   const [suppliers, setSuppliers] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -130,24 +144,8 @@ function SupplierPage() {
     }
   };
 
-  const fetchAllSuppliers = async () => {
-    try {
-      const response = await fetch(
-        process.env.REACT_APP_API_URL + `/supplier/getAllSuppliers`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
-
-      const data = await response.json();
-      setSuppliers(data);
-    } catch (error) {
-      console.error("Error fetching suppliers", error);
-    }
-  };
-
-  const createSupplier = async (newSupplier) => {
+    
+  /*const createSupplier = async (newSupplier) => {
     try {
       const response = await fetch(
         process.env.REACT_APP_API_URL + `/supplier/addSupplier`,
@@ -179,9 +177,13 @@ function SupplierPage() {
     } catch (error) {
       console.error("Error saving supplier:", error);
     }
-  };
+  };*/
+
+
   useEffect(() => {
-    fetchAllSuppliers();
+    fetchAllSuppliers()
+    .then((data) => data.json())
+    .then((suppliers) => setSuppliers(suppliers));
   }, []);
 
   return (
