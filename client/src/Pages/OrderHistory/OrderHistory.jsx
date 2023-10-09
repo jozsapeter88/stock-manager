@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, Form, Modal } from "react-bootstrap";
 import { useAuth } from "../../Contexts/AuthContext";
 import TopNavbar from "../Navbar/Navbar";
+
 import "./OrderHistory.css";
 
 const OrderHistory = () => {
@@ -157,6 +158,7 @@ const OrderHistory = () => {
             <tr>
               <th>Facility</th>
               <th>Content</th>
+              <th>Supplier</th>
               <th>Comment</th>
               <th>Date</th>
               <th>Action</th>
@@ -180,6 +182,7 @@ const OrderHistory = () => {
                     </tr>
                   ))}
                 </td>
+                <td>{order.supplier.name}</td>
                 <td>{order.comment}</td>
                 <td>{new Date(order.createdAt).toLocaleString()}</td>
                 <td>

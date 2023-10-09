@@ -10,6 +10,7 @@ import {
 } from "react-bootstrap";
 import TopNavbar from "../Navbar/Navbar";
 import { useAuth } from "../../Contexts/AuthContext";
+import { fetchAllSuppliers } from "../SupplierPage/SupplierPage";
 
 function OrderItem({ item, onChange }) {
   const [quantity, setQuantity] = useState(1);
@@ -41,15 +42,32 @@ const fetchItems = async () => {
   }
 };
 
+const fetchFacilityDetails = async (id) => {
+  try {
+    return await fetch(
+      process.env.REACT_APP_API_URL + `/facility/getFacility/${id}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+  } catch (error) {
+    console.error("Error fetching facility details:", error);
+  }
+}
+
 export default function FacilityDetails() {
   const { id } = useParams();
   const [facility, setFacility] = useState(null);
   const [itemDetails, setItemDetails] = useState([]);
-
+  const [allSuppliers, setAllSuppliers] = useState([]);
+  console.log(allSuppliers)
+  const [selectedSupplierId, setSelectedSupplierId] = useState(null)
+  console.log("id" + selectedSupplierId)
   const [showModal, setShowModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-
+  
   const [selectedItems, setSelectedItems] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
   console.log(orderItems)
@@ -57,29 +75,18 @@ export default function FacilityDetails() {
   const { user } = useAuth();
 
   useEffect(() => {
-    const fetchFacilityDetails = async () => {
-      try {
-        const response = await fetch(
-          process.env.REACT_APP_API_URL + `/facility/getFacility/${id}`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
-
-        const data = await response.json();
-        setFacility(data);
-
-        const items = await fetchItems();
-        const itemsData = await items.json();
-        setItemDetails(itemsData);
-        console.log("items" + items.length);
-      } catch (error) {
-        console.error("Error fetching facility details:", error);
-      }
-    };
-
-    fetchFacilityDetails();
+    fetchFacilityDetails(id)
+    .then((data) => data.json())
+    .then((facilities) =>setFacility(facilities) )
+        
+    fetchItems()
+    .then((data) => data.json())
+    .then((items) => setItemDetails(items))
+        
+    fetchAllSuppliers()
+    .then((data) => data.json())
+    .then((suppliers) => setAllSuppliers(suppliers))
+      
   }, [id]);
 
   if (!facility || itemDetails.length === 0) {
@@ -90,6 +97,13 @@ export default function FacilityDetails() {
     (item) => item.sport === facility.sport
   );
 
+  const selectedSupplierName = (supplierID) => {
+    if(supplierID !== null){
+      console.log(allSuppliers[supplierID])
+      return allSuppliers.find(s => s.id === supplierID).name;
+    }else return "Select Supplier";
+  }
+  console.log("name" + selectedSupplierName)
   const addToOrder = (item, quantity) => {
     setSelectedItems([...selectedItems, item]);
     setOrderItems([...orderItems, { item, quantity }]);
@@ -108,6 +122,7 @@ export default function FacilityDetails() {
       const selectedOrder = {
         facilityId: facility.id,
         itemquantities: convertOrderItems(),
+        supplierId: selectedSupplierId,
         comment: comment,
       };
       console.log(selectedOrder);
@@ -127,6 +142,7 @@ export default function FacilityDetails() {
         setShowModal(false);
         setSelectedItems([]);
         setOrderItems([]);
+        setSelectedSupplierId(null);
         setComment("");
         setShowSuccessMessage(true);
         setTimeout(() => {
@@ -265,6 +281,27 @@ export default function FacilityDetails() {
                 </ul>
               </div>
             )}
+            <Form.Group>
+              <Dropdown>
+                <Dropdown.Toggle
+                  variant="outline-secondary"
+                  id="dropdown-basic"
+                >
+                {selectedSupplierName(selectedSupplierId)}
+                
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  {allSuppliers.map((supplier) => (
+                    <Dropdown.Item
+                      key={supplier.id}
+                      onClick={() => setSelectedSupplierId(supplier.id)} // Set initial quantity to 1
+                    >
+                      {supplier.name}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            </Form.Group>
             <InputGroup>
               <InputGroup.Text>Add your comment</InputGroup.Text>
               <Form.Control
