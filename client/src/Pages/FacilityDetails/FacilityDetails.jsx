@@ -11,6 +11,7 @@ import {
 import TopNavbar from "../Navbar/Navbar";
 import { useAuth } from "../../Contexts/AuthContext";
 import { fetchAllSuppliers } from "../SupplierPage/SupplierPage";
+import { DispatchForm } from "../DispatchForm/DispatchForm";
 
 function OrderItem({ item, onChange }) {
   const [quantity, setQuantity] = useState(1);
@@ -67,7 +68,7 @@ export default function FacilityDetails() {
   const [showModal, setShowModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  
+  const [showDispatchModal, setShowDispatchModal] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
   console.log(orderItems)
@@ -209,6 +210,7 @@ export default function FacilityDetails() {
               <th>Name</th>
               <th>Price</th>
               <th>Quantity</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -220,11 +222,20 @@ export default function FacilityDetails() {
                 </td>
                 <td>{item.price}</td>
                 <td>{item.quantity}</td>
+                <td><Button
+                variant="warning"
+                style={{ float: "right" }}
+                onClick={() => setShowDispatchModal(true)}>
+                  Dispatch
+                  </Button></td>
               </tr>
             ))}
           </tbody>
         </Table>
       </div>
+      <DispatchForm
+      showDispatchModal={showDispatchModal}
+      setShowDispatchModal={setShowDispatchModal}/>
       <Modal
         show={showModal}
         onHide={() => {
