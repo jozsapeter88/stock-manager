@@ -18,6 +18,9 @@ const OrderHistory = () => {
     useState(null);
   const { user } = useAuth();
   const [suppliers, setSuppliers] = useState(["All suppliers"]);
+  const [showSupplierModal, setShowSupplierModal] = useState(false);
+  const [selectedSupplierDetails, setSelectedSupplierDetails] = useState(null);
+
 
   const fetchOrderHistory = async (user) => {
     try {
@@ -38,13 +41,16 @@ const OrderHistory = () => {
           credentials: "include",
         }
       );
-  
+
       if (facilityResponse.ok) {
         const facilityData = await facilityResponse.json();
         setFacilities(facilityData);
-  
+
         const suppliersData = await fetchAllSuppliers();
-        const suppliers = ["All suppliers", ...suppliersData.map((supplier) => supplier.name)];
+        const suppliers = [
+          "All suppliers",
+          ...suppliersData.map((supplier) => supplier.name),
+        ];
         setSuppliers(suppliers);
       } else {
         console.error("Failed to fetch facilities");
@@ -53,7 +59,6 @@ const OrderHistory = () => {
       console.error("Error fetching facility details:", error);
     }
   };
-  
 
   const fetchAllSuppliers = async () => {
     try {
@@ -64,10 +69,10 @@ const OrderHistory = () => {
           credentials: "include",
         }
       );
-  
+
       if (response.ok) {
         const data = await response.json();
-        return data; // Return the list of suppliers
+        return data;
       } else {
         console.error("Failed to fetch suppliers");
         return [];
@@ -228,7 +233,17 @@ const OrderHistory = () => {
                     </tr>
                   ))}
                 </td>
-                <td>{order.supplier.name}</td>
+                <td>
+                <Button
+                    variant="secondary"
+                    onClick={() => {
+                      setSelectedSupplierDetails(order.supplier);
+                      setShowSupplierModal(true);
+                    }}
+                  >
+                    {order.supplier.name} <i class="fa-solid fa-arrow-right"></i>
+                  </Button>
+                </td>
                 <td>{order.comment}</td>
                 <td>{new Date(order.createdAt).toLocaleString()}</td>
                 <td>
@@ -256,6 +271,34 @@ const OrderHistory = () => {
             ))}
           </tbody>
         </Table>
+
+        <Modal
+  show={showSupplierModal}
+  onHide={() => setShowSupplierModal(false)}
+>
+  <Modal.Header closeButton>
+    <Modal.Title>{selectedSupplierDetails.name}</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    {selectedSupplierDetails && (
+      <>
+        <p><b>Name:</b> {selectedSupplierDetails.name}</p>
+        <p><b>Category:</b> {selectedSupplierDetails.category}</p>
+        <p><b>Location:</b> {selectedSupplierDetails.location}</p>
+        <p><b>Comment:</b> {selectedSupplierDetails.comment}</p>
+      </>
+    )}
+  </Modal.Body>
+  <Modal.Footer>
+    <Button
+      variant="secondary"
+      onClick={() => setShowSupplierModal(false)}
+    >
+      Close
+    </Button>
+  </Modal.Footer>
+</Modal>
+
 
         {/* Confirm Delivered Modal */}
         <Modal
