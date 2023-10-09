@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using StockBackend.Models;
+using StockBackend.Models.DTO;
 using StockBackend.Service;
 
 namespace StockBackend.Controllers;
@@ -20,6 +21,14 @@ public class ItemController: ControllerBase
     {
         var result = await _itemService.GetItems();
         if (result is null) return NotFound("No items available");
+        return Ok(result);
+    }
+
+    [HttpPost("addDispatch/{userId}")]
+    public async Task<ActionResult<Dispatch>> AddDispatch([FromBody] DispatchDto dispatchDto, string userId)
+    {
+        var result = await _itemService.AddDispatch(dispatchDto, userId);
+        if (result is null) return NotFound("User is not Found");
         return Ok(result);
     }
 }

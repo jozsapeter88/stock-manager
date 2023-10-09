@@ -12,6 +12,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Item> Items { get; set; }
     public new DbSet<Role> Roles { get; set; }
     public DbSet<Supplier> Suppliers { get; set; }
+    public DbSet<Dispatch> Dispatches { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
