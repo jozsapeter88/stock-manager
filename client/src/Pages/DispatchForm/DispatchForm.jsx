@@ -6,20 +6,27 @@ import {
     InputGroup,
   } from "react-bootstrap";
 
-export const DispatchForm = ({showDispatchModal, setShowDispatchModal}) => {
-    const [count, setCount] = useState(0);
-    const [comment, setComment] = useState("");
+export const DispatchForm = ({
+    showDispatchModal,
+    setShowDispatchModal, 
+    setDispatchComment,
+    dispatchComment,
+    itemQuantity,
+    setItemQuantity,
+    placeDispatch,
+    selectedItemName}) => {
+    
     const handleIncrement = () => {
-      setCount(prevCount => prevCount + 1);
+      setItemQuantity(prevCount => prevCount + 1);
     };
   
     const handleDecrement = () => {
-      setCount(prevCount => (prevCount > 0 ? prevCount - 1 : 0));
+      setItemQuantity(prevCount => (prevCount > 0 ? prevCount - 1 : 0));
     };
 
     const handleChange = (e) => {
         const value = parseInt(e.target.value, 10);
-        setCount(isNaN(value) ? 0 : value);
+        setItemQuantity(isNaN(value) ? 0 : value);
       };
 
     return(
@@ -28,17 +35,17 @@ export const DispatchForm = ({showDispatchModal, setShowDispatchModal}) => {
         show={showDispatchModal}
         onHide={() => {
           setShowDispatchModal(false);
-          setComment("");
+          setDispatchComment("");
         }}>
         <Modal.Header closeButton>
-          <Modal.Title>Dispatch Item</Modal.Title>
+          <Modal.Title>Dispatch Item: {selectedItemName}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
             <Form>
             <InputGroup>
                 <InputGroup.Text>Number Of Items to dispatch</InputGroup.Text>
                 <Button variant="outline-secondary" onClick={handleDecrement}>-</Button>
-                <Form.Control type="text" value={count} onChange={handleChange} />
+                <Form.Control type="text" value={itemQuantity} onChange={handleChange} />
                 <Button variant="outline-secondary" onClick={handleIncrement}>+</Button>
             </InputGroup>
             <InputGroup>
@@ -46,8 +53,8 @@ export const DispatchForm = ({showDispatchModal, setShowDispatchModal}) => {
               <Form.Control
                 as="textarea"
                 aria-label="With textarea"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
+                value={dispatchComment}
+                onChange={(e) => setDispatchComment(e.target.value)}
               />
             </InputGroup>
             </Form>
@@ -56,7 +63,7 @@ export const DispatchForm = ({showDispatchModal, setShowDispatchModal}) => {
           <Button variant="secondary" onClick={() => setShowDispatchModal(false)}>
             Close
           </Button>
-          <Button variant="warning" >
+          <Button variant="warning" onClick={()=> placeDispatch()} >
             Dispatch Items
           </Button>
         </Modal.Footer>

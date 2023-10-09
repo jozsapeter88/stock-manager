@@ -39,6 +39,37 @@ function OrderItem({ item, onChange }) {
   );
 }
 
+const addDispatch = async (userId, dispatch) => {
+  try{
+    return await fetch(process.env.REACT_APP_API_URL + `/item/addDispatch/${userId}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dispatch),
+    })
+  }catch (error) {
+    console.error("Error adding Dispatch:", error);
+  }
+}
+
+const addOrder = async (userId, selectedOrder) => {
+  try{
+    return await fetch(
+      process.env.REACT_APP_API_URL +
+        `/order/addOrder/${userId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(selectedOrder),
+      });
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
+}
 const fetchItems = async () => {
   try {
     return await fetch(process.env.REACT_APP_API_URL + "/item/getItems");
@@ -64,19 +95,26 @@ const fetchFacilityDetails = async (id) => {
 export default function FacilityDetails() {
   const { id } = useParams();
   const [facility, setFacility] = useState(null);
-  const [itemDetails, setItemDetails] = useState([]);
+  //Suppliers
   const [allSuppliers, setAllSuppliers] = useState([]);
-  console.log(allSuppliers)
   const [selectedSupplierId, setSelectedSupplierId] = useState(null)
-  console.log("id" + selectedSupplierId)
+  //Items
+  const [items, setItems] = useState([]);
+ 
+  //Order related
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [orderItems, setOrderItems] = useState([]);
+  const [comment, setComment] = useState("");
+  //Dispatch useStates
+  const [dispatchComment, setDispatchComment] = useState("");
+  const [itemQuantity, setItemQuantity] = useState(0);
+  const [selectedItemId, setSelectedItemId] = useState(null)
+  //Modals and Messages
   const [showModal, setShowModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showDispatchModal, setShowDispatchModal] = useState(false);
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [orderItems, setOrderItems] = useState([]);
-  console.log(orderItems)
-  const [comment, setComment] = useState("");
+  //User
   const { user } = useAuth();
 
   useEffect(() => {
@@ -86,7 +124,7 @@ export default function FacilityDetails() {
         
     fetchItems()
     .then((data) => data.json())
-    .then((items) => setItemDetails(items))
+    .then((items) => setItems(items))
         
     fetchAllSuppliers()
     .then((data) => data.json())
@@ -94,56 +132,43 @@ export default function FacilityDetails() {
       
   }, [id]);
 
-  if (!facility || itemDetails.length === 0) {
-    return <div>Loading facility details...</div>;
-  }
-
-  const filteredItems = itemDetails.filter(
-    (item) => item.sport === facility.sport
-  );
-
   const selectedSupplierName = (supplierID) => {
     if(supplierID !== null){
-      console.log(allSuppliers[supplierID])
       return allSuppliers.find(s => s.id === supplierID).name;
     }else return "Select Supplier";
   }
-  console.log("name" + selectedSupplierName)
+  
+  const selectedItemName = (itemId) => {
+    if(itemId !== null){
+      return items.find(i => i.id === itemId).name;
+    }
+  }
+
+  const convertOrderItems = () => {
+    let orderItemsArray = [];
+    for (let iq of orderItems) {
+      orderItemsArray.push({itemId: iq.item.id, quantity: iq.quantity })
+    }
+    return orderItemsArray;
+  }
+
+  const filteredItems = facility ? [...items].filter((item) => item.sport === facility.sport): [];
+
+  const sortedItems = [...filteredItems].sort((a, b) => b.quantity - a.quantity);
+
   const addToOrder = (item, quantity) => {
     setSelectedItems([...selectedItems, item]);
     setOrderItems([...orderItems, { item, quantity }]);
   };
 
-  const sortedItems = [...filteredItems].sort((a, b) => b.quantity - a.quantity);
-
-  const convertOrderItems = () => {
-    let orderItemsArray = [];
-    for (let iq of orderItems) {
-      console.log(iq)
-      orderItemsArray.push({itemId: iq.item.id, quantity: iq.quantity })
-    }
-    return orderItemsArray;
-  }
   const placeOrder = async () => {
-    try {
       const selectedOrder = {
         facilityId: facility.id,
         itemquantities: convertOrderItems(),
         supplierId: selectedSupplierId,
         comment: comment,
       };
-      console.log(selectedOrder);
-      const response = await fetch(
-        process.env.REACT_APP_API_URL +
-          `/order/addOrder/${user.id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(selectedOrder),
-        }
-      );
+      const response = await addOrder(user.id, selectedOrder)
       if(response.ok){
         setSuccessMessage("Order placed successfully!");
         setShowModal(false);
@@ -158,10 +183,35 @@ export default function FacilityDetails() {
       }else if(response.status === 404){
         console.error("User is not found!")
       } 
-    } catch (error) {
-      console.error("Error placing order:", error);
-    }
   };
+
+  const placeDispatch = async () => {
+    let dispatch = {
+      comment: dispatchComment,
+      quantity: itemQuantity,
+      itemId: selectedItemId,
+      facilityId: facility.id
+    }
+   const response = await addDispatch(user.id, dispatch);
+   if(response.ok){
+    setShowDispatchModal(!showDispatchModal)
+    setSuccessMessage("Items dispatched successfully!");
+    setDispatchComment("")
+    setItemQuantity(0)
+    fetchItems()
+    .then((data) => data.json())
+    .then((items) => setItems(items))
+    setShowSuccessMessage(true);
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 3000);
+  } else if(response.status === 404){
+    console.error("User is not found!")
+  } }
+  
+  if (!facility || items.length === 0) {
+    return <div>Loading facility details...</div>;
+  }
 
   return (
     <div>
@@ -227,35 +277,14 @@ export default function FacilityDetails() {
                   <strong>{item.name}</strong>
                 </td>
                 <td>{item.price}</td>
-                <td>
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={
-                      <Tooltip>
-                        {item.quantity === 0
-                          ? "There are no items registered of this kind"
-                          : item.quantity < item.suggestedQuantity
-                          ? "The quantity of this item is below the suggested quantity!"
-                          : null}
-                      </Tooltip>
-                    }
-                  >
-                    {item.quantity === 0 ? (
-                      <BsFillExclamationTriangleFill
-                        style={{ color: 'red', cursor: 'pointer' }}
-                      />
-                    ) : item.quantity < item.suggestedQuantity ? (
-                      <BsFillExclamationTriangleFill
-                        style={{ color: 'yellow', cursor: 'pointer' }}
-                      />
-                    ) : null}
-                  </OverlayTrigger>
-                  {item.quantity}
-                </td>
+                <td>{item.quantity}</td>
                 <td><Button
                 variant="warning"
                 style={{ float: "right" }}
-                onClick={() => setShowDispatchModal(true)}>
+                onClick={() => {
+                  setSelectedItemId(item.id)
+                  setShowDispatchModal(true)
+                }}>
                   Dispatch
                   </Button></td>
               </tr>
@@ -265,7 +294,14 @@ export default function FacilityDetails() {
       </div>
       <DispatchForm
       showDispatchModal={showDispatchModal}
-      setShowDispatchModal={setShowDispatchModal}/>
+      setShowDispatchModal={setShowDispatchModal}
+      setDispatchComment = {setDispatchComment}
+      dispatchComment = {dispatchComment}
+      itemQuantity = {itemQuantity}
+      setItemQuantity = {setItemQuantity}
+      placeDispatch = {placeDispatch}
+      selectedItemName = {selectedItemName(selectedItemId)}
+      />
       <Modal
         show={showModal}
         onHide={() => {
@@ -291,14 +327,15 @@ export default function FacilityDetails() {
                     : "Select items"}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  {filteredItems.map((item) => (
+                  {filteredItems.length > 0 
+                  ? filteredItems.map((item) => (
                     <Dropdown.Item
                       key={item.id}
                       onClick={() => addToOrder(item, 1)} // Set initial quantity to 1
                     >
                       {item.name}
                     </Dropdown.Item>
-                  ))}
+                  )): "No items"}
                 </Dropdown.Menu>
               </Dropdown>
             </Form.Group>
