@@ -7,11 +7,15 @@ import {
   Form,
   Dropdown,
   InputGroup,
+  OverlayTrigger,
+  Tooltip,
 } from "react-bootstrap";
 import TopNavbar from "../Navbar/Navbar";
 import { useAuth } from "../../Contexts/AuthContext";
 import { fetchAllSuppliers } from "../SupplierPage/SupplierPage";
 import { DispatchForm } from "../DispatchForm/DispatchForm";
+import { BsFillExclamationTriangleFill } from 'react-icons/bs';
+
 
 function OrderItem({ item, onChange }) {
   const [quantity, setQuantity] = useState(1);
@@ -109,6 +113,8 @@ export default function FacilityDetails() {
     setSelectedItems([...selectedItems, item]);
     setOrderItems([...orderItems, { item, quantity }]);
   };
+
+  const sortedItems = [...filteredItems].sort((a, b) => b.quantity - a.quantity);
 
   const convertOrderItems = () => {
     let orderItemsArray = [];
@@ -214,14 +220,38 @@ export default function FacilityDetails() {
             </tr>
           </thead>
           <tbody>
-            {filteredItems.map((item) => (
+            {sortedItems.map((item) => (
               <tr key={item.id}>
                 <td>{item.sport}</td>
                 <td>
                   <strong>{item.name}</strong>
                 </td>
                 <td>{item.price}</td>
-                <td>{item.quantity}</td>
+                <td>
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip>
+                        {item.quantity === 0
+                          ? "There are no items registered of this kind"
+                          : item.quantity < item.suggestedQuantity
+                          ? "The quantity of this item is below the suggested quantity!"
+                          : null}
+                      </Tooltip>
+                    }
+                  >
+                    {item.quantity === 0 ? (
+                      <BsFillExclamationTriangleFill
+                        style={{ color: 'red', cursor: 'pointer' }}
+                      />
+                    ) : item.quantity < item.suggestedQuantity ? (
+                      <BsFillExclamationTriangleFill
+                        style={{ color: 'yellow', cursor: 'pointer' }}
+                      />
+                    ) : null}
+                  </OverlayTrigger>
+                  {item.quantity}
+                </td>
                 <td><Button
                 variant="warning"
                 style={{ float: "right" }}
