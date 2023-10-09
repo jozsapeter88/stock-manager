@@ -10,12 +10,14 @@ const OrderHistory = () => {
   const [facilities, setFacilities] = useState([]);
   const [searchItem, setSearchItem] = useState("");
   const [selectedFacility, setSelectedFacility] = useState("All facilities");
+  const [selectedSupplier, setSelectedSupplier] = useState("All suppliers");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedOrderIdForDeletion, setSelectedOrderIdForDeletion] =
     useState(null);
   const { user } = useAuth();
+  const [suppliers, setSuppliers] = useState(["All suppliers"]);
 
   const fetchOrderHistory = async (user) => {
     try {
@@ -29,22 +31,50 @@ const OrderHistory = () => {
 
   const fetchFacilityDetails = async (user) => {
     try {
-      const response = await fetch(
+      const facilityResponse = await fetch(
         `${process.env.REACT_APP_API_URL}/facility/facilities/${user.id}`,
         {
           method: "GET",
           credentials: "include",
         }
       );
-
-      if (response.ok) {
-        const data = await response.json();
-        setFacilities(data);
+  
+      if (facilityResponse.ok) {
+        const facilityData = await facilityResponse.json();
+        setFacilities(facilityData);
+  
+        const suppliersData = await fetchAllSuppliers();
+        const suppliers = ["All suppliers", ...suppliersData.map((supplier) => supplier.name)];
+        setSuppliers(suppliers);
       } else {
         console.error("Failed to fetch facilities");
       }
     } catch (error) {
       console.error("Error fetching facility details:", error);
+    }
+  };
+  
+
+  const fetchAllSuppliers = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/supplier/getAllSuppliers`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+  
+      if (response.ok) {
+        const data = await response.json();
+        return data; // Return the list of suppliers
+      } else {
+        console.error("Failed to fetch suppliers");
+        return [];
+      }
+    } catch (error) {
+      console.error("Error fetching suppliers", error);
+      return [];
     }
   };
 
@@ -120,7 +150,11 @@ const OrderHistory = () => {
         itemQuantity.item.name.toLowerCase().includes(searchItem.toLowerCase())
       );
 
-    return isFacilityFiltered && isItemNameFiltered;
+    const isSupplierFiltered =
+      selectedSupplier === "All suppliers" ||
+      order.supplier.name === selectedSupplier;
+
+    return isFacilityFiltered && isItemNameFiltered && isSupplierFiltered;
   });
 
   return (
@@ -138,6 +172,18 @@ const OrderHistory = () => {
               {facilities.map((facility) => (
                 <option key={facility.id} value={facility.name}>
                   {facility.name}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+          <Form.Group>
+            <Form.Select
+              value={selectedSupplier}
+              onChange={(e) => setSelectedSupplier(e.target.value)}
+            >
+              {suppliers.map((supplier) => (
+                <option key={supplier} value={supplier}>
+                  {supplier}
                 </option>
               ))}
             </Form.Select>
@@ -201,7 +247,7 @@ const OrderHistory = () => {
                       setSelectedOrderId(order.id);
                       setShowConfirmModal(true);
                     }}
-                    disabled={order.isDelivered} // Disable the button if the order is already delivered
+                    disabled={order.isDelivered}
                   >
                     Confirm Delivered
                   </Button>
