@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, Form, Modal } from "react-bootstrap";
 import { useAuth } from "../../Contexts/AuthContext";
 import TopNavbar from "../Navbar/Navbar";
+import {fetchFacilities} from "../AdminPage/AdminPage"
 
 import "./OrderHistory.css";
 
@@ -32,7 +33,7 @@ const OrderHistory = () => {
     }
   };
 
-  const fetchFacilityDetails = async (user) => {
+ const fetchFacilityDetails = async (user) => {
     try {
       const facilityResponse = await fetch(
         `${process.env.REACT_APP_API_URL}/facility/facilities/${user.id}`,
@@ -47,10 +48,7 @@ const OrderHistory = () => {
         setFacilities(facilityData);
 
         const suppliersData = await fetchAllSuppliers();
-        const suppliers = [
-          "All suppliers",
-          ...suppliersData.map((supplier) => supplier.name),
-        ];
+        const suppliers = ["All suppliers", ...suppliersData.map((supplier) => supplier.name)];
         setSuppliers(suppliers);
       } else {
         console.error("Failed to fetch facilities");
@@ -59,6 +57,7 @@ const OrderHistory = () => {
       console.error("Error fetching facility details:", error);
     }
   };
+
 
   const fetchAllSuppliers = async () => {
     try {
@@ -72,7 +71,7 @@ const OrderHistory = () => {
 
       if (response.ok) {
         const data = await response.json();
-        return data;
+        return data; // Return the list of suppliers
       } else {
         console.error("Failed to fetch suppliers");
         return [];
@@ -82,9 +81,12 @@ const OrderHistory = () => {
       return [];
     }
   };
-
+  
+  
   useEffect(() => {
-    fetchFacilityDetails(user);
+    fetchFacilities()
+    .then((data) => data.json())
+    .then((facilities) => setFacilities(facilities));
 
     fetchOrderHistory(user)
       .then((data) => data.json())

@@ -3,7 +3,6 @@ import SignUp from '../SignUp/SignUp';
 import { useNavigate } from "react-router-dom";
 
 const Register = async (formData) => {
-    console.log(JSON.stringify(formData));
     try {
         const response = await fetch(process.env.REACT_APP_API_URL + '/user/register', {
             method: 'POST',

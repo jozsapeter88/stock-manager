@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using StockBackend.Areas.Identity.Enums;
 using StockBackend.Models;
 using StockBackend.Models.DBContext;
 using StockBackend.Models.DTO;
@@ -46,6 +47,30 @@ public class ItemService: IItemService
         _dbContext.Dispatches.Add(newDispatch);
         await _dbContext.SaveChangesAsync();
         return newDispatch;
+    }
+
+    public async Task<List<Dispatch>?> GetAllDispatch(string userId)
+    {
+        var user = await _dbContext.Users
+            .FirstOrDefaultAsync(u => u.Id == userId);
+        switch (user?.Role)
+        {
+            case RoleEnum.Admin:
+                return await _dbContext.Dispatches
+                    .Include(d => d.Facility)
+                    .Include(d => d.Item)
+                    .Include(d => d.User)
+                    .ToListAsync();
+            case RoleEnum.User:
+                return await _dbContext.Dispatches
+                    .Where(dispatch => dispatch.UserId == userId)
+                    .Include(d => d.Facility)
+                    .Include(d => d.Item)
+                    .Include(d => d.User)
+                    .ToListAsync();
+            default:
+                return null;
+        }
     }
 
     private void CalculateRemainingItems(Item? item, int quantity)

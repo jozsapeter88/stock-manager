@@ -11,6 +11,7 @@ import FacilitiesOfUser from "./Pages/FacilitiesOfUser/FacilitiesOfUser";
 import AdminPage from "./Pages/AdminPage/AdminPage";
 import FacilityDetails from "./Pages/FacilityDetails/FacilityDetails";
 import SupplierPage from "./Pages/SupplierPage/SupplierPage";
+import DispatchHistory from "./Pages/DispatchHistory/DispatchHistory";
 
 const App = () => {
   const { user, login } = useAuth();
@@ -38,6 +39,7 @@ const App = () => {
         <Route path="facilities/:id" element={isAuthenticated([0,1]) ? <FacilitiesOfUser /> : <LoginForm/>} />
         <Route path="facilityDetails/:id" element={isAuthenticated([0,1]) ? <FacilityDetails /> : <LoginForm />} />
         <Route path="orderhistory/:id" element={isAuthenticated([0,1]) ? <OrderHistory /> : <LoginForm/>} />
+        <Route path="dispatchHistory/:id" element={isAuthenticated([0,1]) ? <DispatchHistory/> : <LoginForm/>} />
         <Route path="statistics" element={isAuthenticated([0,1]) ? <Statistics /> : <LoginForm/>} />
         <Route path="suppliers" element={isAuthenticated([0,1]) ? <SupplierPage /> : <LoginForm/>} />
         <Route path="*" element={<ErrorPage />} />

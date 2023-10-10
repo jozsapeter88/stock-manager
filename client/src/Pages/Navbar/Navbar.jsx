@@ -62,6 +62,19 @@ export default function TopNavbar() {
             <Nav.Item>
               <Nav.Link
                 as={Link}
+                to={`/dispatchHistory/${user.id}`}
+                style={{
+                  color: "black",
+                  fontWeight: "bold",
+                  marginRight: "10px",
+                }}
+              >
+                Dispatch History
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
+                as={Link}
                 to="/suppliers"
                 style={{
                   color: "black",
