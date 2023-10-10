@@ -1,0 +1,16 @@
+.table {
+    --bs-table-striped-bg: #ffc10741;
+}
+
+.table-container {
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.green-background {
+    background-color: rgba(0, 128, 0, 0.37); /* Set your desired background color for delivered orders */
+  }
+  
+  .default-background {
+    background-color: rgba(155, 152, 0, 0.37);
+  }

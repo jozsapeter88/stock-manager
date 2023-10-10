@@ -4,6 +4,15 @@ import { useState, useEffect } from "react";
 import TopNavbar from "../Navbar/Navbar";
 import Loading from "../Loading";
 
+export const fetchFacilities = async () => {
+  try {
+    return await fetch(
+      process.env.REACT_APP_API_URL + "/facility/facilities"
+    )
+  }
+  catch (error) {}
+}
+
 export default function AdminPage() {
   const { user } = useAuth();
 
@@ -26,20 +35,21 @@ export default function AdminPage() {
         throw error;
       }
     };
-
-    const fetchFacilities = async () => {
-      try {
-        const response = await fetch(
-          process.env.REACT_APP_API_URL + "/facility/facilities"
-        );
-        const data = await response.json();
-        setFacilities(data);
-        setLoading(false);
-      } catch (error) {
-        throw error;
+    fetchFacilities()
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok' + response.statusText);
       }
-    };
-    fetchFacilities();
+      return response.json();
+    })
+    .then(data => {
+      console.log(data);
+      setFacilities(data)
+      setLoading(false)
+    })
+    .catch(error => {
+      console.error('There has been a problem with fetch operation:', error);
+    });
     fetchUsers();
   }, []);
 

@@ -56,7 +56,7 @@ const fetchItems = async () => {
   }
 };
 
-const fetchFacilityDetails = async (id) => {
+export const fetchFacilityDetails = async (id) => {
   try {
     return await fetch(
       process.env.REACT_APP_API_URL + `/facility/getFacility/${id}`,

@@ -31,4 +31,13 @@ public class ItemController: ControllerBase
         if (result is null) return NotFound("User is not Found");
         return Ok(result);
     }
+
+    [HttpGet("getDispatches/{userId}")]
+
+    public async Task<ActionResult<List<Dispatch>>> GetDispatches(string userId)
+    {
+        var result = await _itemService.GetAllDispatch(userId);
+        if (result is null) return NotFound("User is not Found");
+        return Ok(result);
+    }
 }

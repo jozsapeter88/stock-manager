@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, Form, Modal } from "react-bootstrap";
 import { useAuth } from "../../Contexts/AuthContext";
 import TopNavbar from "../Navbar/Navbar";
+import {fetchFacilities} from "../AdminPage/AdminPage"
 
 import "./OrderHistory.css";
 
@@ -27,29 +28,10 @@ const OrderHistory = () => {
     }
   };
 
-  const fetchFacilityDetails = async (user) => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/facility/facilities/${user.id}`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setFacilities(data);
-      } else {
-        console.error("Failed to fetch facilities");
-      }
-    } catch (error) {
-      console.error("Error fetching facility details:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchFacilityDetails(user);
+    fetchFacilities()
+    .then((data) => data.json())
+    .then((facilities) => setFacilities(facilities));
 
     fetchOrderHistory(user)
       .then((data) => data.json())
