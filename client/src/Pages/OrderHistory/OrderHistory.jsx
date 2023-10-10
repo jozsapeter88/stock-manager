@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, Form, Modal } from "react-bootstrap";
 import { useAuth } from "../../Contexts/AuthContext";
 import TopNavbar from "../Navbar/Navbar";
-import {fetchFacilities} from "../AdminPage/AdminPage"
-
+ 
 import "./OrderHistory.css";
-
+ 
 const OrderHistory = () => {
   const [orderHistory, setOrderHistory] = useState([]);
   const [facilities, setFacilities] = useState([]);
@@ -21,8 +20,8 @@ const OrderHistory = () => {
   const [suppliers, setSuppliers] = useState(["All suppliers"]);
   const [showSupplierModal, setShowSupplierModal] = useState(false);
   const [selectedSupplierDetails, setSelectedSupplierDetails] = useState(null);
-
-
+ 
+ 
   const fetchOrderHistory = async (user) => {
     try {
       return await fetch(
@@ -32,8 +31,8 @@ const OrderHistory = () => {
       console.error("Error fetching order history:", error);
     }
   };
-
- const fetchFacilityDetails = async (user) => {
+ 
+  const fetchFacilityDetails = async (user) => {
     try {
       const facilityResponse = await fetch(
         `${process.env.REACT_APP_API_URL}/facility/facilities/${user.id}`,
@@ -42,13 +41,16 @@ const OrderHistory = () => {
           credentials: "include",
         }
       );
-
+ 
       if (facilityResponse.ok) {
         const facilityData = await facilityResponse.json();
         setFacilities(facilityData);
-
+ 
         const suppliersData = await fetchAllSuppliers();
-        const suppliers = ["All suppliers", ...suppliersData.map((supplier) => supplier.name)];
+        const suppliers = [
+          "All suppliers",
+          ...suppliersData.map((supplier) => supplier.name),
+        ];
         setSuppliers(suppliers);
       } else {
         console.error("Failed to fetch facilities");
@@ -57,8 +59,7 @@ const OrderHistory = () => {
       console.error("Error fetching facility details:", error);
     }
   };
-
-
+ 
   const fetchAllSuppliers = async () => {
     try {
       const response = await fetch(
@@ -68,10 +69,10 @@ const OrderHistory = () => {
           credentials: "include",
         }
       );
-
+ 
       if (response.ok) {
         const data = await response.json();
-        return data; // Return the list of suppliers
+        return data;
       } else {
         console.error("Failed to fetch suppliers");
         return [];
@@ -81,18 +82,15 @@ const OrderHistory = () => {
       return [];
     }
   };
-  
-  
+ 
   useEffect(() => {
-    fetchFacilities()
-    .then((data) => data.json())
-    .then((facilities) => setFacilities(facilities));
-
+    fetchFacilityDetails(user);
+ 
     fetchOrderHistory(user)
       .then((data) => data.json())
       .then((orders) => setOrderHistory(orders));
   }, [user]);
-
+ 
   const deleteOrder = async (orderId) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API_URL}/order/deleteOrder/${user.id}/${orderId}`;
@@ -102,7 +100,7 @@ const OrderHistory = () => {
           "Content-Type": "application/json",
         },
       });
-
+ 
       if (response.ok) {
         const data = await response.json();
         setOrderHistory(data);
@@ -115,7 +113,7 @@ const OrderHistory = () => {
       return false;
     }
   };
-
+ 
   const confirmDelivered = async () => {
     try {
       const response = await fetch(
@@ -145,25 +143,25 @@ const OrderHistory = () => {
       return false;
     }
   };
-
+ 
   const filteredOrders = orderHistory.filter((order) => {
     const isFacilityFiltered =
       selectedFacility === "All facilities" ||
       order.facility.name === selectedFacility;
-
+ 
     const isItemNameFiltered =
       searchItem.trim() === "" ||
       order.orderItemQuantities.some((itemQuantity) =>
         itemQuantity.item.name.toLowerCase().includes(searchItem.toLowerCase())
       );
-
+ 
     const isSupplierFiltered =
       selectedSupplier === "All suppliers" ||
       order.supplier.name === selectedSupplier;
-
+ 
     return isFacilityFiltered && isItemNameFiltered && isSupplierFiltered;
   });
-
+ 
   return (
     <div>
       <TopNavbar />
@@ -205,7 +203,7 @@ const OrderHistory = () => {
           </Form.Group>
         </Form>
         <br />
-
+ 
         <Table bordered hover style={{ outline: "2px solid" }}>
           <thead>
             <tr>
@@ -273,14 +271,18 @@ const OrderHistory = () => {
             ))}
           </tbody>
         </Table>
-
+ 
         <Modal
   show={showSupplierModal}
   onHide={() => setShowSupplierModal(false)}
 >
-  <Modal.Header closeButton>
+<Modal.Header closeButton>
+  {selectedSupplierDetails ? (
     <Modal.Title>{selectedSupplierDetails.name}</Modal.Title>
-  </Modal.Header>
+  ) : (
+    <Modal.Title>No Supplier Selected</Modal.Title>
+  )}
+</Modal.Header>
   <Modal.Body>
     {selectedSupplierDetails && (
       <>
@@ -300,8 +302,8 @@ const OrderHistory = () => {
     </Button>
   </Modal.Footer>
 </Modal>
-
-
+ 
+ 
         {/* Confirm Delivered Modal */}
         <Modal
           show={showConfirmModal}
@@ -331,7 +333,7 @@ const OrderHistory = () => {
             </Button>
           </Modal.Footer>
         </Modal>
-
+ 
         {/* Confirm Delete Modal */}
         <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
           <Modal.Header closeButton>
@@ -366,5 +368,6 @@ const OrderHistory = () => {
     </div>
   );
 };
-
+ 
 export default OrderHistory;
+ 
