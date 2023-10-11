@@ -20,6 +20,24 @@ public class ItemService: IItemService
         var items = await _dbContext.Items.ToListAsync();
         return items ?? null;
     }
+    
+    public async Task<Item> AddItem(Item item)
+    {
+        var newItem = new Item
+        {
+            Name = item.Name,
+            Sport = item.Sport,
+            Price = item.Price,
+            Quantity = item.Quantity,
+            SuggestedQuantity = item.SuggestedQuantity
+        };
+
+        _dbContext.Items.Add(newItem);
+        await _dbContext.SaveChangesAsync();
+
+        return newItem;
+    }
+
 
     public async Task<Dispatch?> AddDispatch(DispatchDto dispatchDto, string userId)
     {
