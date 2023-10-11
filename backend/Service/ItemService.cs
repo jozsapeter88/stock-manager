@@ -21,15 +21,14 @@ public class ItemService: IItemService
         return items ?? null;
     }
     
-    public async Task<Item> AddItem(Item item)
+    public async Task<Item> AddItem(ItemDto itemDto)
     {
         var newItem = new Item
         {
-            Name = item.Name,
-            Sport = item.Sport,
-            Price = item.Price,
-            Quantity = item.Quantity,
-            SuggestedQuantity = item.SuggestedQuantity
+            Name = itemDto.Name,
+            Price = itemDto.Price,
+            Quantity = itemDto.Quantity,
+            SuggestedQuantity = itemDto.SuggestedQuantity
         };
 
         _dbContext.Items.Add(newItem);

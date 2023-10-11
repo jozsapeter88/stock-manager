@@ -28,7 +28,6 @@ public class ItemControllerTests
             {
                 Id = 1,
                 Name = "Boxing Gloves",
-                Sport = SportEnum.CombatSports,
                 Price = 79.99,
                 Quantity = 10
             },
@@ -36,7 +35,6 @@ public class ItemControllerTests
             {
                 Id = 2,
                 Name = "Mouthguard",
-                Sport = SportEnum.CombatSports,
                 Price = 9.99,
                 Quantity = 20
             }

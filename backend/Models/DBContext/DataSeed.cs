@@ -89,7 +89,6 @@ public class DataSeed
                 {
                     Id = 1,
                     Name = "Boxing Gloves",
-                    Sport = SportEnum.CombatSports,
                     Price = 79.99,
                     SuggestedQuantity = 10
                 },
@@ -97,7 +96,6 @@ public class DataSeed
                 {
                     Id = 2,
                     Name = "Mouthguard",
-                    Sport = SportEnum.CombatSports,
                     Price = 9.99,
                     SuggestedQuantity = 10
                 },
@@ -105,7 +103,6 @@ public class DataSeed
                 {
                     Id = 3,
                     Name = "Headgear",
-                    Sport = SportEnum.CombatSports,
                     Price = 49.99,
                     SuggestedQuantity = 5
                 },
@@ -113,7 +110,6 @@ public class DataSeed
                 {
                     Id = 4,
                     Name = "Shin Guards",
-                    Sport = SportEnum.CombatSports,
                     Price = 39.99,
                     SuggestedQuantity = 10
                 },
@@ -121,7 +117,6 @@ public class DataSeed
                 {
                     Id = 5,
                     Name = "MMA Shorts",
-                    Sport = SportEnum.CombatSports,
                     Price = 29.99,
                     SuggestedQuantity = 15
                 },
@@ -130,7 +125,6 @@ public class DataSeed
                 {
                     Id = 6,
                     Name = "Soccer Ball",
-                    Sport = SportEnum.Soccer,
                     Price = 24.99,
                     SuggestedQuantity = 20
                 },
@@ -138,7 +132,6 @@ public class DataSeed
                 {
                     Id = 7,
                     Name = "Soccer Shoes",
-                    Sport = SportEnum.Soccer,
                     Price = 89.99,
                     SuggestedQuantity = 8
                 },
@@ -146,7 +139,6 @@ public class DataSeed
                 {
                     Id = 8,
                     Name = "Soccer Jersey",
-                    Sport = SportEnum.Soccer,
                     Price = 49.99,
                     SuggestedQuantity = 12
                 },
@@ -154,7 +146,6 @@ public class DataSeed
                 {
                     Id = 9,
                     Name = "Soccer Goal",
-                    Sport = SportEnum.Soccer,
                     Price = 149.99,
                     SuggestedQuantity = 5
                 },
@@ -162,7 +153,6 @@ public class DataSeed
                 {
                     Id = 10,
                     Name = "Soccer Training Cones",
-                    Sport = SportEnum.Soccer,
                     Price = 9.99,
                     SuggestedQuantity = 30
                 },
@@ -171,7 +161,6 @@ public class DataSeed
                 {
                     Id = 11,
                     Name = "Football - Wilson",
-                    Sport = SportEnum.AmericanFootball,
                     Price = 29.99,
                     SuggestedQuantity = 15
                 },
@@ -179,7 +168,6 @@ public class DataSeed
                 {
                     Id = 12,
                     Name = "Football Helmet",
-                    Sport = SportEnum.AmericanFootball,
                     Price = 159.99,
                     SuggestedQuantity = 8
                 },
@@ -187,7 +175,6 @@ public class DataSeed
                 {
                     Id = 13,
                     Name = "Football Gloves",
-                    Sport = SportEnum.AmericanFootball,
                     Price = 39.99,
                     SuggestedQuantity = 20
                 },
@@ -195,7 +182,6 @@ public class DataSeed
                 {
                     Id = 14,
                     Name = "Football Shoulder Pads",
-                    Sport = SportEnum.AmericanFootball,
                     Price = 89.99,
                     SuggestedQuantity = 12
                 },
@@ -203,7 +189,6 @@ public class DataSeed
                 {
                     Id = 15,
                     Name = "Football Cones",
-                    Sport = SportEnum.AmericanFootball,
                     Price = 9.99,
                     SuggestedQuantity = 30
                 },
@@ -212,7 +197,6 @@ public class DataSeed
                 {
                     Id = 16,
                     Name = "Basketball - Spalding",
-                    Sport = SportEnum.Basketball,
                     Price = 24.99,
                     SuggestedQuantity = 20
                 },
@@ -220,7 +204,6 @@ public class DataSeed
                 {
                     Id = 17,
                     Name = "Basketball Shoes",
-                    Sport = SportEnum.Basketball,
                     Price = 99.99,
                     SuggestedQuantity = 8
                 },
@@ -228,7 +211,6 @@ public class DataSeed
                 {
                     Id = 18,
                     Name = "Basketball Jersey",
-                    Sport = SportEnum.Basketball,
                     Price = 49.99,
                     SuggestedQuantity = 12
                 },
@@ -236,7 +218,6 @@ public class DataSeed
                 {
                     Id = 19,
                     Name = "Basketball Hoop",
-                    Sport = SportEnum.Basketball,
                     Price = 199.99,
                     SuggestedQuantity = 5
                 },
@@ -244,7 +225,6 @@ public class DataSeed
                 {
                     Id = 20,
                     Name = "Basketball Training Cones",
-                    Sport = SportEnum.Basketball,
                     Price = 9.99,
                     SuggestedQuantity = 30
                 },
@@ -253,7 +233,6 @@ public class DataSeed
                 {
                     Id = 21,
                     Name = "Tennis Racket - Wilson",
-                    Sport = SportEnum.Tennis,
                     Price = 59.99,
                     SuggestedQuantity = 10
                 },
@@ -261,7 +240,6 @@ public class DataSeed
                 {
                     Id = 22,
                     Name = "Tennis Balls",
-                    Sport = SportEnum.Tennis,
                     Price = 14.99,
                     SuggestedQuantity = 50
                 },
@@ -269,7 +247,6 @@ public class DataSeed
                 {
                     Id = 23,
                     Name = "Tennis Shoes",
-                    Sport = SportEnum.Tennis,
                     Price = 79.99,
                     SuggestedQuantity = 8
                 },
@@ -277,7 +254,6 @@ public class DataSeed
                 {
                     Id = 24,
                     Name = "Tennis Bag",
-                    Sport = SportEnum.Tennis,
                     Price = 39.99,
                     SuggestedQuantity = 15
                 },
@@ -285,7 +261,6 @@ public class DataSeed
                 {
                     Id = 25,
                     Name = "Tennis Training Cones",
-                    Sport = SportEnum.Tennis,
                     Price = 9.99,
                     SuggestedQuantity = 30
                 },
@@ -294,7 +269,6 @@ public class DataSeed
                 {
                     Id = 26,
                     Name = "Swimming Goggles",
-                    Sport = SportEnum.Swimming,
                     Price = 14.99,
                     SuggestedQuantity = 20
                 },
@@ -302,7 +276,6 @@ public class DataSeed
                 {
                     Id = 27,
                     Name = "Swimming Cap",
-                    Sport = SportEnum.Swimming,
                     Price = 9.99,
                     SuggestedQuantity = 30
                 },
@@ -310,7 +283,6 @@ public class DataSeed
                 {
                     Id = 28,
                     Name = "Swimming Fins",
-                    Sport = SportEnum.Swimming,
                     Price = 29.99,
                     SuggestedQuantity = 15
                 },
@@ -318,7 +290,6 @@ public class DataSeed
                 {
                     Id = 29,
                     Name = "Swimming Kickboard",
-                    Sport = SportEnum.Swimming,
                     Price = 19.99,
                     SuggestedQuantity = 20
                 },
@@ -326,7 +297,6 @@ public class DataSeed
                 {
                     Id = 30,
                     Name = "Swimming Training Cones",
-                    Sport = SportEnum.Swimming,
                     Price = 9.99,
                     SuggestedQuantity = 30
                 }

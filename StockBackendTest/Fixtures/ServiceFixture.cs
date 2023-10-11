@@ -55,7 +55,6 @@ public class ServiceFixture //: IDisposable
                         {
                             Id = 30,
                             Name = "Swimming Training Cones",
-                            Sport = SportEnum.Swimming,
                             Price = 9.99,
                             Quantity = 15
                         }
@@ -86,7 +85,6 @@ public class ServiceFixture //: IDisposable
         {
             Id = 1,
             Name = "Boxing Gloves",
-            Sport = SportEnum.CombatSports,
             Price = 79.99,
             
         },
@@ -94,7 +92,6 @@ public class ServiceFixture //: IDisposable
         {
             Id = 2,
             Name = "Mouthguard",
-            Sport = SportEnum.CombatSports,
             Price = 9.99,
             
         }

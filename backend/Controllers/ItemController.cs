@@ -25,7 +25,7 @@ public class ItemController: ControllerBase
     }
     
     [HttpPost("addItem")]
-    public async Task<ActionResult<Item>> AddItem([FromBody] Item itemDto)
+    public async Task<ActionResult<Item>> AddItem([FromBody] ItemDto itemDto)
     {
         var result = await _itemService.AddItem(itemDto);
         if (result is null) return BadRequest("Failed to add the item");
