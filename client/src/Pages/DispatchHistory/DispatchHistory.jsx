@@ -23,11 +23,11 @@ const DispatchHistory = ()=> {
     const [selectedFacility, setSelectedFacility] = useState("All facilities");
     const [dispatches, setDispatches] = useState([]);
     const [searchItem, setSearchItem] = useState("");
+    const [searchUserName, setSearchUserName] = useState("")
     const { user } = useAuth();
 
     useEffect(() => {
         fetchFacilities()
-        .then((data) => data.json())
         .then((facilities) => setFacilities(facilities));
     
         fetchDispatches(user.id)
@@ -46,6 +46,13 @@ const DispatchHistory = ()=> {
           });
       }, [user]);
 
+      const isAdmin = () => {
+        if(user.role === 0)
+        {
+            return true;
+        } else return false;
+      }
+
       const filteredDispatches = () => {
         let filteredByFacility = dispatches.filter(d => d.facility.name === selectedFacility)
       
@@ -58,6 +65,14 @@ const DispatchHistory = ()=> {
         } else{
             return dispatches.filter(d => d.item.name.toLowerCase().includes(searchItem));
         }
+      }
+
+      const filteredDispatchesByAdmin = () => {
+        if (searchUserName === "" || !isAdmin ) {
+            return filteredDispatches();
+        }else {
+            return filteredDispatches()
+            .filter(d => d.user.userName.toLowerCase().includes(searchUserName))}
       }
 
     return (
@@ -87,6 +102,16 @@ const DispatchHistory = ()=> {
               onChange={(e) => setSearchItem(e.target.value)}
             />
           </Form.Group>
+          {isAdmin() ? (
+            <Form.Group>
+            <Form.Control
+              type="text"
+              placeholder="Search by UserName..."
+              value={searchUserName}
+              onChange={(e) => setSearchUserName(e.target.value)}
+            />
+          </Form.Group>
+          ): null}
         </Form>
         <br />
 
@@ -102,7 +127,7 @@ const DispatchHistory = ()=> {
             </tr>
           </thead>
           <tbody>
-            {filteredDispatches().map((d) => (
+            {filteredDispatchesByAdmin().map((d) => (
               <tr
                 key={d.id}
                 className={ "default-background"}

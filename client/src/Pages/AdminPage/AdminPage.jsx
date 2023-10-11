@@ -6,60 +6,37 @@ import Loading from "../Loading";
 
 export const fetchFacilities = async () => {
   try {
-    return await fetch(
+    const response = await fetch(
       process.env.REACT_APP_API_URL + "/facility/facilities"
     )
-  }
-  catch (error) {}
+  if(response.ok){
+    const data = await response.json()
+    return data;
+  } else {
+    console.error("Failed to fetch facilities");
+    return [];
+  } 
+} catch (error) {
+  console.error("Error fetching facility details:", error);
+}
 }
 
-export default function AdminPage() {
-  const { user } = useAuth();
-
-  const [facilities, setFacilities] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch(
-          process.env.REACT_APP_API_URL + "/user/getUsers"
-        );
-        const data = await response.json();
-        setUsers(data);
-        setLoading(false);
-      } catch (error) {
-        throw error;
-      }
-    };
-    fetchFacilities()
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok' + response.statusText);
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log(data);
-      setFacilities(data)
-      setLoading(false)
-    })
-    .catch(error => {
-      console.error('There has been a problem with fetch operation:', error);
-    });
-    fetchUsers();
-  }, []);
-
-  const handleAddFacility = async (id) => {
-    await addFacilityToUser(selectedUser.id, id);
-  };
-
-  const handleRemoveFacility = (facilityId) => {
-    removeFacilityFromUser();
-  };
+const fetchUsers = async () => {
+  try {
+    const response = await fetch(
+      process.env.REACT_APP_API_URL + "/user/getUsers"
+    );
+    if(response.ok){
+      const data = await response.json()
+      return data;
+    } else {
+      console.error("Failed to users");
+      return [];
+    } 
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
+  }
 
   const addFacilityToUser = async (userId, facilityId) => {
     try {
@@ -84,6 +61,36 @@ export default function AdminPage() {
     }
   };
 
+export default function AdminPage() {
+  const { user } = useAuth();
+  const [facilities, setFacilities] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  useEffect(() => {
+    fetchFacilities()
+    .then((data) => {
+      console.log(data);
+      setFacilities(data)
+    })
+    
+    fetchUsers()
+    .then((data) => {
+      setUsers(data)
+    });
+    setLoading(false)
+  }, []);
+
+  const handleAddFacility = async (id) => {
+    await addFacilityToUser(selectedUser.id, id);
+  };
+
+  const handleRemoveFacility = (facilityId) => {
+    removeFacilityFromUser();
+  };
+
   const removeFacilityFromUser = async (userId, facilityId) => {
     console.log("user should be removed now");
   };
@@ -97,7 +104,7 @@ export default function AdminPage() {
     setShowModal(false);
   };
 
-  if (loading) {
+  if (loading || (facilities === null && users === null)) {
     return <Loading />;
   }
 

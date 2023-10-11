@@ -58,14 +58,21 @@ const fetchItems = async () => {
 
 export const fetchFacilityDetails = async (id) => {
   try {
-    return await fetch(
+    const response =  await fetch(
       process.env.REACT_APP_API_URL + `/facility/getFacility/${id}`,
       {
         method: "GET",
         credentials: "include",
       }
     );
-  } catch (error) {
+    if(response.ok){
+      const data = await response.json()
+      return data;
+    } else {
+      console.error("Failed to fetch facilities");
+      return [];
+    }
+    } catch (error) {
     console.error("Error fetching facility details:", error);
   }
 }
@@ -96,15 +103,13 @@ export default function FacilityDetails() {
 
   useEffect(() => {
     fetchFacilityDetails(id)
-    .then((data) => data.json())
     .then((facilities) =>setFacility(facilities) )
         
     fetchItems()
     .then((data) => data.json())
     .then((items) => setItems(items))
         
-    fetchAllSuppliers()
-    .then((data) => data.json())
+    fetchAllSuppliers() 
     .then((suppliers) => setAllSuppliers(suppliers))
       
   }, [id]);

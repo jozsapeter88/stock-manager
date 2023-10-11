@@ -7,29 +7,38 @@ import { FaSearch } from "react-icons/fa";
 import "./FacilitiesOfUser.css";
 import Loading from "../Loading";
 
+const fetchFacilityDetails = async (userId) => {
+  try {
+    const response = await fetch(
+      process.env.REACT_APP_API_URL + `/facility/facilities/${userId}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+    if(response.ok){
+      const data = await response.json()
+      return data;
+    } else {
+      console.error("Failed to fetch facilities");
+      return [];
+    } 
+  } catch (error) {
+    console.error("Error fetching facilities of user:", error);
+  }
+};
+
 export default function FacilitiesOfUser() {
   const [facilities, setFacilities] = useState(null);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
   useEffect(() => {
-    const fetchFacilityDetails = async () => {
-      try {
-        const response = await fetch(
-          process.env.REACT_APP_API_URL + `/facility/facilities/${user.id}`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
-        const data = await response.json();
-        setFacilities(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching facility details:", error);
-      }
-    };
-    fetchFacilityDetails();
+   fetchFacilityDetails(user.id)
+   .then((data) => {
+      setFacilities(data) 
+      setLoading(false)
+    });
   }, [user]);
 
   if (loading) {

@@ -2,9 +2,21 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, Form, Modal } from "react-bootstrap";
 import { useAuth } from "../../Contexts/AuthContext";
 import TopNavbar from "../Navbar/Navbar";
- 
+import Loading from "../Loading";
+import { fetchFacilities } from "../AdminPage/AdminPage";
+import { fetchAllSuppliers } from "../SupplierPage/SupplierPage";
 import "./OrderHistory.css";
  
+const fetchOrderHistory = async (user) => {
+  try {
+    return await fetch(
+      `${process.env.REACT_APP_API_URL}/order/getOrders/${user.id}`
+    );
+  } catch (error) {
+    console.error("Error fetching order history:", error);
+  }
+};
+
 const OrderHistory = () => {
   const [orderHistory, setOrderHistory] = useState([]);
   const [facilities, setFacilities] = useState([]);
@@ -17,78 +29,30 @@ const OrderHistory = () => {
   const [selectedOrderIdForDeletion, setSelectedOrderIdForDeletion] =
     useState(null);
   const { user } = useAuth();
-  const [suppliers, setSuppliers] = useState(["All suppliers"]);
+  const [loading, setLoading] = useState(true);
+  const [suppliers, setSuppliers] = useState([]);
+  console.log(suppliers)
   const [showSupplierModal, setShowSupplierModal] = useState(false);
   const [selectedSupplierDetails, setSelectedSupplierDetails] = useState(null);
  
  
-  const fetchOrderHistory = async (user) => {
-    try {
-      return await fetch(
-        `${process.env.REACT_APP_API_URL}/order/getOrders/${user.id}`
-      );
-    } catch (error) {
-      console.error("Error fetching order history:", error);
-    }
-  };
  
-  const fetchFacilityDetails = async (user) => {
-    try {
-      const facilityResponse = await fetch(
-        `${process.env.REACT_APP_API_URL}/facility/facilities/${user.id}`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
  
-      if (facilityResponse.ok) {
-        const facilityData = await facilityResponse.json();
-        setFacilities(facilityData);
- 
-        const suppliersData = await fetchAllSuppliers();
-        const suppliers = [
-          "All suppliers",
-          ...suppliersData.map((supplier) => supplier.name),
-        ];
-        setSuppliers(suppliers);
-      } else {
-        console.error("Failed to fetch facilities");
-      }
-    } catch (error) {
-      console.error("Error fetching facility details:", error);
-    }
-  };
- 
-  const fetchAllSuppliers = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/supplier/getAllSuppliers`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
- 
-      if (response.ok) {
-        const data = await response.json();
-        return data;
-      } else {
-        console.error("Failed to fetch suppliers");
-        return [];
-      }
-    } catch (error) {
-      console.error("Error fetching suppliers", error);
-      return [];
-    }
-  };
- 
+  
   useEffect(() => {
-    fetchFacilityDetails(user);
+    
+    fetchFacilities()
+    .then((data)=>{
+      setFacilities(data)
+    } );
  
+    fetchAllSuppliers()
+    .then((data) => setSuppliers(data))
+
     fetchOrderHistory(user)
       .then((data) => data.json())
       .then((orders) => setOrderHistory(orders));
+      setLoading(false)
   }, [user]);
  
   const deleteOrder = async (orderId) => {
@@ -162,6 +126,9 @@ const OrderHistory = () => {
     return isFacilityFiltered && isItemNameFiltered && isSupplierFiltered;
   });
  
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <div>
       <TopNavbar />
@@ -186,9 +153,10 @@ const OrderHistory = () => {
               value={selectedSupplier}
               onChange={(e) => setSelectedSupplier(e.target.value)}
             >
+              <option value="All suppliers">All suppliers</option>
               {suppliers.map((supplier) => (
-                <option key={supplier} value={supplier}>
-                  {supplier}
+                <option key={supplier.id} value={supplier.name}>
+                  {supplier.name}
                 </option>
               ))}
             </Form.Select>
