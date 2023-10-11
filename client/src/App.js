@@ -12,7 +12,7 @@ import AdminPage from "./Pages/AdminPage/AdminPage";
 import FacilityDetails from "./Pages/FacilityDetails/FacilityDetails";
 import SupplierPage from "./Pages/SupplierPage/SupplierPage";
 import DispatchHistory from "./Pages/DispatchHistory/DispatchHistory";
-import ItemPage from "./Pages/ItemPage/ItemPage";
+import CreateItemForm from "./Pages/AdminPage/CreateItemForm";
 
 const App = () => {
   const { user, login } = useAuth();
@@ -46,7 +46,7 @@ const App = () => {
         <Route path="*" element={<ErrorPage />} />
         <Route path="admin" element={ isAuthenticated([0]) ? (<AdminPage />) : (
               <p>You are not authorized to access this page.</p>)}/>
-        <Route path="addItem" element={ isAuthenticated([0]) ? (<ItemPage />) : (
+        <Route path="addItem" element={ isAuthenticated([0]) ? (<CreateItemForm />) : (
               <p>You are not authorized to access this page.</p>)}/>     
       </Routes>
     </div>
