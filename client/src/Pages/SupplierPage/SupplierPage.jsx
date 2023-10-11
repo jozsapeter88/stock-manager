@@ -6,15 +6,23 @@ import EditSupplierModal from "./EditSupplierModal";
 
 export const fetchAllSuppliers = async () => {
   try {
-    return await fetch(
-      process.env.REACT_APP_API_URL + `/supplier/getAllSuppliers`,
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/supplier/getAllSuppliers`,
       {
         method: "GET",
         credentials: "include",
       }
     );
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to fetch suppliers");
+      return [];
+    }
   } catch (error) {
     console.error("Error fetching suppliers", error);
+    return [];
   }
 };
 
@@ -144,45 +152,8 @@ function SupplierPage() {
     }
   };
 
-    
-  /*const createSupplier = async (newSupplier) => {
-    try {
-      const response = await fetch(
-        process.env.REACT_APP_API_URL + `/supplier/addSupplier`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newSupplier),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log("New supplier saved:", data);
-
-      setSuppliers([...suppliers, data]);
-
-      setFormData({
-        name: "",
-        category: "",
-        location: "",
-        comment: "",
-      });
-      setShowModal(false);
-    } catch (error) {
-      console.error("Error saving supplier:", error);
-    }
-  };*/
-
-
   useEffect(() => {
     fetchAllSuppliers()
-    .then((data) => data.json())
     .then((suppliers) => setSuppliers(suppliers));
   }, []);
 

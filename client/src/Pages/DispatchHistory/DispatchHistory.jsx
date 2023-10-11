@@ -28,7 +28,6 @@ const DispatchHistory = ()=> {
 
     useEffect(() => {
         fetchFacilities()
-        .then((data) => data.json())
         .then((facilities) => setFacilities(facilities));
     
         fetchDispatches(user.id)
