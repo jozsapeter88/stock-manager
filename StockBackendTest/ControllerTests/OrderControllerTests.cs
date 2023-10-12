@@ -62,7 +62,6 @@ public class OrderControllerTests
                         Name = "testItem1", 
                         Price = 10, 
                         Quantity = 2, 
-                        Sport = SportEnum.Soccer 
                     }, 
                         Quantity  = 15// This is the quantity for the first item
                 }
@@ -75,7 +74,6 @@ public class OrderControllerTests
             Id = 2,
             Name = "testItem2",
             Price = 20,
-            Sport = SportEnum.Basketball
         };
         
        _thirdItem = new Item()
@@ -83,7 +81,6 @@ public class OrderControllerTests
             Id = 3,
             Name = "testItem3",
             Price = 30,
-            Sport = SportEnum.Basketball
         };
     }
 

@@ -23,6 +23,15 @@ public class ItemController: ControllerBase
         if (result is null) return NotFound("No items available");
         return Ok(result);
     }
+    
+    [HttpPost("addItem")]
+    public async Task<ActionResult<Item>> AddItem([FromBody] ItemDto itemDto)
+    {
+        var result = await _itemService.AddItem(itemDto);
+        if (result is null) return BadRequest("Failed to add the item");
+        return Ok(result);
+    }
+
 
     [HttpPost("addDispatch/{userId}")]
     public async Task<ActionResult<Dispatch>> AddDispatch([FromBody] DispatchDto dispatchDto, string userId)
