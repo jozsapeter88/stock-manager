@@ -34,7 +34,7 @@ public class ServiceFixture //: IDisposable
                 {
                     Id = 2,
                     Name = "TestFacilityUserAlreadyHas",
-                    Sport = SportEnum.Soccer,
+                    Category = CategoryEnum.Sport,
                     CountryCode = "ExampleCode",
                     PostCode = "ExamplePostCode",
                     City = "TestCity",
@@ -44,7 +44,7 @@ public class ServiceFixture //: IDisposable
                 {
                     Id = 3,
                     Name = "TestFacility3",
-                    Sport = SportEnum.CombatSports,
+                    Category = CategoryEnum.Sport,
                     CountryCode = "ExampleCode",
                     PostCode = "ExamplePostCode",
                     City = "TestCity",
@@ -69,7 +69,7 @@ public class ServiceFixture //: IDisposable
         {
             Id = 1,
             Name = "TestFacility",
-            Sport = SportEnum.Soccer,
+            Category = CategoryEnum.Sport,
             CountryCode = "ExampleCode",
             PostCode = "ExamplePostCode",
             City = "TestCity",

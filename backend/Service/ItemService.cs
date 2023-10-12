@@ -26,6 +26,7 @@ public class ItemService: IItemService
         var newItem = new Item
         {
             Name = itemDto.Name,
+            Category = itemDto.Category,
             Price = itemDto.Price,
             Quantity = itemDto.Quantity,
             SuggestedQuantity = itemDto.SuggestedQuantity
