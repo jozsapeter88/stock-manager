@@ -85,6 +85,57 @@ public class DataSeed
         {
             var items = new[]
             {
+                // Electronics items
+                new Item()
+                {
+                    Name = "Smartphone",
+                    Category = CategoryEnum.Electronics,
+                    Price = 499.99,
+                    SuggestedQuantity = 5
+                },
+                new Item()
+                {
+                    Name = "Laptop",
+                    Category = CategoryEnum.Electronics,
+                    Price = 799.99,
+                    SuggestedQuantity = 8
+                },
+                // Sport items
+                new Item()
+                {
+                    Name = "Soccer Ball",
+                    Category = CategoryEnum.Sport,
+                    Price = 19.99,
+                    SuggestedQuantity = 20
+                },
+                new Item()
+                {
+                    Name = "Basketball",
+                    Category = CategoryEnum.Sport,
+                    Price = 24.99,
+                    SuggestedQuantity = 15
+                },
+                new Item()
+                {
+                    Name = "Tennis Racket",
+                    Category = CategoryEnum.Sport,
+                    Price = 59.99,
+                    SuggestedQuantity = 10
+                },
+                new Item()
+                {
+                    Name = "Yoga Mat",
+                    Category = CategoryEnum.Sport,
+                    Price = 29.99,
+                    SuggestedQuantity = 25
+                },
+                new Item()
+                {
+                    Name = "Dumbbell Set",
+                    Category = CategoryEnum.Sport,
+                    Price = 69.99,
+                    SuggestedQuantity = 8
+                },
                 // Clothing items
                 new Item()
                 {
