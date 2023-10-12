@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using StockBackend.Areas.Identity.Enums;
 using StockBackend.Models;
 using StockBackend.Models.DTO;
 using StockBackend.Service;
@@ -48,5 +49,16 @@ public class ItemController: ControllerBase
         var result = await _itemService.GetAllDispatch(userId);
         if (result is null) return NotFound("User is not Found");
         return Ok(result);
+    }
+    
+    [HttpGet("categories")]
+    public ActionResult<IEnumerable<string>> GetCategories()
+    {
+        var categories = Enum.GetValues(typeof(CategoryEnum))
+            .Cast<CategoryEnum>()
+            .Select(e => e.ToString())
+            .ToList();
+
+        return Ok(categories);
     }
 }

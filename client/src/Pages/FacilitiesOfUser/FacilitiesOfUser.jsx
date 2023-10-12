@@ -7,7 +7,7 @@ import { FaSearch } from "react-icons/fa";
 import "./FacilitiesOfUser.css";
 import Loading from "../Loading";
 
-const fetchFacilityDetails = async (userId) => {
+const fetchFacilitiesOfUser = async (userId) => {
   try {
     const response = await fetch(
       process.env.REACT_APP_API_URL + `/facility/facilities/${userId}`,
@@ -34,7 +34,7 @@ export default function FacilitiesOfUser() {
   const { user } = useAuth();
 
   useEffect(() => {
-   fetchFacilityDetails(user.id)
+   fetchFacilitiesOfUser(user.id)
    .then((data) => {
       setFacilities(data) 
       setLoading(false)

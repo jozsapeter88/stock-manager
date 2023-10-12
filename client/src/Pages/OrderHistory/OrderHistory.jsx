@@ -5,15 +5,24 @@ import TopNavbar from "../Navbar/Navbar";
 import Loading from "../Loading";
 import { fetchFacilities } from "../AdminPage/AdminPage";
 import { fetchAllSuppliers } from "../SupplierPage/SupplierPage";
+import ErrorComponent from "../ErrorPage";
 import "./OrderHistory.css";
  
 const fetchOrderHistory = async (user) => {
   try {
-    return await fetch(
+    const response = await fetch(
       `${process.env.REACT_APP_API_URL}/order/getOrders/${user.id}`
     );
+    if(response.ok){
+      const data = await response.json()
+      return data;
+    } else {
+      console.error("Failed to fetch orders");
+      throw new Error("Failed to fetch orders");
+    } 
   } catch (error) {
-    console.error("Error fetching order history:", error);
+    console.error("Error fetching order details:", error);
+    throw error;
   }
 };
 
@@ -29,30 +38,31 @@ const OrderHistory = () => {
   const [selectedOrderIdForDeletion, setSelectedOrderIdForDeletion] =
     useState(null);
   const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
   const [suppliers, setSuppliers] = useState([]);
-  console.log(suppliers)
   const [showSupplierModal, setShowSupplierModal] = useState(false);
   const [selectedSupplierDetails, setSelectedSupplierDetails] = useState(null);
- 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null)
  
  
  
   
   useEffect(() => {
-    
-    fetchFacilities()
-    .then((data)=>{
-      setFacilities(data)
-    } );
- 
-    fetchAllSuppliers()
-    .then((data) => setSuppliers(data))
-
-    fetchOrderHistory(user)
-      .then((data) => data.json())
-      .then((orders) => setOrderHistory(orders));
-      setLoading(false)
+    const fetchData = async () => {
+      try {
+        const facilitiesData = await fetchFacilities();
+        setFacilities(facilitiesData);
+        const supplierData = await fetchAllSuppliers();
+        setSuppliers(supplierData);
+        const orders = await fetchOrderHistory(user);
+        setOrderHistory(orders)
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
   }, [user]);
  
   const deleteOrder = async (orderId) => {
@@ -128,6 +138,9 @@ const OrderHistory = () => {
  
   if (loading) {
     return <Loading />;
+  }
+  if (error) {
+    return <ErrorComponent error={error} />;
   }
   return (
     <div>
@@ -209,7 +222,7 @@ const OrderHistory = () => {
                       setShowSupplierModal(true);
                     }}
                   >
-                    {order.supplier.name} <i class="fa-solid fa-arrow-right"></i>
+                    {order.supplier.name} <i className="fa-solid fa-arrow-right"></i>
                   </Button>
                 </td>
                 <td>{order.comment}</td>
