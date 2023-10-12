@@ -1,8 +1,10 @@
 import { Table, Modal, Button } from "react-bootstrap";
 import { useAuth } from "../../Contexts/AuthContext";
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import TopNavbar from "../Navbar/Navbar";
 import Loading from "../Loading";
+import ErrorComponent from "../ErrorPage";
 
 export const fetchFacilities = async () => {
   try {
@@ -14,10 +16,11 @@ export const fetchFacilities = async () => {
     return data;
   } else {
     console.error("Failed to fetch facilities");
-    return [];
+    throw new Error("Failed to fetch facilities");
   } 
 } catch (error) {
   console.error("Error fetching facility details:", error);
+  throw error;
 }
 }
 
@@ -30,11 +33,12 @@ const fetchUsers = async () => {
       const data = await response.json()
       return data;
     } else {
-      console.error("Failed to users");
-      return [];
+      console.error("Failed to fetch users");
+      throw new Error("Failed to fetch users");
     } 
   } catch (error) {
     console.error("Error fetching users:", error);
+    throw error;
   }
   }
 
@@ -65,22 +69,25 @@ export default function AdminPage() {
   const { user } = useAuth();
   const [facilities, setFacilities] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null)
   const [users, setUsers] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
-    fetchFacilities()
-    .then((data) => {
-      console.log(data);
-      setFacilities(data)
-    })
-    
-    fetchUsers()
-    .then((data) => {
-      setUsers(data)
-    });
-    setLoading(false)
+    const fetchData = async () => {
+      try {
+        const facilitiesData = await fetchFacilities();
+        setFacilities(facilitiesData);
+        const usersData = await fetchUsers();
+        setUsers(usersData);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
   }, []);
 
   const handleAddFacility = async (id) => {
@@ -104,9 +111,13 @@ export default function AdminPage() {
     setShowModal(false);
   };
 
-  if (loading || (facilities === null && users === null)) {
+  if (loading) {
     return <Loading />;
   }
+  if (error) {
+    return <ErrorComponent error={error} />;
+  }
+
 
   return (
     <>
@@ -133,6 +144,13 @@ export default function AdminPage() {
                     >
                       Manage Facilities
                     </Button>
+                    <Link
+                      to={`/addItem`}
+                      variant="warning"
+                      style={{ marginBottom: "10px" }}
+                    >
+                    <Button variant="warning">Add Item</Button>
+                    </Link>
                   </td>
                 </tr>
               ))

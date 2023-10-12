@@ -4,18 +4,28 @@ import { useAuth } from "../../Contexts/AuthContext";
 import TopNavbar from "../Navbar/Navbar";
 import "./DispatchHistory.css";
 import {fetchFacilities} from "../AdminPage/AdminPage"
+import Loading from "../Loading";
+import ErrorComponent from "../ErrorPage";
 
 const fetchDispatches = async (id) => {
     try{
-        return await fetch(process.env.REACT_APP_API_URL + `/item/getDispatches/${id}`,
+        const response = await fetch(process.env.REACT_APP_API_URL + `/item/getDispatches/${id}`,
         {
           method: "GET",
           credentials: "include",
         }
       )
-    }catch(error) {
-        console.error("Error fetching dispatches:", error);
-      }
+      if(response.ok){
+        const data = await response.json()
+        return data;
+      } else {
+        console.error("Failed to fetch dispatches");
+        throw new Error("Failed to fetch dispatches");
+      } 
+    } catch (error) {
+      console.error("Error fetching dispatch details:", error);
+      throw error;
+    }
 }
 const DispatchHistory = ()=> {
 
@@ -24,26 +34,24 @@ const DispatchHistory = ()=> {
     const [dispatches, setDispatches] = useState([]);
     const [searchItem, setSearchItem] = useState("");
     const [searchUserName, setSearchUserName] = useState("")
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null)
     const { user } = useAuth();
 
     useEffect(() => {
-        fetchFacilities()
-        .then((facilities) => setFacilities(facilities));
-    
-        fetchDispatches(user.id)
-        .then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok' + response.statusText);
-            }
-            return response.json();
-          })
-          .then(data => {
-            console.log(data);
-            setDispatches(data)
-          })
-          .catch(error => {
-            console.error('There has been a problem with fetch operation:', error);
-          });
+      const fetchData = async () => {
+        try {
+          const facilitiesData = await fetchFacilities();
+          setFacilities(facilitiesData);
+          const dispatchData = await fetchDispatches(user.id);
+          setDispatches(dispatchData);
+        } catch (error) {
+          setError(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
       }, [user]);
 
       const isAdmin = () => {
@@ -73,6 +81,13 @@ const DispatchHistory = ()=> {
         }else {
             return filteredDispatches()
             .filter(d => d.user.userName.toLowerCase().includes(searchUserName))}
+      }
+
+      if (loading) {
+        return <Loading />;
+      }
+      if (error) {
+        return <ErrorComponent error={error} />;
       }
 
     return (

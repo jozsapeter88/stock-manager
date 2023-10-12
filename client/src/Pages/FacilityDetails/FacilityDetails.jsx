@@ -2,13 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   Table,
-  Button,
-  Modal,
-  Form,
-  Dropdown,
-  InputGroup,
-  OverlayTrigger,
-  Tooltip,
+  Button
 } from "react-bootstrap";
 import TopNavbar from "../Navbar/Navbar";
 import { useAuth } from "../../Contexts/AuthContext";
@@ -16,6 +10,8 @@ import { fetchAllSuppliers } from "../SupplierPage/SupplierPage";
 import { DispatchForm } from "../Forms/DispatchForm";
 import { BsFillExclamationTriangleFill } from 'react-icons/bs';
 import { OrderForm } from "../Forms/OrderForm";
+import Loading from "../Loading";
+import ErrorComponent from "../ErrorPage";
 
 const addDispatch = async (userId, dispatch) => {
   try{
@@ -50,9 +46,17 @@ const addOrder = async (userId, selectedOrder) => {
 }
 const fetchItems = async () => {
   try {
-    return await fetch(process.env.REACT_APP_API_URL + "/item/getItems");
+    const response = await fetch(process.env.REACT_APP_API_URL + "/item/getItems")
+    if(response.ok){
+      const data = await response.json()
+      return data;
+    } else {
+      console.error("Failed to fetch items");
+      throw new Error("Failed to fetch items");
+    } 
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error fetching items:", error);
+    throw error;
   }
 };
 
@@ -100,18 +104,25 @@ export default function FacilityDetails() {
   const [showDispatchModal, setShowDispatchModal] = useState(false);
   //User
   const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetchFacilityDetails(id)
-    .then((facilities) =>setFacility(facilities) )
-        
-    fetchItems()
-    .then((data) => data.json())
-    .then((items) => setItems(items))
-        
-    fetchAllSuppliers() 
-    .then((suppliers) => setAllSuppliers(suppliers))
-      
+    const fetchData = async () => {
+      try {
+        const facilitiesData = await fetchFacilityDetails(id);
+        setFacility(facilitiesData);
+        const usersData = await fetchItems();
+        setItems(usersData);
+        const suppliers = await fetchAllSuppliers();
+        setAllSuppliers(suppliers)
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
   }, [id]);
 
   const selectedSupplierName = (supplierID) => {
@@ -180,7 +191,6 @@ export default function FacilityDetails() {
     setDispatchComment("")
     setItemQuantity(0)
     fetchItems()
-    .then((data) => data.json())
     .then((items) => setItems(items))
     setShowSuccessMessage(true);
     setTimeout(() => {
@@ -190,10 +200,12 @@ export default function FacilityDetails() {
     console.error("User is not found!")
   } }
   
-  if (!facility || items.length === 0) {
-    return <div>Loading facility details...</div>;
+  if (loading) {
+    return <Loading />;
   }
-
+  if (error) {
+    return <ErrorComponent error={error} />;
+  }
   return (
     <div>
       <TopNavbar />

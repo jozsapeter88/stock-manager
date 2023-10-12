@@ -85,21 +85,7 @@ public class DataSeed
         {
             var items = new[]
             {
-                // Electronics items
-                new Item()
-                {
-                    Name = "Smartphone",
-                    Category = CategoryEnum.Electronics,
-                    Price = 499.99,
-                    SuggestedQuantity = 5
-                },
-                new Item()
-                {
-                    Name = "Laptop",
-                    Category = CategoryEnum.Electronics,
-                    Price = 799.99,
-                    SuggestedQuantity = 8
-                },
+               
                 // Sport items
                 new Item()
                 {
