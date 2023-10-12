@@ -2,3 +2,7 @@
     max-width: 1500px;
     margin: 0 auto;
 }
+
+.card-reduced-opacity {
+    opacity: 0.5;
+}

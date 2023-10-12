@@ -14,14 +14,13 @@ const StatisticsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-
   useEffect(() => {
     fetchFacilities();
     fetchOwnFacilities();
     fetchItems();
     fetchOrders();
   }, []);
-  
+
   const fetchFacilities = async () => {
     try {
       const response = await fetch(
@@ -71,56 +70,59 @@ const StatisticsPage = () => {
     }
   };
 
-
   const calculateInventoryItems = (facilityItems) => {
-    console.log(facilityItems.length)
+    console.log(facilityItems.length);
     return facilityItems.reduce((sum, item) => sum + item.quantity, 0);
-  }
+  };
 
   const calculateInventoryValue = (facilityItems) => {
     let totalValue = 0;
-    for(let i = 0; i < facilityItems.length; i++){
-      let price = facilityItems[i].price.toFixed(2)*facilityItems[i].quantity;
+    for (let i = 0; i < facilityItems.length; i++) {
+      let price = facilityItems[i].price.toFixed(2) * facilityItems[i].quantity;
       totalValue += price;
     }
     return totalValue.toFixed(2);
-  }
+  };
 
   const getActiveOrdersOfFacility = (idOfFacility) => {
     let activeOrders = 0;
-     for(let i= 0; i < ordersData.length; i++){
-      if(ordersData[i].facilityId === idOfFacility 
-        && ordersData[i].isDelivered === false){
-          activeOrders++;}
-        }
-        return activeOrders;
-     }
-     
+    for (let i = 0; i < ordersData.length; i++) {
+      if (
+        ordersData[i].facilityId === idOfFacility &&
+        ordersData[i].isDelivered === false
+      ) {
+        activeOrders++;
+      }
+    }
+    return activeOrders;
+  };
+
   const allOrdersOfFacility = (idOfFacility) => {
-     return ordersData.filter(o => o.facilityId === idOfFacility).length;
-  }
+    return ordersData.filter((o) => o.facilityId === idOfFacility).length;
+  };
 
-  const overallQuantityOfItems = ()=> {
-   return itemsData.reduce((total, item) => total + item.quantity, 0)
-  }
-  
+  const overallQuantityOfItems = () => {
+    return itemsData.reduce((total, item) => total + item.quantity, 0);
+  };
+
   const overallValueOfItems = () => {
-  let totalValue = 0;
-  for(let i = 0; i < itemsData.length; i++){
-    let price = itemsData[i].price.toFixed(2)*itemsData[i].quantity;
-    totalValue += price;
-  }
-  return totalValue;
-}
+    let totalValue = 0;
+    for (let i = 0; i < itemsData.length; i++) {
+      let price = itemsData[i].price.toFixed(2) * itemsData[i].quantity;
+      totalValue += price;
+    }
+    return totalValue;
+  };
 
-const sortedItemsByQuantity = () => {
-  let copyItems = [...itemsData];
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const itemsToShow = copyItems.sort((a, b)=> b.quantity -a.quantity)
-  .slice(startIndex, endIndex);
-  return itemsToShow;
-}
+  const sortedItemsByQuantity = () => {
+    let copyItems = [...itemsData];
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const itemsToShow = copyItems
+      .sort((a, b) => b.quantity - a.quantity)
+      .slice(startIndex, endIndex);
+    return itemsToShow;
+  };
   const fetchOrders = async () => {
     try {
       const response = await fetch(
@@ -138,15 +140,21 @@ const sortedItemsByQuantity = () => {
     }
   };
 
-  
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  
+  const allFunctionsReturnZero = (facility) => {
+    if (
+      calculateInventoryItems(facility.items) === 0 &&
+      calculateInventoryValue(facility.items) === "0.00" &&
+      getActiveOrdersOfFacility(facility.id) === 0 &&
+      allOrdersOfFacility(facility.id) === 0
+    ) {
+      return true;
+    } else return false;
+  };
 
-  
   return (
     <>
       <TopNavbar />
@@ -188,9 +196,7 @@ const sortedItemsByQuantity = () => {
             <Card>
               <Card.Body>
                 <Card.Title>Overall Quantity of Items</Card.Title>
-                <Card.Text>
-                  {overallQuantityOfItems()}
-                </Card.Text>
+                <Card.Text>{overallQuantityOfItems()}</Card.Text>
               </Card.Body>
             </Card>
           </Col>
@@ -201,8 +207,9 @@ const sortedItemsByQuantity = () => {
                 <Card.Title>Average Value of Items</Card.Title>
                 <Card.Text>
                   {itemsData.length > 0
-                    ? `${(overallValueOfItems()/overallQuantityOfItems()
-                    ).toFixed(2)}$`
+                    ? `${(
+                        overallValueOfItems() / overallQuantityOfItems()
+                      ).toFixed(2)}$`
                     : "N/A"}
                 </Card.Text>
               </Card.Body>
@@ -213,9 +220,7 @@ const sortedItemsByQuantity = () => {
             <Card>
               <Card.Body>
                 <Card.Title>Overall Value of Items</Card.Title>
-                <Card.Text>
-                  {`${overallValueOfItems()}$`}
-                </Card.Text>
+                <Card.Text>{`${overallValueOfItems()}$`}</Card.Text>
               </Card.Body>
             </Card>
           </Col>
@@ -225,24 +230,28 @@ const sortedItemsByQuantity = () => {
         <Row>
           {ownFacilitiesData.map((facility) => (
             <Col key={facility.id} md={4}>
-              <Card>
+              <Card
+                className={
+                  allFunctionsReturnZero(facility) ? "card-reduced-opacity" : ""
+                }
+              >
                 <Card.Body>
                   <Card.Title>{facility.name}</Card.Title>
                   <Card.Text>
                     Number of Items in Inventory:{" "}
-                    { calculateInventoryItems(facility.items) }
+                    {calculateInventoryItems(facility.items)}
                   </Card.Text>
                   <Card.Text>
                     Overall Value of Inventory:{" "}
-                    { `${calculateInventoryValue(facility.items)}$` }
+                    {`${calculateInventoryValue(facility.items)}$`}
                   </Card.Text>
                   <Card.Text>
                     Active orders:
-                    { getActiveOrdersOfFacility(facility.id) }
+                    {getActiveOrdersOfFacility(facility.id)}
                   </Card.Text>
                   <Card.Text>
                     All orders:
-                    {  allOrdersOfFacility(facility.id) }
+                    {allOrdersOfFacility(facility.id)}
                   </Card.Text>
                 </Card.Body>
               </Card>
