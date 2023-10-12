@@ -18,6 +18,13 @@ const CreateItemForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const itemDto = {
+      name: formData.name,
+      price: formData.price,
+      quantity: formData.quantity,
+      suggestedQuantity: formData.suggestedQuantity,
+    };
+
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/item/addItem`,
@@ -26,14 +33,9 @@ const CreateItemForm = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            itemDto: {
-              name: formData.name,
-              price: formData.price,
-              quantity: formData.quantity,
-              suggestedQuantity: formData.suggestedQuantity,
-            },
-          }),
+          body: JSON.stringify(
+            itemDto
+          ),
         }
       );
       console.log("Data to be sent:", formData);
@@ -99,7 +101,9 @@ const CreateItemForm = () => {
               required
             />
           </div>
-          <Button variant="warning">Create Item</Button>
+          <Button variant="warning" onClick={handleSubmit}>
+            Create Item
+          </Button>
         </form>
       </div>
     </>
