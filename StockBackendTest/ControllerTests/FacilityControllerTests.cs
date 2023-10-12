@@ -37,7 +37,7 @@ public class FacilityControllerTests
         {
             Id = 1,
             Name = "TestFacility",
-            Sport = SportEnum.Soccer,
+            Category = CategoryEnum.Sport,
             CountryCode = "ExampleCode",
             PostCode = "ExamplePostCode",
             City = "TestCity",
@@ -48,7 +48,7 @@ public class FacilityControllerTests
         {
             Id = 2,
             Name = "Celestial Tennis Courts",
-            Sport = SportEnum.Tennis,
+            Category = CategoryEnum.Sport,
             CountryCode = "UK",
             PostCode = "24680",
             City = "Reactville",

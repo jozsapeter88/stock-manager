@@ -9,6 +9,7 @@ public class Item
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public long Id { get; set; }
     public string Name { get; set; }
+    public CategoryEnum Category { get; set; }
     public double Price { get; set; }
     public int Quantity { get; set; } = 0;
     public int SuggestedQuantity { get; set; }

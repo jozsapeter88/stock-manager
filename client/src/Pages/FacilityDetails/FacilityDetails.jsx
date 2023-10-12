@@ -134,8 +134,7 @@ export default function FacilityDetails() {
     return orderItemsArray;
   }
 
-  const filteredItems = facility ? [...items].filter((item) => item.sport === facility.sport): [];
-
+  const filteredItems = facility ? [...items].filter((item) => item.category === facility.category): [];
   const sortedItems = [...filteredItems].sort((a, b) => b.quantity - a.quantity);
 
   const addToOrder = (item, quantity) => {
@@ -223,8 +222,8 @@ export default function FacilityDetails() {
         <Table striped bordered hover style={{ outline: "2px solid" }}>
           <tbody>
             <tr>
-              <td>Sport</td>
-              <td>{facility.sport}</td>
+              <td>Category</td>
+              <td>{facility.category}</td>
             </tr>
             <tr>
               <td>City</td>
@@ -254,7 +253,7 @@ export default function FacilityDetails() {
           <tbody>
             {sortedItems.map((item) => (
               <tr key={item.id}>
-                <td>{item.sport}</td>
+                <td>{item.category}</td>
                 <td>
                   <strong>{item.name}</strong>
                 </td>

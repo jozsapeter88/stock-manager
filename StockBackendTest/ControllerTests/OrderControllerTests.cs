@@ -36,7 +36,7 @@ public class OrderControllerTests
         {
             Id = 1,
             Name = "TestFacility",
-            Sport = SportEnum.Soccer,
+            Category = CategoryEnum.Sport,
             CountryCode = "ExampleCode",
             PostCode = "ExamplePostCode",
             City = "TestCity",
