@@ -144,13 +144,6 @@ export default function AdminPage() {
                     >
                       Manage Facilities
                     </Button>
-                    <Link
-                      to={`/addItem`}
-                      variant="warning"
-                      style={{ marginBottom: "10px" }}
-                    >
-                    <Button variant="warning">Add Item</Button>
-                    </Link>
                   </td>
                 </tr>
               ))
@@ -163,6 +156,13 @@ export default function AdminPage() {
             )}
           </tbody>
         </Table>
+        <Link
+            to={`/addItem`}
+            variant="warning"
+            style={{ marginBottom: "10px" }}
+          >
+          <Button variant="warning">Add Item</Button>
+        </Link>
       </div>
 
       {/* Facility Management Modal */}
