@@ -33,22 +33,18 @@ const LoginForm = () => {
             });
       
             if (response.ok) {
-                // Check if the response contains JSON data before parsing
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
                   const userData = await response.json();
-                  login(userData); // Update the user state in AuthContext
-                  console.log(userData)
-                  navigate(`/facilities/${userData.id}`); // Navigate to the home page
+                  login(userData);
+                  navigate(`/facilities/${userData.id}`);
                 } else {
-                  console.error('Login response is not JSON'); // Handle this case
+                  console.error('Login response is not JSON');
                 }
               } else {
-                // Handle login failure
                 console.error('Login failed');
               }
             } catch (error) {
-              // Handle network or other errors
               console.error('Error logging in:', error);
             }
           };

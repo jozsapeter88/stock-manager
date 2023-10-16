@@ -16,19 +16,17 @@ import CreateItemForm from "./Pages/AdminPage/CreateItemForm";
 
 const App = () => {
   const { user, login } = useAuth();
-  console.log(user)
   useEffect(() => {
     const userJSON = sessionStorage.getItem('user');
-    console.log(userJSON)
     if (userJSON) {
       const userData = JSON.parse(userJSON);
-      login(userData); // Log the user in using the data from localStorage
+      login(userData);
     }
   }, []);
 
   const isAuthenticated = (allowedRoles) => {
     if (user === null) return false;
-    return allowedRoles.includes(user.role); // Use 'includes' for array filtering
+    return allowedRoles.includes(user.role);
   };
 
   return (

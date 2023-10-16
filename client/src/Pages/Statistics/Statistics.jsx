@@ -71,7 +71,6 @@ const StatisticsPage = () => {
   };
 
   const calculateInventoryItems = (facilityItems) => {
-    console.log(facilityItems.length);
     return facilityItems.reduce((sum, item) => sum + item.quantity, 0);
   };
 

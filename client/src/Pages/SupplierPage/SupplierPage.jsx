@@ -44,7 +44,6 @@ function SupplierPage() {
 
   const handleRowClick = (supplier) => {
     setSelectedSupplier(supplier);
-    console.log("Selected Supplier:", supplier);
     setShowEditModal(true);
   };
 
@@ -68,7 +67,6 @@ function SupplierPage() {
       );
 
       if (!response.ok) {
-        console.log(editedSupplier);
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 

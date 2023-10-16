@@ -56,7 +56,7 @@ const fetchUsers = async () => {
         }
       );
       if (response.ok) {
-        console.log("facility added");
+        console.log("Facility successfully added");
       } else {
         console.error("Facility addition failed");
       }
@@ -99,7 +99,7 @@ export default function AdminPage() {
   };
 
   const removeFacilityFromUser = async (userId, facilityId) => {
-    console.log("user should be removed now");
+    console.log("Facility successfully removed");
   };
 
   const handleOpenModal = (user) => {

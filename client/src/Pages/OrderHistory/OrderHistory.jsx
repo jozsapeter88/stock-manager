@@ -101,13 +101,10 @@ const OrderHistory = () => {
       );
       if (response.ok) {
         let order = orderHistory.find((o) => o.id === selectedOrderId);
-        console.log(order);
         order.isDelivered = true;
         let data = [...orderHistory];
         let orderInData = data.findIndex((o) => o.id === selectedOrderId);
-        console.log(orderInData);
         data[orderInData] = order;
-        console.log(data);
         setOrderHistory([...data]);
       } else {
         console.error("Failed to confirm order");
@@ -208,9 +205,9 @@ const OrderHistory = () => {
                 <td>
                   {order.orderItemQuantities.map((itemQuantity) => (
                     <tr key={itemQuantity.item.id}>
-                      <td>
+                      <div>
                         {itemQuantity.item.name}: {itemQuantity.quantity}
-                      </td>
+                      </div>
                     </tr>
                   ))}
                 </td>
