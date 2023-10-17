@@ -286,7 +286,9 @@ export default function FacilityDetails() {
           <tbody>
             {sortedItems.map((item) => (
               <tr key={item.id}>
-                <td>{item.category}</td>
+                <td>
+                  <td>{getCategoryName(facility.category)}</td>
+                </td>
                 <td>
                   <strong>{item.name}</strong>
                 </td>
