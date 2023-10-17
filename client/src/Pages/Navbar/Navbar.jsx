@@ -1,13 +1,13 @@
 import { Link, Outlet } from "react-router-dom";
-import { Navbar, Nav } from "react-bootstrap";
+import { Navbar, Nav, Dropdown } from "react-bootstrap";
 import "./Navbar.css";
 import { useAuth } from "../../Contexts/AuthContext";
 
 export default function TopNavbar() {
   const { user, logout } = useAuth();
-
   return (
     <>
+
       <Navbar
         expand="lg"
         variant="light"
@@ -99,18 +99,22 @@ export default function TopNavbar() {
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to="/"
-                style={{
-                  color: "black",
-                  fontWeight: "bold",
-                  marginRight: "10px",
-                }}
-                onClick={logout}
-              >
-                Logout
-              </Nav.Link>
+              <Dropdown>
+                <Dropdown.Toggle
+                  as={Nav.Link}
+                  id="dropdown-basic"
+                  style={{
+                    color: "black",
+                    fontWeight: "bold",
+                    marginRight: "10px",
+                  }}
+                >
+                  Logged in as <span style={{ color: "blue" }}>{user.userName}</span>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </Nav.Item>
           </Nav>
         </Navbar.Collapse>
