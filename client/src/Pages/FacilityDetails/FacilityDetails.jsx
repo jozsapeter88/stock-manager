@@ -9,7 +9,6 @@ import { BsFillExclamationTriangleFill } from "react-icons/bs";
 import { OrderForm } from "../Forms/OrderForm";
 import Loading from "../Loading";
 import ErrorComponent from "../ErrorPage";
-import { FaAlignRight } from "react-icons/fa";
 
 const addDispatch = async (userId, dispatch) => {
   try {
@@ -86,25 +85,19 @@ export const fetchFacilityDetails = async (id) => {
 export default function FacilityDetails() {
   const { id } = useParams();
   const [facility, setFacility] = useState(null);
-  //Suppliers
   const [allSuppliers, setAllSuppliers] = useState([]);
   const [selectedSupplierId, setSelectedSupplierId] = useState(null);
-  //Items
   const [items, setItems] = useState([]);
-  //Order related
   const [selectedItems, setSelectedItems] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
   const [comment, setComment] = useState("");
-  //Dispatch useStates
   const [dispatchComment, setDispatchComment] = useState("");
   const [itemQuantity, setItemQuantity] = useState(0);
   const [selectedItemId, setSelectedItemId] = useState(null);
-  //Modals and Messages
   const [showModal, setShowModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showDispatchModal, setShowDispatchModal] = useState(false);
-  //User
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -266,10 +259,6 @@ export default function FacilityDetails() {
             <tr>
               <td>Address</td>
               <td>{facility.address}</td>
-            </tr>
-            <tr>
-              <td>Users</td>
-              <td>{facility.users}</td>
             </tr>
           </tbody>
         </Table>
