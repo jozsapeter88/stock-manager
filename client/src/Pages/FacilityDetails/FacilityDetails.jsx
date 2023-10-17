@@ -9,6 +9,7 @@ import { BsFillExclamationTriangleFill } from "react-icons/bs";
 import { OrderForm } from "../Forms/OrderForm";
 import Loading from "../Loading";
 import ErrorComponent from "../ErrorPage";
+import { FaAlignRight } from "react-icons/fa";
 
 const addDispatch = async (userId, dispatch) => {
   try {
@@ -273,6 +274,16 @@ export default function FacilityDetails() {
           </tbody>
         </Table>
         <h2>Item Stock:</h2>
+        <div style={{ textAlign: "right" }}>
+          <BsFillExclamationTriangleFill
+            style={{ textAlign: "right", color: "yellow" }}
+          />
+          Below suggested quantity&nbsp;&nbsp;&nbsp;&nbsp;
+          <BsFillExclamationTriangleFill
+            style={{ textAlign: "right", color: "red" }}
+          />
+          Not in stock
+        </div>
         <Table striped bordered hover style={{ outline: "2px solid" }}>
           <thead>
             <tr>
@@ -294,6 +305,7 @@ export default function FacilityDetails() {
                 </td>
                 <td>{item.price}</td>
                 <td>
+                  {item.quantity}&nbsp;
                   {item.quantity === 0 ? (
                     <BsFillExclamationTriangleFill
                       style={{ color: "red", cursor: "pointer" }}
@@ -303,7 +315,6 @@ export default function FacilityDetails() {
                       style={{ color: "yellow", cursor: "pointer" }}
                     />
                   ) : null}
-                  {item.quantity}
                 </td>
                 <td>
                   <Button
