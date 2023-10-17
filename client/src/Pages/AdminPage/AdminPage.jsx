@@ -1,4 +1,4 @@
-import { Table, Modal, Button } from "react-bootstrap";
+import { Table, Modal, Button, Alert } from "react-bootstrap";
 import { useAuth } from "../../Contexts/AuthContext";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -42,28 +42,7 @@ const fetchUsers = async () => {
   }
   }
 
-  const addFacilityToUser = async (userId, facilityId) => {
-    try {
-      const response = await fetch(
-        process.env.REACT_APP_API_URL +
-          `/facility/addFacility/${userId}/${facilityId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({}),
-        }
-      );
-      if (response.ok) {
-        console.log("Facility successfully added");
-      } else {
-        console.error("Facility addition failed");
-      }
-    } catch (error) {
-      console.error("Error logging in:", error);
-    }
-  };
+
 
 export default function AdminPage() {
   const { user } = useAuth();
@@ -73,6 +52,45 @@ export default function AdminPage() {
   const [users, setUsers] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [modalShowAlert, setModalShowAlert] = useState(false);
+  const [modalAlertVariant, setModalAlertVariant] = useState("success");
+  const [modalAlertMessage, setModalAlertMessage] = useState("");
+
+const addFacilityToUser = async (userId, facilityId) => {
+  try {
+    const response = await fetch(
+      process.env.REACT_APP_API_URL +
+        `/facility/addFacility/${userId}/${facilityId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+      }
+    );
+    if (response.ok) {
+      setModalShowAlert(true);
+      setModalAlertVariant("success");
+      setModalAlertMessage("Facility successfully added");
+
+      // Hide the alert after a few seconds
+      setTimeout(() => {
+        setModalShowAlert(false);
+      }, 5000);
+    } else {
+      console.error("Facility addition failed");
+      setModalShowAlert(true);
+      setModalAlertVariant("danger");
+      setModalAlertMessage("Facility addition failed");
+    }
+  } catch (error) {
+    console.error("Error logging in:", error);
+    setModalShowAlert(true);
+    setModalAlertVariant("danger");
+    setModalAlertMessage(`Error adding facility: ${error.message}`);
+  }
+};
 
   useEffect(() => {
     const fetchData = async () => {
@@ -173,6 +191,15 @@ export default function AdminPage() {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+        {modalShowAlert && (
+      <Alert
+        variant={modalAlertVariant}
+        onClose={() => setModalShowAlert(false)}
+        dismissible
+      >
+        {modalAlertMessage}
+      </Alert>
+    )}
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -202,6 +229,7 @@ export default function AdminPage() {
               ))}
             </tbody>
           </Table>
+          
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
