@@ -64,4 +64,21 @@ public class FacilityService: IFacilityService
         await _dbContext.SaveChangesAsync();
         return facility ?? null;
     }
+    
+    public async Task<Facility?> RemoveFacilityFromUser(int fId, string userId)
+    {
+        var facility = await _dbContext.Facilities.FirstOrDefaultAsync(f => f.Id == fId);
+        var user = await _dbContext.Users
+            .Include(u => u.FacilitiesOfUser)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user is not null && facility is not null)
+        {
+            user.FacilitiesOfUser?.Remove(facility);
+            await _dbContext.SaveChangesAsync();
+            return facility;
+        }
+
+        return null;
+    }
 }
