@@ -93,6 +93,9 @@ const DispatchHistory = ()=> {
     return (
         <div>
       <TopNavbar />
+      <div className="header-title">
+      <h1>Dispatch History</h1>
+    </div>
       <div className="table-container">
         <h1>Dispatch History</h1>
         <Form>

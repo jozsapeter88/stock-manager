@@ -151,28 +151,31 @@ function SupplierPage() {
   };
 
   useEffect(() => {
-    fetchAllSuppliers()
-    .then((suppliers) => setSuppliers(suppliers));
+    fetchAllSuppliers().then((suppliers) => setSuppliers(suppliers));
   }, []);
 
   return (
     <>
       <TopNavbar />
+      <div className="header-title">
+        <h1>Supplier Page</h1>
+      </div>
       <div className="main-container">
         {showAlert && (
           <Alert
-          variant={alertVariant}
-          onClose={() => setShowAlert(false)}
-          dismissible
+            variant={alertVariant}
+            onClose={() => setShowAlert(false)}
+            dismissible
           >
             {alertMessage}
           </Alert>
         )}
-        <p style={{ textAlign: "right" }}><i className="fas fa-info-circle"></i> You can click on a Supplier to edit it</p>
+        <p style={{ textAlign: "right" }}>
+          <i className="fas fa-info-circle"></i> You can click on a Supplier to
+          edit it
+        </p>
         {isNaN(suppliers.length) ? (
-          <p
-          className="no-suppliers-message"
-          >No Suppliers Available</p>
+          <p className="no-suppliers-message">No Suppliers Available</p>
         ) : (
           <Table striped bordered hover style={{ outline: "2px solid" }}>
             <thead>

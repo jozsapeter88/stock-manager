@@ -157,10 +157,12 @@ const StatisticsPage = () => {
   return (
     <>
       <TopNavbar />
+      <div className="header-title">
+      <h1>Statistics Page</h1>
+    </div>
       <div className="main-container">
-        <h1>Global statistics</h1>
+        <h1 className="global-stats">Global statistics</h1>
         {/* Cards */}
-
         <Row>
           <Col md={4}>
             <Card>
@@ -225,7 +227,7 @@ const StatisticsPage = () => {
           </Col>
         </Row>
 
-        <h1>Your statistics</h1>
+        <h1 className="my-stats">My statistics</h1>
         <Row>
           {ownFacilitiesData.map((facility) => (
             <Col key={facility.id} md={4}>
@@ -259,7 +261,7 @@ const StatisticsPage = () => {
         </Row>
 
         {/* Items */}
-        <h2>Items</h2>
+        <h2 className="item-list">List of registered items</h2>
         <Table striped bordered hover>
           <thead>
             <tr>

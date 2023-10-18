@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import TopNavbar from "../Navbar/Navbar";
 import Loading from "../Loading";
 import ErrorComponent from "../ErrorPage";
+import "./AdminPage.css";
 
 export const fetchFacilities = async () => {
   try {
@@ -174,6 +175,9 @@ export default function AdminPage() {
   return (
     <>
       <TopNavbar />
+      <div className="header-title">
+        <h1>Admin Page</h1>
+      </div>
       <div className="container mt-4">
         <Table striped bordered hover style={{ outline: "2px solid" }}>
           <thead>

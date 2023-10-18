@@ -63,6 +63,9 @@ export default function FacilitiesOfUser() {
   return (
     <div>
       <TopNavbar />
+      <div className="header-title">
+        <h1>My Facilities</h1>
+      </div>
       <div className="table-container">
         {(facilities && facilities.length > 0) || user.role === 0 ? (
           <Table striped bordered hover style={{ outline: "2px solid" }}>
