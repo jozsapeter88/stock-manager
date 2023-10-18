@@ -19,7 +19,7 @@ const StatisticsPage = () => {
     fetchOwnFacilities();
     fetchItems();
     fetchOrders();
-  }, []);
+  }, );
 
   const fetchFacilities = async () => {
     try {

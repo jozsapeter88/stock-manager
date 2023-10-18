@@ -51,7 +51,6 @@ export default function AdminPage() {
   const [users, setUsers] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [showAlert, setShowAlert] = useState(false);
   const [modalShowAlert, setModalShowAlert] = useState(false);
   const [modalAlertVariant, setModalAlertVariant] = useState("success");
   const [modalAlertMessage, setModalAlertMessage] = useState("");

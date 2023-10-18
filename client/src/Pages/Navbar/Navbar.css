@@ -1,10 +1,12 @@
+/* Existing styles for logo */
 .logo img {
   opacity: 1;
-  transition: opacity 0.5s;
+  transition: 0.5s;
 }
 
+/* New hover effect to scale the logo */
 .logo:hover img {
-  opacity: 0.5;
+  transform: scale(1.1); /* Adjust the scale factor as needed */
 }
 
 .btn {
@@ -13,11 +15,11 @@
 
 .nav-link {
   font-size: 18px;
-  transition: color 0.3s ease-in-out;
+  transition: 0.5s;
 }
 
 .nav-link:hover {
-  color: rgb(0, 0, 0);
+  transform: scale(1.1);
 }
 
 * {

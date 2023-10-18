@@ -4,8 +4,8 @@ import { Table, Alert } from "react-bootstrap";
 import TopNavbar from "../Navbar/Navbar";
 import { useAuth } from "../../Contexts/AuthContext";
 import { FaSearch } from "react-icons/fa";
-import "./FacilitiesOfUser.css";
 import Loading from "../Loading";
+import "./FacilitiesOfUser.css";
 
 const fetchFacilitiesOfUser = async (userId) => {
   try {
@@ -32,6 +32,7 @@ export default function FacilitiesOfUser() {
   const [facilities, setFacilities] = useState(null);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const [showWelcomeAlert, setShowWelcomeAlert] = useState(true);
 
   useEffect(() => {
     fetchFacilitiesOfUser(user.id).then((data) => {
@@ -65,6 +66,28 @@ export default function FacilitiesOfUser() {
       <TopNavbar />
       <div className="header-title">
         <h1>My Facilities</h1>
+      </div>
+      <div className="additional-text-container">
+        {showWelcomeAlert && (
+          <Alert
+            variant="warning"
+            onClose={() => setShowWelcomeAlert(false)}
+            dismissible
+          >
+            <Alert.Heading>
+              Welcome to the Stock Management System!
+            </Alert.Heading>
+            <p>
+              • Choose a facility and click on the <b>View</b> button to see its
+              inventory, place an order, or dispatch items. <br></br>• To see
+              the existing orders with their details, click on the{" "}
+              <b>Order history</b> option. <br></br>• To manage the suppliers,
+              click on the <b>Suppliers</b> option. <br></br>• To see global and
+              personal statistics, click on the <b>Statistics</b> option.{" "}
+              <br></br>• After you finish, do not forget to <b>Sign out</b>.
+            </p>
+          </Alert>
+        )}
       </div>
       <div className="table-container">
         {(facilities && facilities.length > 0) || user.role === 0 ? (
@@ -103,22 +126,6 @@ export default function FacilitiesOfUser() {
             You do not have access to any facilities. Please contact an admin.
           </Alert>
         )}
-      </div>
-      <div className="additional-text-container">
-        <div className="additional-text">
-          <p>
-            Welcome to the stock management system! <br></br>
-            <br></br>• Choose a facility and click on the <b>'View'</b> button
-            to see its inventory or place an order. <br></br>• To see the
-            existing orders with their details, click on the{" "}
-            <b>'Order history'</b>
-            option. <br></br>• To manage the suppliers, click on the{" "}
-            <b>'Suppliers'</b> option. <br></br>• To see global and personal
-            statistics, click on the <b>'Statistics'</b>
-            option. <br></br>• After you finished, do not forget to{" "}
-            <b>sign out</b>.
-          </p>
-        </div>
       </div>
     </div>
   );
