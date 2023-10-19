@@ -13,23 +13,26 @@ thead {
     background-color: #6e530041;
 }
 
-/* FacilitiesOfUser.css */
-
 .additional-text-container {
     display: flex;
     justify-content: center;
     align-items: center;
     max-width: 1500px;
     margin: 0 auto;
-    height: 40vh;
-  }
-  
-  .additional-text {
+}
+
+.additional-text {
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     background-color: rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     padding: 20px;
-  }
-  
-  
+}
+
+.header-title {
+    text-align: center;
+    background-color: #6e530041;
+    padding: 20px;
+    margin-bottom: 10px;
+    font-family: 'Roboto', sans-serif;
+}

@@ -12,7 +12,7 @@ const ErrorComponent = ({ error }) => (
 );
 
 ErrorComponent.propTypes = {
-  error: PropTypes.instanceOf(Error).isRequired,
+  error: PropTypes.instanceOf(Error),
 };
 
 export default ErrorComponent;

@@ -19,7 +19,7 @@ const StatisticsPage = () => {
     fetchOwnFacilities();
     fetchItems();
     fetchOrders();
-  }, []);
+  }, );
 
   const fetchFacilities = async () => {
     try {
@@ -71,7 +71,6 @@ const StatisticsPage = () => {
   };
 
   const calculateInventoryItems = (facilityItems) => {
-    console.log(facilityItems.length);
     return facilityItems.reduce((sum, item) => sum + item.quantity, 0);
   };
 
@@ -158,10 +157,12 @@ const StatisticsPage = () => {
   return (
     <>
       <TopNavbar />
+      <div className="header-title">
+      <h1>Statistics Page</h1>
+    </div>
       <div className="main-container">
-        <h1>Global statistics</h1>
+        <h1 className="global-stats">Global statistics</h1>
         {/* Cards */}
-
         <Row>
           <Col md={4}>
             <Card>
@@ -226,7 +227,7 @@ const StatisticsPage = () => {
           </Col>
         </Row>
 
-        <h1>Your statistics</h1>
+        <h1 className="my-stats">My statistics</h1>
         <Row>
           {ownFacilitiesData.map((facility) => (
             <Col key={facility.id} md={4}>
@@ -260,7 +261,7 @@ const StatisticsPage = () => {
         </Row>
 
         {/* Items */}
-        <h2>Items</h2>
+        <h2 className="item-list">List of registered items</h2>
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -286,6 +287,7 @@ const StatisticsPage = () => {
               key={index}
               active={index + 1 === currentPage}
               onClick={() => handlePageChange(index + 1)}
+              variant="warning"
             >
               {index + 1}
             </PageItem>

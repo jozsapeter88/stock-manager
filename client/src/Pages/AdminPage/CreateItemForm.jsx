@@ -60,8 +60,6 @@ const CreateItemForm = () => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const[options, setOptions] = useState(null)
  
-  console.log(options)
-
   useEffect(() => {
     fetchCategories()
     .then((data)=>{

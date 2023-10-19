@@ -1,46 +1,60 @@
-import { Table, Modal, Button } from "react-bootstrap";
+import { Table, Modal, Button, Alert } from "react-bootstrap";
 import { useAuth } from "../../Contexts/AuthContext";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import TopNavbar from "../Navbar/Navbar";
 import Loading from "../Loading";
 import ErrorComponent from "../ErrorPage";
+import "./AdminPage.css";
+import { BsFillPlusCircleFill } from "react-icons/bs";
 
 export const fetchFacilities = async () => {
   try {
     const response = await fetch(
       process.env.REACT_APP_API_URL + "/facility/facilities"
-    )
-  if(response.ok){
-    const data = await response.json()
-    return data;
-  } else {
-    console.error("Failed to fetch facilities");
-    throw new Error("Failed to fetch facilities");
-  } 
-} catch (error) {
-  console.error("Error fetching facility details:", error);
-  throw error;
-}
-}
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to fetch facilities");
+      throw new Error("Failed to fetch facilities");
+    }
+  } catch (error) {
+    console.error("Error fetching facility details:", error);
+    throw error;
+  }
+};
 
 const fetchUsers = async () => {
   try {
     const response = await fetch(
       process.env.REACT_APP_API_URL + "/user/getUsers"
     );
-    if(response.ok){
-      const data = await response.json()
+    if (response.ok) {
+      const data = await response.json();
       return data;
     } else {
       console.error("Failed to fetch users");
       throw new Error("Failed to fetch users");
-    } 
+    }
   } catch (error) {
     console.error("Error fetching users:", error);
     throw error;
   }
-  }
+};
+
+export default function AdminPage() {
+  const { user } = useAuth();
+  const [facilities, setFacilities] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [users, setUsers] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [modalShowAlert, setModalShowAlert] = useState(false);
+  const [modalAlertVariant, setModalAlertVariant] = useState("success");
+  const [modalAlertMessage, setModalAlertMessage] = useState("");
 
   const addFacilityToUser = async (userId, facilityId) => {
     try {
@@ -56,23 +70,27 @@ const fetchUsers = async () => {
         }
       );
       if (response.ok) {
-        console.log("facility added");
+        setModalShowAlert(true);
+        setModalAlertVariant("success");
+        setModalAlertMessage("Facility successfully added");
+
+        // Hide the alert after a few seconds
+        setTimeout(() => {
+          setModalShowAlert(false);
+        }, 5000);
       } else {
         console.error("Facility addition failed");
+        setModalShowAlert(true);
+        setModalAlertVariant("danger");
+        setModalAlertMessage("Facility addition failed");
       }
     } catch (error) {
       console.error("Error logging in:", error);
+      setModalShowAlert(true);
+      setModalAlertVariant("danger");
+      setModalAlertMessage(`Error adding facility: ${error.message}`);
     }
   };
-
-export default function AdminPage() {
-  const { user } = useAuth();
-  const [facilities, setFacilities] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null)
-  const [users, setUsers] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,12 +112,48 @@ export default function AdminPage() {
     await addFacilityToUser(selectedUser.id, id);
   };
 
-  const handleRemoveFacility = (facilityId) => {
-    removeFacilityFromUser();
+  const handleRemoveFacility = (facility) => {
+    removeFacilityFromUser(selectedUser.id, facility.id);
   };
 
   const removeFacilityFromUser = async (userId, facilityId) => {
-    console.log("user should be removed now");
+    try {
+      const response = await fetch(
+        process.env.REACT_APP_API_URL +
+          `/facility/removeFacility/${userId}/${facilityId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        setModalShowAlert(true);
+        setModalAlertVariant("warning"); // Change this to "warning" for orange color
+        setModalAlertMessage("Facility successfully removed");
+
+        // Hide the alert after a few seconds
+        setTimeout(() => {
+          setModalShowAlert(false);
+        }, 5000);
+      } else if (response.status === 404) {
+        setModalShowAlert(true);
+        setModalAlertVariant("danger");
+        setModalAlertMessage("Facility is not added to the user");
+      } else {
+        console.error("Facility removal failed");
+        setModalShowAlert(true);
+        setModalAlertVariant("danger");
+        setModalAlertMessage("Facility removal failed");
+      }
+    } catch (error) {
+      console.error("Error removing facility:", error);
+      setModalShowAlert(true);
+      setModalAlertVariant("danger");
+      setModalAlertMessage(`Error removing facility: ${error.message}`);
+    }
   };
 
   const handleOpenModal = (user) => {
@@ -118,12 +172,14 @@ export default function AdminPage() {
     return <ErrorComponent error={error} />;
   }
 
-
   return (
     <>
       <TopNavbar />
+      <div className="header-title">
+        <h1>Admin Page</h1>
+      </div>
       <div className="container mt-4">
-        <Table striped bordered hover style={{ outline: '2px solid'}}>
+        <Table striped bordered hover style={{ outline: "2px solid" }}>
           <thead>
             <tr>
               <th>Username</th>
@@ -157,11 +213,17 @@ export default function AdminPage() {
           </tbody>
         </Table>
         <Link
-            to={`/addItem`}
+          to={`/addItem`}
+          variant="warning"
+          style={{ marginBottom: "10px" }}
+        >
+          <Button
             variant="warning"
-            style={{ marginBottom: "10px" }}
+            style={{ float: "right", fontSize: "24px" }}
           >
-          <Button variant="warning">Add Item</Button>
+            <BsFillPlusCircleFill />
+            &nbsp;Add Item
+          </Button>
         </Link>
       </div>
 
@@ -173,6 +235,15 @@ export default function AdminPage() {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {modalShowAlert && (
+            <Alert
+              variant={modalAlertVariant}
+              onClose={() => setModalShowAlert(false)}
+              dismissible
+            >
+              {modalAlertMessage}
+            </Alert>
+          )}
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -193,7 +264,7 @@ export default function AdminPage() {
                     </Button>
                     <Button
                       variant="danger"
-                      onClick={() => handleRemoveFacility(facility.id)}
+                      onClick={() => handleRemoveFacility(facility)}
                     >
                       Remove
                     </Button>

@@ -6,3 +6,33 @@
 .card-reduced-opacity {
     opacity: 0.5;
 }
+
+.header-title {
+    text-align: center;
+    background-color: #6e530041; /* Background color spanning the whole width */
+    padding: 20px;
+  }
+
+  .global-stats {
+    text-align: center;
+    background-color: #926e0018; /* Background color spanning the whole width */
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 21px;
+  }
+
+  .my-stats {
+    text-align: center;
+    background-color: #926e0018; /* Background color spanning the whole width */
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 20px;
+  }
+
+  .item-list {
+    text-align: center;
+    background-color: #926e0018; /* Background color spanning the whole width */
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 20px;
+  }

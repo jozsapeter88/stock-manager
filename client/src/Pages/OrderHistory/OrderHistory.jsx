@@ -7,19 +7,19 @@ import { fetchFacilities } from "../AdminPage/AdminPage";
 import { fetchAllSuppliers } from "../SupplierPage/SupplierPage";
 import ErrorComponent from "../ErrorPage";
 import "./OrderHistory.css";
- 
+
 const fetchOrderHistory = async (user) => {
   try {
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/order/getOrders/${user.id}`
     );
-    if(response.ok){
-      const data = await response.json()
+    if (response.ok) {
+      const data = await response.json();
       return data;
     } else {
       console.error("Failed to fetch orders");
       throw new Error("Failed to fetch orders");
-    } 
+    }
   } catch (error) {
     console.error("Error fetching order details:", error);
     throw error;
@@ -42,11 +42,8 @@ const OrderHistory = () => {
   const [showSupplierModal, setShowSupplierModal] = useState(false);
   const [selectedSupplierDetails, setSelectedSupplierDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null)
- 
- 
- 
-  
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -55,7 +52,7 @@ const OrderHistory = () => {
         const supplierData = await fetchAllSuppliers();
         setSuppliers(supplierData);
         const orders = await fetchOrderHistory(user);
-        setOrderHistory(orders)
+        setOrderHistory(orders);
       } catch (error) {
         setError(error);
       } finally {
@@ -64,7 +61,7 @@ const OrderHistory = () => {
     };
     fetchData();
   }, [user]);
- 
+
   const deleteOrder = async (orderId) => {
     try {
       const apiUrl = `${process.env.REACT_APP_API_URL}/order/deleteOrder/${user.id}/${orderId}`;
@@ -74,7 +71,7 @@ const OrderHistory = () => {
           "Content-Type": "application/json",
         },
       });
- 
+
       if (response.ok) {
         const data = await response.json();
         setOrderHistory(data);
@@ -87,7 +84,7 @@ const OrderHistory = () => {
       return false;
     }
   };
- 
+
   const confirmDelivered = async () => {
     try {
       const response = await fetch(
@@ -101,13 +98,10 @@ const OrderHistory = () => {
       );
       if (response.ok) {
         let order = orderHistory.find((o) => o.id === selectedOrderId);
-        console.log(order);
         order.isDelivered = true;
         let data = [...orderHistory];
         let orderInData = data.findIndex((o) => o.id === selectedOrderId);
-        console.log(orderInData);
         data[orderInData] = order;
-        console.log(data);
         setOrderHistory([...data]);
       } else {
         console.error("Failed to confirm order");
@@ -117,25 +111,25 @@ const OrderHistory = () => {
       return false;
     }
   };
- 
+
   const filteredOrders = orderHistory.filter((order) => {
     const isFacilityFiltered =
       selectedFacility === "All facilities" ||
       order.facility.name === selectedFacility;
- 
+
     const isItemNameFiltered =
       searchItem.trim() === "" ||
       order.orderItemQuantities.some((itemQuantity) =>
         itemQuantity.item.name.toLowerCase().includes(searchItem.toLowerCase())
       );
- 
+
     const isSupplierFiltered =
       selectedSupplier === "All suppliers" ||
       order.supplier.name === selectedSupplier;
- 
+
     return isFacilityFiltered && isItemNameFiltered && isSupplierFiltered;
   });
- 
+
   if (loading) {
     return <Loading />;
   }
@@ -145,6 +139,9 @@ const OrderHistory = () => {
   return (
     <div>
       <TopNavbar />
+      <div className="header-title">
+        <h1>Order History</h1>
+      </div>
       <div className="table-container">
         <h1>Order History</h1>
         <Form>
@@ -184,7 +181,7 @@ const OrderHistory = () => {
           </Form.Group>
         </Form>
         <br />
- 
+
         <Table bordered hover style={{ outline: "2px solid" }}>
           <thead>
             <tr>
@@ -208,21 +205,22 @@ const OrderHistory = () => {
                 <td>
                   {order.orderItemQuantities.map((itemQuantity) => (
                     <tr key={itemQuantity.item.id}>
-                      <td>
+                      <div>
                         {itemQuantity.item.name}: {itemQuantity.quantity}
-                      </td>
+                      </div>
                     </tr>
                   ))}
                 </td>
                 <td>
-                <Button
+                  <Button
                     variant="secondary"
                     onClick={() => {
                       setSelectedSupplierDetails(order.supplier);
                       setShowSupplierModal(true);
                     }}
                   >
-                    {order.supplier.name} <i className="fa-solid fa-arrow-right"></i>
+                    {order.supplier.name}{" "}
+                    <i className="fa-solid fa-arrow-right"></i>
                   </Button>
                 </td>
                 <td>{order.comment}</td>
@@ -252,39 +250,46 @@ const OrderHistory = () => {
             ))}
           </tbody>
         </Table>
- 
+
         <Modal
-  show={showSupplierModal}
-  onHide={() => setShowSupplierModal(false)}
->
-<Modal.Header closeButton>
-  {selectedSupplierDetails ? (
-    <Modal.Title>{selectedSupplierDetails.name}</Modal.Title>
-  ) : (
-    <Modal.Title>No Supplier Selected</Modal.Title>
-  )}
-</Modal.Header>
-  <Modal.Body>
-    {selectedSupplierDetails && (
-      <>
-        <p><b>Name:</b> {selectedSupplierDetails.name}</p>
-        <p><b>Category:</b> {selectedSupplierDetails.category}</p>
-        <p><b>Location:</b> {selectedSupplierDetails.location}</p>
-        <p><b>Comment:</b> {selectedSupplierDetails.comment}</p>
-      </>
-    )}
-  </Modal.Body>
-  <Modal.Footer>
-    <Button
-      variant="secondary"
-      onClick={() => setShowSupplierModal(false)}
-    >
-      Close
-    </Button>
-  </Modal.Footer>
-</Modal>
- 
- 
+          show={showSupplierModal}
+          onHide={() => setShowSupplierModal(false)}
+        >
+          <Modal.Header closeButton>
+            {selectedSupplierDetails ? (
+              <Modal.Title>{selectedSupplierDetails.name}</Modal.Title>
+            ) : (
+              <Modal.Title>No Supplier Selected</Modal.Title>
+            )}
+          </Modal.Header>
+          <Modal.Body>
+            {selectedSupplierDetails && (
+              <>
+                <p>
+                  <b>Name:</b> {selectedSupplierDetails.name}
+                </p>
+                <p>
+                  <b>Category:</b> {selectedSupplierDetails.category}
+                </p>
+                <p>
+                  <b>Location:</b> {selectedSupplierDetails.location}
+                </p>
+                <p>
+                  <b>Comment:</b> {selectedSupplierDetails.comment}
+                </p>
+              </>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => setShowSupplierModal(false)}
+            >
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
         {/* Confirm Delivered Modal */}
         <Modal
           show={showConfirmModal}
@@ -314,7 +319,7 @@ const OrderHistory = () => {
             </Button>
           </Modal.Footer>
         </Modal>
- 
+
         {/* Confirm Delete Modal */}
         <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
           <Modal.Header closeButton>
@@ -349,6 +354,5 @@ const OrderHistory = () => {
     </div>
   );
 };
- 
+
 export default OrderHistory;
- 

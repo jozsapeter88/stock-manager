@@ -6,7 +6,6 @@ export const AuthContext = createContext();
 export const AuthContextProvider = (props) => {
     const [user, setUser] = useState(null);
 
-   console.log("auth: " + user)
     const login = (userData) => {
       sessionStorage.setItem('user', JSON.stringify(userData))
       setUser(userData);
@@ -15,7 +14,7 @@ export const AuthContextProvider = (props) => {
       const logout = () => {
         sessionStorage.clear();
         setUser(null);
-        console.log("user is logged out")
+        console.log("User is logged out")
       };
     
       return (

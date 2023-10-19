@@ -6,3 +6,18 @@
     max-width: 1500px;
     margin: 0 auto;
 }
+
+.header-title {
+    text-align: center;
+    background-color: #6e530041;
+    padding: 20px;
+    margin-bottom: 10px;
+}
+
+.item-list {
+    text-align: center;
+    background-color: #926e0018;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 20px;
+}
