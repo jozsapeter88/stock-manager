@@ -6,6 +6,7 @@ import TopNavbar from "../Navbar/Navbar";
 import Loading from "../Loading";
 import ErrorComponent from "../ErrorPage";
 import "./AdminPage.css";
+import { BsFillPlusCircleFill } from "react-icons/bs";
 
 export const fetchFacilities = async () => {
   try {
@@ -90,7 +91,7 @@ export default function AdminPage() {
       setModalAlertMessage(`Error adding facility: ${error.message}`);
     }
   };
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -115,45 +116,45 @@ export default function AdminPage() {
     removeFacilityFromUser(selectedUser.id, facility.id);
   };
 
- const removeFacilityFromUser = async (userId, facilityId) => {
-  try {
-    const response = await fetch(
-      process.env.REACT_APP_API_URL +
-        `/facility/removeFacility/${userId}/${facilityId}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
+  const removeFacilityFromUser = async (userId, facilityId) => {
+    try {
+      const response = await fetch(
+        process.env.REACT_APP_API_URL +
+          `/facility/removeFacility/${userId}/${facilityId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        setModalShowAlert(true);
+        setModalAlertVariant("warning"); // Change this to "warning" for orange color
+        setModalAlertMessage("Facility successfully removed");
+
+        // Hide the alert after a few seconds
+        setTimeout(() => {
+          setModalShowAlert(false);
+        }, 5000);
+      } else if (response.status === 404) {
+        setModalShowAlert(true);
+        setModalAlertVariant("danger");
+        setModalAlertMessage("Facility is not added to the user");
+      } else {
+        console.error("Facility removal failed");
+        setModalShowAlert(true);
+        setModalAlertVariant("danger");
+        setModalAlertMessage("Facility removal failed");
       }
-    );
-
-    if (response.ok) {
-      setModalShowAlert(true);
-      setModalAlertVariant("warning"); // Change this to "warning" for orange color
-      setModalAlertMessage("Facility successfully removed");
-
-      // Hide the alert after a few seconds
-      setTimeout(() => {
-        setModalShowAlert(false);
-      }, 5000);
-    } else if (response.status === 404) {
+    } catch (error) {
+      console.error("Error removing facility:", error);
       setModalShowAlert(true);
       setModalAlertVariant("danger");
-      setModalAlertMessage("Facility is not added to the user");
-    } else {
-      console.error("Facility removal failed");
-      setModalShowAlert(true);
-      setModalAlertVariant("danger");
-      setModalAlertMessage("Facility removal failed");
+      setModalAlertMessage(`Error removing facility: ${error.message}`);
     }
-  } catch (error) {
-    console.error("Error removing facility:", error);
-    setModalShowAlert(true);
-    setModalAlertVariant("danger");
-    setModalAlertMessage(`Error removing facility: ${error.message}`);
-  }
-};
+  };
 
   const handleOpenModal = (user) => {
     setSelectedUser(user);
@@ -216,7 +217,13 @@ export default function AdminPage() {
           variant="warning"
           style={{ marginBottom: "10px" }}
         >
-          <Button variant="warning">Add Item</Button>
+          <Button
+            variant="warning"
+            style={{ float: "right", fontSize: "24px" }}
+          >
+            <BsFillPlusCircleFill />
+            &nbsp;Add Item
+          </Button>
         </Link>
       </div>
 
@@ -256,11 +263,11 @@ export default function AdminPage() {
                       Add
                     </Button>
                     <Button
-  variant="danger"
-  onClick={() => handleRemoveFacility(facility)}
->
-  Remove
-</Button>
+                      variant="danger"
+                      onClick={() => handleRemoveFacility(facility)}
+                    >
+                      Remove
+                    </Button>
                   </td>
                 </tr>
               ))}

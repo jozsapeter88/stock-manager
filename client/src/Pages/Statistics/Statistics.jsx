@@ -287,6 +287,7 @@ const StatisticsPage = () => {
               key={index}
               active={index + 1 === currentPage}
               onClick={() => handlePageChange(index + 1)}
+              variant="warning"
             >
               {index + 1}
             </PageItem>

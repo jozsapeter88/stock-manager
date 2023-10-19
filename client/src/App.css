@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 .App {
-  text-align: center;
+  font-family: 'Roboto Slab', serif;
+
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
 }
 
 .App-header {
@@ -17,8 +17,4 @@ body {
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
-
-.App-link {
-  color: #61dafb;
 }

@@ -1,12 +1,10 @@
-/* Existing styles for logo */
 .logo img {
   opacity: 1;
   transition: 0.5s;
 }
 
-/* New hover effect to scale the logo */
 .logo:hover img {
-  transform: scale(1.1); /* Adjust the scale factor as needed */
+  transform: scale(1.1);
 }
 
 .btn {
@@ -26,6 +24,7 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  font-family: 'Roboto', sans-serif;
 }
 
 .switch-button {

@@ -9,6 +9,7 @@ import { BsFillExclamationTriangleFill } from "react-icons/bs";
 import { OrderForm } from "../Forms/OrderForm";
 import Loading from "../Loading";
 import ErrorComponent from "../ErrorPage";
+import { BsFillPlusCircleFill } from 'react-icons/bs';
 
 const addDispatch = async (userId, dispatch) => {
   try {
@@ -224,6 +225,9 @@ export default function FacilityDetails() {
   return (
     <div>
       <TopNavbar />
+      <div className="header-title">
+        <h1>Details of {facility.name}</h1>
+      </div>
       <div className="table-container">
         <Link
           to={`/facilities/${user.id}`}
@@ -234,12 +238,11 @@ export default function FacilityDetails() {
         </Link>
         <Button
           variant="warning"
-          style={{ float: "right" }}
+          style={{ float: "right", fontSize: "24px"}}
           onClick={() => setShowModal(true)}
         >
-          Order
+          <BsFillPlusCircleFill /> Order
         </Button>
-        <h1>{facility.name}</h1>
         {/* Success message */}
         {showSuccessMessage && (
           <div className="alert alert-success" role="alert">
@@ -262,15 +265,15 @@ export default function FacilityDetails() {
             </tr>
           </tbody>
         </Table>
-        <h2>Item Stock:</h2>
+        <h1 className="my-stats">Inventory</h1>
         <div style={{ textAlign: "right" }}>
           <BsFillExclamationTriangleFill
             style={{ textAlign: "right", color: "yellow" }}
-          />
-          Below suggested quantity&nbsp;&nbsp;&nbsp;&nbsp;
+          />&nbsp;
+          Below suggested quantity&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <BsFillExclamationTriangleFill
             style={{ textAlign: "right", color: "red" }}
-          />
+          />&nbsp;
           Not in stock
         </div>
         <Table striped bordered hover style={{ outline: "2px solid" }}>

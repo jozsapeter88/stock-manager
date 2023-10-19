@@ -5,6 +5,7 @@ import ErrorPage from "./Pages/ErrorPage";
 import OrderHistory from "./Pages/OrderHistory/OrderHistory";
 import Statistics from "./Pages/Statistics/Statistics";
 import "./index.css";
+import "./App.css";
 import LoginForm from "./Pages/LandingPage/LoginForm";
 import RegisterForm from "./Pages/LandingPage/RegisterForm";
 import FacilitiesOfUser from "./Pages/FacilitiesOfUser/FacilitiesOfUser";

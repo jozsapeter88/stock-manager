@@ -5,6 +5,8 @@ import {
     Form,
     InputGroup,
   } from "react-bootstrap";
+import "./DispatchForm.css";
+import { FaMinusCircle, FaPlusCircle } from 'react-icons/fa';
 
 export const DispatchForm = ({
     showDispatchModal,
@@ -44,9 +46,9 @@ export const DispatchForm = ({
             <Form>
             <InputGroup>
                 <InputGroup.Text>Number Of Items to dispatch</InputGroup.Text>
-                <Button variant="outline-secondary" onClick={handleDecrement}>-</Button>
+                <Button variant="" onClick={handleDecrement}><FaMinusCircle /></Button>
                 <Form.Control type="text" value={itemQuantity} onChange={handleChange} />
-                <Button variant="outline-secondary" onClick={handleIncrement}>+</Button>
+                <Button variant="" onClick={handleIncrement}><FaPlusCircle /></Button>
             </InputGroup>
             <InputGroup>
               <InputGroup.Text>Add your comment</InputGroup.Text>
