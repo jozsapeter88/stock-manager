@@ -70,5 +70,8 @@ $ docker-compose up -d stockfrontend
 
 # Open your web browser and go to http://localhost:3000 to explore the Stock System Manager.
 ```
+# How to use it
+## Check out the 2-minutes tutorial right [here](https://scribehow.com/shared/Stock_Manager_How-to_demonstration__bLf2BrTbRNmzBALCnWWGjg).
+
 # Stats
 <img alt="GitHub Language Count" src="https://img.shields.io/github/languages/count/jozsapeter88/stock-manager" /> <img alt="GitHub Top Language" src="https://img.shields.io/github/languages/top/jozsapeter88/stock-manager" /> <img alt="" src="https://img.shields.io/github/repo-size/jozsapeter88/stock-manager" /> <img alt="GitHub Contributors" src="https://img.shields.io/github/contributors/jozsapeter88/stock-manager" /> <img alt="GitHub Last Commit" src="https://img.shields.io/github/last-commit/jozsapeter88/stock-manager" />
