@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StockBackend.Areas.Identity.Data.Models;
@@ -10,9 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-string envType = builder.Environment.IsDevelopment()
+string envType = "DefaultConnection";
+
+/* string envType = builder.Environment.IsDevelopment()
     ? "DefaultConnection"
-    : "DockerCommandsConnectionString";
+    : "DockerCommandsConnectionString"; */
+
 var connectionString = builder.Configuration.GetConnectionString(envType) ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
