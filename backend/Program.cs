@@ -64,20 +64,21 @@ builder.Services.AddLogging(loggingBuilder =>
 });
 var app = builder.Build();
 
+
 using (var serviceScope = app.Services.CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-    //context.Database.EnsureDeleted();
+    // Optionally delete existing database for testing
+    // context.Database.EnsureDeleted(); 
 
-    //true if has to be created, false if already exists
-    //always true if EnsureDeleted is allowed
-    if (context.Database.EnsureCreated())
-    {
-        //if it is newly created, seed data:
-       DataSeed.Initialize(context);
-    }
+    // Apply migrations to create/update database schema
+    context.Database.Migrate();
+
+    // Always seed data
+    DataSeed.Initialize(context);
 }
+
 //Add adminUser
 using (var scope = app.Services.CreateScope())
 {

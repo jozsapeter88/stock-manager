@@ -416,6 +416,12 @@ public class DataSeed
             };
             dbContext.Items.AddRange(items);
             dbContext.SaveChanges();
+
+            Console.WriteLine("Facilities seeded successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Facilities already exist. Skipping seeding.");
         }
     }
 }
