@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5286:5286"
+    environment:
+      - ConnectionType=DockerCommandsConnectionString
     depends_on:
       - db
   db:
@@ -16,7 +18,7 @@ services:
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5433:5432"
+      - "5432:5432"
 
   stockfrontend:
     container_name: stockfrontend

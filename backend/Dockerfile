@@ -10,9 +10,6 @@ WORKDIR /src
 # Copy .csproj file first to utilize layer caching
 COPY ["StockBackend.csproj", "./"]
 
-# Copy the NuGet configuration file
-COPY NuGet.Config /root/.nuget/NuGet/NuGet.Config
-
 # List files for verification and run dotnet restore
 RUN ls -la /src && dotnet restore --verbosity detailed
 
