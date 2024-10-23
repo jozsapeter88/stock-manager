@@ -3,7 +3,7 @@
 <span style="color: blue">ℹ️ Please note that this is not the final version of the project, therefore bugs may appear. If you have any suggestions or observations, please do not hesitate to reach out to us!</span> 
 
 ## <span style="font-size: 24px"><b>Introduction 👋</b></span>
-Welcome to the Stock System Manager, this a project by two of us, [jozsapeter88](https://github.com/jozsapeter88) and [hajosroli](https://github.com/hajosroli). 
+Welcome to the Stock System Manager, a project by the two of us, [jozsapeter88](https://github.com/jozsapeter88) and [hajosroli](https://github.com/hajosroli). 
 
 A React / C# project designed to help you manage your facilities and track their corresponding item stock. This system allows you to place orders for items linked to each facility and effectively manage the order process.
 
