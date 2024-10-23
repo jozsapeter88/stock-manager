@@ -32,7 +32,7 @@ export default function TopNavbar() {
         >
           <Nav className="ml-auto">
             {user && user.role === 0 && (
-              <Nav.Item>
+              <Nav.Item className="button-35">
                 <Nav.Link
                   as={Link}
                   to="/admin"
@@ -46,7 +46,7 @@ export default function TopNavbar() {
                 </Nav.Link>
               </Nav.Item>
             )}
-            <Nav.Item>
+            <Nav.Item className="button-35">
               <Nav.Link
                 as={Link}
                 to={`/orderhistory/${user.id}`}
@@ -59,7 +59,7 @@ export default function TopNavbar() {
                 Order History
               </Nav.Link>
             </Nav.Item>
-            <Nav.Item>
+            <Nav.Item className="button-35">
               <Nav.Link
                 as={Link}
                 to={`/dispatchHistory/${user.id}`}
@@ -72,7 +72,7 @@ export default function TopNavbar() {
                 Dispatch History
               </Nav.Link>
             </Nav.Item>
-            <Nav.Item>
+            <Nav.Item className="button-35">
               <Nav.Link
                 as={Link}
                 to="/suppliers"
@@ -85,7 +85,7 @@ export default function TopNavbar() {
                 Suppliers
               </Nav.Link>
             </Nav.Item>
-            <Nav.Item>
+            <Nav.Item className="button-35">
               <Nav.Link
                 as={Link}
                 to="/statistics"
