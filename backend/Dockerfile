@@ -7,28 +7,29 @@ ENV ASPNETCORE_URLS=http://*:5286
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 
-# Copy only the .csproj file first to optimize Docker layer caching
+# Copy .csproj file first to utilize layer caching
 COPY ["StockBackend.csproj", "./"]
 
-# Restore dependencies with verbose logging to help identify issues
-RUN dotnet restore --verbosity detailed
+# Copy the NuGet configuration file
+COPY NuGet.Config /root/.nuget/NuGet/NuGet.Config
+
+# List files for verification and run dotnet restore
+RUN ls -la /src && dotnet restore --verbosity detailed
 
 # Copy the remaining project files
 COPY . .
 
-# Build the project in Release mode and output to the /app/build directory
+# Build the project in Release mode
 RUN dotnet build "StockBackend.csproj" -c Release -o /app/build
 
 # Stage 3: Publish stage
 FROM build AS publish
 RUN dotnet publish "StockBackend.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-# Stage 4: Final stage - use the base image to run the app
+# Stage 4: Final stage for running the app
 FROM base AS final
 WORKDIR /app
-
-# Copy the published files from the previous stage
 COPY --from=publish /app/publish .
 
-# Run the application
+# Start the application
 ENTRYPOINT ["dotnet", "StockBackend.dll"]
