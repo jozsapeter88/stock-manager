@@ -11,18 +11,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-string envType = "DefaultConnection";
+// Get the connection string based on the environment variable
+string envType = builder.Configuration["ConnectionType"] ?? "DefaultConnection"; // Default to DefaultConnection
 
-/* string envType = builder.Environment.IsDevelopment()
-    ? "DefaultConnection"
-    : "DockerCommandsConnectionString"; */
+var connectionString = builder.Configuration.GetConnectionString(envType) ?? throw new InvalidOperationException($"Connection string '{envType}' not found.");
 
-var connectionString = builder.Configuration.GetConnectionString(envType) ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseNpgsql(connectionString);
     options.EnableSensitiveDataLogging();
 });
+
     
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

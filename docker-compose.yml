@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  stockbackend:
+    container_name: stockbackend
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    ports:
+      - "5286:5286"
+    environment:
+      - ConnectionType=DockerCommandsConnectionString
+    depends_on:
+      - db
+  db:
+    container_name: stockDb
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+
+  stockfrontend:
+    container_name: stockfrontend
+    build:
+      context: client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - stockbackend 
